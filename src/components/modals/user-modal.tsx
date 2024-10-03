@@ -92,7 +92,11 @@ const UserForm = ({
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.SELECT}
-                  options={["Dentist", "Front Desk", "Branch Head"]}
+                  selectOptions={[
+                    { value: "Dentist", label: "Dentist" },
+                    { value: "Front Desk", label: "Front Desk" },
+                    { value: "Branch Head", label: "Branch Head" },
+                  ]}
                   placeholder="Select Role"
                   label="Role"
                   isRequired={true}
