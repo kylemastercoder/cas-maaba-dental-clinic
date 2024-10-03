@@ -3,11 +3,13 @@ import { Poppins } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { ModalProvider } from "@/components/providers/modal-provider";
+import { TanstackProvider } from "@/components/providers/tanstack-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-},);
+});
 
 export const metadata: Metadata = {
   title: "CAS-MAABA Dental Clinic",
@@ -20,12 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={cn("antialiased", poppins.className)}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={cn("antialiased", poppins.className)}>
         <Toaster richColors position="top-right" />
-        {children}
+        <ModalProvider />
+        <TanstackProvider>{children}</TanstackProvider>
       </body>
     </html>
   );

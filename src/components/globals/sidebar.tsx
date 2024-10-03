@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SidebarAnimated,
   SidebarBody,
@@ -7,42 +7,95 @@ import {
 } from "@/components/aceternity-ui/sidebar-animated";
 import {
   IconBrandTabler,
+  IconCalendarMonth,
+  IconFiles,
+  IconLogs,
   IconMedicineSyrup,
   IconStethoscope,
+  IconUsers,
   IconUserSquareRounded,
 } from "@tabler/icons-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import BranchSwitcher from "./branch-switcher";
+import { Branch } from "@prisma/client";
+import { getAllBranches } from "@/actions/branch";
+import { toast } from "sonner";
 
 export function Sidebar() {
+  const [branchData, setBranchData] = useState<Branch[]>([]);
+
+  useEffect(() => {
+    const fetchBranch = async () => {
+      const response = await getAllBranches();
+      if (response.error) {
+        toast.error(response.error);
+      } else {
+        if (response.data) {
+          setBranchData(response.data);
+        }
+      }
+    };
+
+    fetchBranch();
+  }, []);
+
   const links = [
     {
       label: "Dashboard",
-      href: "/",
+      href: "/admin",
       icon: (
         <IconBrandTabler className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
       label: "Patients",
-      href: "/patients",
+      href: "/admin/patients",
       icon: (
         <IconUserSquareRounded className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
+      label: "Services",
+      href: "/admin/services",
+      icon: (
+        <IconFiles className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Appointments",
+      href: "/admin/appointments",
+      icon: (
+        <IconCalendarMonth className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
       label: "Treatment Rendered",
-      href: "/treatment-rendered",
+      href: "/admin/treatment-rendered",
       icon: (
         <IconStethoscope className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
     {
-      label: "Stocks",
-      href: "/stocks",
+      label: "Supplies",
+      href: "/admin/supplies",
       icon: (
         <IconMedicineSyrup className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Manage Users",
+      href: "/admin/manage-users",
+      icon: (
+        <IconUsers className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+      ),
+    },
+    {
+      label: "Logs",
+      href: "/admin/logs",
+      icon: (
+        <IconLogs className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
     },
   ];
@@ -58,6 +111,24 @@ export function Sidebar() {
             ))}
           </div>
         </div>
+        <div>
+          {/* <SidebarLink
+            link={{
+              label: "Manu Arora",
+              href: "#",
+              icon: (
+                <Image
+                  src="/images/logo.png"
+                  className="h-7 w-7 flex-shrink-0 rounded-full"
+                  width={50}
+                  height={50}
+                  alt="Avatar"
+                />
+              ),
+            }}
+          /> */}
+          <BranchSwitcher items={branchData} isOpen={open} />
+        </div>
       </SidebarBody>
     </SidebarAnimated>
   );
@@ -65,7 +136,7 @@ export function Sidebar() {
 export const Logo = () => {
   return (
     <Link
-      href="/"
+      href="/admin"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
       <Image src="/images/logo-icon.png" alt="Logo" width={60} height={60} />
@@ -83,7 +154,7 @@ export const Logo = () => {
 export const LogoIcon = () => {
   return (
     <Link
-      href="/"
+      href="/admin"
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20"
     >
       <Image src="/images/logo-icon.png" alt="Logo" width={60} height={60} />

@@ -6,16 +6,19 @@ import Notification from "./notification";
 import UserProfile from "./user-profile";
 import { IconSearch } from "@tabler/icons-react";
 import { Input } from "../ui/input";
+import CustomBreadcrumb from "./custom-breadcrumb";
 
 const Header = () => {
   const pathname = usePathname();
 
   const getHeaderText = () => {
     switch (pathname) {
-      case "/":
+      case "/admin":
         return "Dashboard";
-      case "/patients":
-        return "Patient Record";
+      case "/admin/patients":
+        return <CustomBreadcrumb page="Patients" />;
+      case "/admin/manage-users":
+        return <CustomBreadcrumb page="Manage Users" />;
       default:
         return "";
     }
@@ -23,7 +26,7 @@ const Header = () => {
 
   return (
     <div className="flex items-center justify-between py-5 border-b px-5">
-      <p className="font-semibold">{getHeaderText()}</p>
+      <div>{getHeaderText()}</div>
       <div className="flex items-center gap-2">
         <div className="relative flex-1 mr-3 md:grow-0">
           <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
