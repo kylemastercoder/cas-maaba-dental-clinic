@@ -200,3 +200,7 @@ export const deleteUser = async (userId: string) => {
     };
   }
 };
+
+export const logout = async () => {
+  cookies().set("Authorization", "", { maxAge: 0, path: "/" });
+};

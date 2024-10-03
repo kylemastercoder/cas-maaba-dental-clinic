@@ -162,7 +162,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               withCountryCallingCode
               limitMaxLength={true}
               numberInputProps={{
-                className: `rounded-md px-4 focus:outline-none shad-input h-full w-full !bg-none border-0
+                className: `rounded-md px-4 border-input border h-full w-full !bg-none
                                     ${
                                       disabled
                                         ? "disabled:opacity-50 disabled:cursor-not-allowed"
@@ -213,7 +213,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               <Button
                 variant={"outline"}
                 className={cn(
-                  "shad-input ml-2",
+                  "shad-input",
                   !field.value && "text-muted-foreground"
                 )}
                 disabled={disabled}
@@ -320,7 +320,7 @@ const CustomFormField = (props: CustomProps) => {
               <FormLabel>
                 {label}
                 {isRequired === true ? (
-                  <span className="text-red-700 text-lg"> *</span>
+                  <span className="text-red-700 text-xs"> *</span>
                 ) : isRequired === false ? (
                   <span className="text-gray-500 text-xs font-normal ml-2">
                     (Optional)

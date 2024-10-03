@@ -7,8 +7,9 @@ import UserProfile from "./user-profile";
 import { IconSearch } from "@tabler/icons-react";
 import { Input } from "../ui/input";
 import CustomBreadcrumb from "./custom-breadcrumb";
+import { User } from "@prisma/client";
 
-const Header = () => {
+const Header = ({user}: {user: User | null}) => {
   const pathname = usePathname();
 
   const getHeaderText = () => {
@@ -16,6 +17,8 @@ const Header = () => {
       case "/admin":
         return "Dashboard";
       case "/admin/patients":
+        return <CustomBreadcrumb page="Patients" />;
+        case "/admin/patients/new":
         return <CustomBreadcrumb page="Patients" />;
       case "/admin/manage-users":
         return <CustomBreadcrumb page="Manage Users" />;
@@ -37,7 +40,7 @@ const Header = () => {
           />
         </div>
         <Notification />
-        <UserProfile />
+        <UserProfile user={user} />
       </div>
     </div>
   );

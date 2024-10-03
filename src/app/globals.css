@@ -2,7 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, :root {
+html,
+body,
+:root {
   height: 100%;
 }
 
@@ -14,6 +16,10 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+.shad-input {
+  @apply flex w-full justify-start border font-normal placeholder:text-gray-600 bg-transparent dark:bg-zinc-800 border-input rounded-md focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed !important;
 }
 
 @layer base {
