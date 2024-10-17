@@ -5,7 +5,7 @@ import { PatientSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Patient } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../ui/form";
@@ -15,11 +15,9 @@ import { Heading } from "@/components/ui/heading";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { useAddressData } from "@/lib/address-selection";
-import { createPatient } from "@/actions/patient";
-import { toast } from "sonner";
+import { useSavePatient } from "@/data/patient";
 
 const PatientForm = ({ initialData }: { initialData: Patient | null }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const addressComponents = parseAddress(initialData?.address ?? "");
 
@@ -72,24 +70,13 @@ const PatientForm = ({ initialData }: { initialData: Patient | null }) => {
         },
   });
 
-  const onSubmit = async (values: z.infer<typeof PatientSchema>) => {
-    setIsLoading(true);
-    await createPatient(values)
-      .then((response) => {
-        if (response.error) {
-          toast.error(response.error);
-        } else {
-          toast.success(response.success);
-          if (response.success) {
-            toast.success(response.success);
-            router.push("/admin/patients");
-          }
-        }
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
+  const { mutate: savePatient, isPending: isLoading } = useSavePatient(initialData);
+
+  async function onSubmit(values: z.infer<typeof PatientSchema>) {
+    savePatient(values, {
+      onSuccess: () => router.push("/admin/patients"),
+    });
+  }
 
   const selectedRegionName = form.watch("region");
   const selectedProvinceName = form.watch("province");

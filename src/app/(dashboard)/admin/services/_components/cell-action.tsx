@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { PatientColumn } from "./column";
+import { ServiceColumn } from "./column";
 
 import {
   DropdownMenu,
@@ -11,33 +11,43 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BriefcaseMedical, Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useDeleteUser } from "@/data/user";
 import { useRouter } from "next/navigation";
+import { useDeleteService } from "@/data/service";
+import ServiceForm from "@/components/modals/service-modal";
 
 interface CellActionProps {
-  data: PatientColumn;
+  data: ServiceColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
+  const [initialData, setInitialData] = useState<ServiceColumn | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
+  const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
 
   const onDelete = async () => {
-    deleteUser(data.id, {
+    deleteService(data.id, {
       onSuccess: () => {
         setOpen(false);
+        router.refresh();
       },
     });
+  };
+
+  const onUpdate = () => {
+    setInitialData(data);
+    router.refresh();
+    setFormOpen(true);
   };
 
   return (
@@ -48,6 +58,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={isDeleting}
         onConfirm={onDelete}
       />
+
+      {formOpen && (
+        <ServiceForm
+          initialData={initialData}
+          onClose={() => setFormOpen(false)}
+        />
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -57,15 +74,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/patients/${data.id}/treatment-plan`)}
-          >
-            <BriefcaseMedical className="w-4 h-4 mr-2" />
-            Treatment Plan
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/patients/${data.id}`)}
-          >
+          <DropdownMenuItem onClick={onUpdate}>
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>

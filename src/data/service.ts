@@ -1,37 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  createPatient,
-  deletePatient,
-  getAllPatients,
-  updatePatient,
-} from "@/actions/patient";
-import { PatientSchema } from "@/lib/validators";
+
+import { createService, deleteService, getAllServices, updateService } from "@/actions/service";
+import { ServiceSchema } from "@/lib/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export function useGetPatients() {
+export function useGetServices() {
   return useQuery({
-    queryFn: async () => getAllPatients(),
-    queryKey: ["patients"],
+    queryFn: async () => getAllServices(),
+    queryKey: ["services"],
   });
 }
 
-export function useSavePatient(initialData?: any) {
+export function useSaveService(initialData?: any) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (values: z.infer<typeof PatientSchema>) => {
+    mutationFn: async (values: z.infer<typeof ServiceSchema>) => {
       if (initialData) {
-        return updatePatient(values, initialData.id);
+        return updateService(values, initialData.id);
       } else {
-        return createPatient(values);
+        return createService(values);
       }
     },
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.success);
-        queryClient.invalidateQueries({ queryKey: ["patients"] });
+        queryClient.invalidateQueries({ queryKey: ["services"] });
       }
     },
     onError: (error: any) => {
@@ -40,17 +36,17 @@ export function useSavePatient(initialData?: any) {
   });
 }
 
-export function useDeletePatient() {
+export function useDeleteService() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (patientId: string) => {
-      return deletePatient(patientId);
+    mutationFn: async (serviceId: string) => {
+      return deleteService(serviceId);
     },
     onSuccess: (data) => {
       if (data?.success) {
         toast.success(data.success);
-        queryClient.invalidateQueries({ queryKey: ["patients"] });
+        queryClient.invalidateQueries({ queryKey: ["services"] });
       }
     },
     onError: (error: any) => {

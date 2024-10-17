@@ -8,7 +8,15 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 
-const CustomBreadcrumb = ({ page }: { page: string }) => {
+const CustomBreadcrumb = ({
+  page,
+  subPage,
+  subLink,
+}: {
+  page: string;
+  subPage?: string;
+  subLink?: string;
+}) => {
   return (
     <Breadcrumb>
       <BreadcrumbList>
@@ -17,8 +25,20 @@ const CustomBreadcrumb = ({ page }: { page: string }) => {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>{page}</BreadcrumbPage>
+          {subPage ? (
+            <BreadcrumbLink href={subLink}>{page}</BreadcrumbLink>
+          ) : (
+            <BreadcrumbPage>{page}</BreadcrumbPage>
+          )}
         </BreadcrumbItem>
+        {subPage && (
+          <>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{subPage}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </>
+        )}
       </BreadcrumbList>
     </Breadcrumb>
   );

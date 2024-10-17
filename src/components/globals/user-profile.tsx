@@ -11,6 +11,7 @@ import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { User } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { logout } from "@/actions/user";
+import { UserCircleIcon } from "lucide-react";
 
 const UserProfile = ({ user }: { user: User | null }) => {
   const router = useRouter();
@@ -22,11 +23,12 @@ const UserProfile = ({ user }: { user: User | null }) => {
     <DropdownMenu>
       <DropdownMenuTrigger className="px-5">
         <div className="flex items-center justify-between">
-          <div className="flex flex-col items-start">
+          <UserCircleIcon className="md:hidden block" />
+          <div className="md:flex hidden flex-col items-start">
             <p className="font-semibold text-sm">{user?.name}</p>
             <p className="text-muted-foreground text-xs">{user?.username}</p>
           </div>
-          <ChevronDownIcon className="ml-8" />
+          <ChevronDownIcon className="md:ml-8 ml-4" />
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent>

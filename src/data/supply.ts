@@ -1,37 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  createPatient,
-  deletePatient,
-  getAllPatients,
-  updatePatient,
-} from "@/actions/patient";
-import { PatientSchema } from "@/lib/validators";
+
+import { createSupply, deleteSupply, getAllSupplies, updateSupply } from "@/actions/supply";
+import { SupplySchema } from "@/lib/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export function useGetPatients() {
+export function useGetSupplies() {
   return useQuery({
-    queryFn: async () => getAllPatients(),
-    queryKey: ["patients"],
+    queryFn: async () => getAllSupplies(),
+    queryKey: ["supplies"],
   });
 }
 
-export function useSavePatient(initialData?: any) {
+export function useSaveSupply(initialData?: any) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (values: z.infer<typeof PatientSchema>) => {
+    mutationFn: async (values: z.infer<typeof SupplySchema>) => {
       if (initialData) {
-        return updatePatient(values, initialData.id);
+        return updateSupply(values, initialData.id);
       } else {
-        return createPatient(values);
+        return createSupply(values);
       }
     },
     onSuccess: (data) => {
       if (data.success) {
         toast.success(data.success);
-        queryClient.invalidateQueries({ queryKey: ["patients"] });
+        queryClient.invalidateQueries({ queryKey: ["supplies"] });
       }
     },
     onError: (error: any) => {
@@ -40,17 +36,17 @@ export function useSavePatient(initialData?: any) {
   });
 }
 
-export function useDeletePatient() {
+export function useDeleteSupply() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (patientId: string) => {
-      return deletePatient(patientId);
+    mutationFn: async (supplyId: string) => {
+      return deleteSupply(supplyId);
     },
     onSuccess: (data) => {
       if (data?.success) {
         toast.success(data.success);
-        queryClient.invalidateQueries({ queryKey: ["patients"] });
+        queryClient.invalidateQueries({ queryKey: ["supplies"] });
       }
     },
     onError: (error: any) => {

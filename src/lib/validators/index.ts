@@ -37,3 +37,23 @@ export const PatientSchema = z.object({
   occupation: z.string().min(1, { message: "Occupation is required" }),
   contactNumber: z.string().min(1, { message: "Contact number is required" }),
 });
+
+export const ServiceSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+});
+
+export const SupplySchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  category: z.string().min(1, { message: "Category is required" }),
+  stocks: z.coerce.number().min(1, { message: "Stocks is required" }),
+  unit: z.string().min(1, { message: "Unit is required" }),
+  used: z.number().optional(),
+});
+
+export const TreatmentPlanSchema = z.object({
+  toothNumber: z.coerce.number().min(1, { message: "Tooth number is required" }),
+  service: z.string().min(1, { message: "Service is required" }),
+  diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
+  remarks: z.string().optional(),
+});
