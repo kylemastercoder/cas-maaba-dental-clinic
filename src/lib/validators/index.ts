@@ -48,7 +48,7 @@ export const SupplySchema = z.object({
   category: z.string().min(1, { message: "Category is required" }),
   stocks: z.coerce.number().min(1, { message: "Stocks is required" }),
   unit: z.string().min(1, { message: "Unit is required" }),
-  used: z.number().optional(),
+  used: z.coerce.number().optional(),
 });
 
 export const TreatmentPlanSchema = z.object({
