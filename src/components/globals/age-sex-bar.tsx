@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
@@ -10,29 +11,23 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { month: "0-18 years old", desktop: 186, mobile: 80 },
-  { month: "19-35 years old", desktop: 305, mobile: 200 },
-];
-
 const chartConfig = {
-  desktop: {
+  male: {
     label: "Male",
     color: "#125b9a",
   },
-  mobile: {
+  female: {
     label: "Female",
     color: "#f05a7e",
   },
-} satisfies ChartConfig;
+};
 
-export function AgeSexBar() {
+export function AgeSexBar({ data }: { data: any[] }) {
   return (
     <Card>
       <CardHeader>
@@ -40,20 +35,15 @@ export function AgeSexBar() {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={true}
-              tickMargin={5}
-              axisLine={true}
-            />
+            <XAxis dataKey="label" tickLine={true} tickMargin={5} />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dot" />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
-            <Bar dataKey="mobile" fill="var(--color-mobile)" radius={8} />
+            <Bar dataKey="male" fill={chartConfig.male.color} radius={8} />
+            <Bar dataKey="female" fill={chartConfig.female.color} radius={8} />
           </BarChart>
         </ChartContainer>
       </CardContent>

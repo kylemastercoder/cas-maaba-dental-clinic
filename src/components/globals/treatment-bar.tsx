@@ -13,8 +13,8 @@ import {
 export const description = "A bar chart";
 
 const chartData = [
-  { month: "Pending Treatments", desktop: 186 },
-  { month: "Treatments Rendered", desktop: 305 },
+  { month: "Pending", desktop: 186 },
+  { month: "Rendered", desktop: 305 },
 ];
 
 const chartConfig = {
@@ -26,11 +26,11 @@ const chartConfig = {
 
 export function TreatmentBar() {
   return (
-    <Card>
+    <Card className="md:h-[340px]">
       <CardHeader>
         <CardTitle>Treatment Plan</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 pb-0">
         <ChartContainer
           className="mx-auto aspect-square max-h-[245px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
           config={chartConfig}
@@ -42,7 +42,6 @@ export function TreatmentBar() {
               tickLine={false}
               tickMargin={5}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip
               cursor={false}

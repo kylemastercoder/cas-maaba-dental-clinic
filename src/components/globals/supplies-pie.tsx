@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { Pie, PieChart } from "recharts";
@@ -10,42 +11,40 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-  { browser: "other", visitors: 90, fill: "var(--color-other)" },
-];
-
-const chartConfig = {
-  firefox: {
-    label: "Firefox",
-    color: "hsl(var(--chart-3))",
-  },
-  other: {
-    label: "Other",
-    color: "hsl(var(--chart-5))",
-  },
-} satisfies ChartConfig;
-
-export function SuppliesPie() {
+export function SuppliesPie({ data }: { data: any[] }) {
   return (
-    <Card className="flex flex-col">
+    <Card className="md:h-[450px]">
       <CardHeader className="pb-0">
-        <CardTitle>Supplies of Cas-Maaba</CardTitle>
+        <CardTitle>Supplies of Cas-Maaba Dental Clinic</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"
+          config={{
+            SuppliesUsed: {
+              label: "Supplies Used",
+              color: "hsl(var(--chart-5))",
+            },
+            RemainingSupplies: {
+              label: "Remaining Supplies",
+              color: "hsl(var(--chart-3))",
+            },
+          }}
+          className="mx-auto pb-0 [&_.recharts-pie-label-text]:fill-foreground"
         >
           <PieChart>
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Pie height={200} data={chartData} dataKey="visitors" label nameKey="browser" />
+            <Pie
+              height={200}
+              data={data}
+              dataKey="value"
+              label={({ name, value }) => `${name} = ${value}`}
+              nameKey="label"
+            />
           </PieChart>
         </ChartContainer>
       </CardContent>
