@@ -11,12 +11,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BriefcaseMedical, Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Bell,
+  BriefcaseMedical,
+  Copy,
+  Edit,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useDeleteUser } from "@/data/user";
 import { useRouter } from "next/navigation";
+import NotifyModal from "@/components/modals/notify-modal";
 
 interface CellActionProps {
   data: PatientColumn;
@@ -25,6 +33,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [openNotifyModal, setOpenNotifyModal] = useState(false);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
@@ -48,6 +57,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={isDeleting}
         onConfirm={onDelete}
       />
+
+      <NotifyModal
+        patientName={data.name}
+        patientEmail={data.email}
+        isOpen={openNotifyModal}
+        onClose={() => setOpenNotifyModal(false)}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -58,10 +74,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/patients/${data.id}/treatment-plan`)}
+            onClick={() =>
+              router.push(`/admin/patients/${data.id}/treatment-plan`)
+            }
           >
             <BriefcaseMedical className="w-4 h-4 mr-2" />
             Treatment Plan
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
+            <Bell className="w-4 h-4 mr-2" />
+            Notify for Follow-up
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/admin/patients/${data.id}`)}

@@ -43,6 +43,14 @@ export const ServiceSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
 });
 
+export const NotifySchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().min(1, { message: "Email address is required" }),
+  title: z.string().min(1, { message: "Title is required" }),
+  description: z.string().min(1, { message: "Description is required" }),
+});
+
+
 export const SupplySchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   category: z.string().min(1, { message: "Category is required" }),

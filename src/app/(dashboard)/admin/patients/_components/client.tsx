@@ -24,15 +24,9 @@ const PatientClient = () => {
   const formattedData: PatientColumn[] =
     patientData?.data?.map((item) => ({
       id: item.id,
-      name:
-        item.firstName +
-        " " +
-        item.middleName +
-        " " +
-        item.lastName +
-        " " +
-        item.suffix,
+      name: item.firstName + " " + item.lastName,
       address: item.address ?? "N/A",
+      email: item.email ?? "N/A",
       sex: item.sex ?? "N/A",
       age: differenceInYears(new Date(), new Date(item.birthdate)),
       contactNumber: item.contactNumber,

@@ -10,6 +10,7 @@ export type PatientColumn = {
   id: string;
   name: string;
   address: string;
+  email: string;
   sex: string;
   age: any;
   contactNumber: string;
