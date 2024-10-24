@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Card, CardContent } from "../ui/card";
 import Link from "next/link";
@@ -10,7 +11,7 @@ const StatCard = ({
   icon
 }: {
   title: string;
-  description: string;
+  description: any;
   href?: string;
   icon: LucideIcon;
 }) => {
