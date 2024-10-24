@@ -2,8 +2,10 @@
 "use server";
 
 import db from "@/lib/db";
+import { formatTimeStamp } from "@/lib/utils";
 import { SupplySchema } from "@/lib/validators";
 import { z } from "zod";
+import { getUserFromCookies } from "@/hooks/use-user";
 
 export const getAllSupplies = async () => {
   try {
@@ -25,6 +27,7 @@ export const getAllSupplies = async () => {
 };
 
 export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
+  const { user } = await getUserFromCookies();
   const validatedField = SupplySchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -45,6 +48,16 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (supply) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${supply.name} on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "Supply created successfully", supply };
   } catch (error: any) {
     return {
@@ -59,6 +72,7 @@ export const updateSupply = async (
   values: z.infer<typeof SupplySchema>,
   supplyId: string
 ) => {
+  const { user } = await getUserFromCookies();
   const validatedField = SupplySchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -79,8 +93,18 @@ export const updateSupply = async (
       },
       where: {
         id: supplyId,
-      }
+      },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (supply) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} updated ${supply.name} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Supply updated successfully", supply };
   } catch (error: any) {
@@ -93,6 +117,7 @@ export const updateSupply = async (
 };
 
 export const deleteSupply = async (supplyId: string) => {
+  const { user } = await getUserFromCookies();
   if (!supplyId) {
     return { error: "Supply ID is required." };
   }
@@ -103,6 +128,16 @@ export const deleteSupply = async (supplyId: string) => {
         id: supplyId,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (supply) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} deleted ${supply.name} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Supply deleted successfully", supply };
   } catch (error: any) {

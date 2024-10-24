@@ -1,89 +1,79 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { fetchCalendarEvents } from "@/actions/appointments";
 import React, { useEffect, useState } from "react";
-import {
-  ActionEventArgs,
-  Day,
-  EventSettingsModel,
-  Inject,
-  Month,
-  ScheduleComponent,
-  ViewDirective,
-  ViewsDirective,
-  Week,
-} from "@syncfusion/ej2-react-schedule";
-import { registerLicense } from "@syncfusion/ej2-base";
 
-registerLicense(
-  "Ngo9BigBOggjHTQxAR8/V1NDaF5cWWtCf1JpRGZGfV5ycEVOal5ZTndWUj0eQnxTdEFiWX5YcnRXTmVZVkN0Vw=="
-);
-
-interface ScheduleEvent {
-  Id: number;
-  Subject: string;
-  StartTime: Date;
-  EndTime: Date;
-  IsAllDay: boolean;
-  Status?: string;
-  Priority?: string;
+export interface CalendarEvent {
+  id: string;
+  summary: string;
+  description?: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+  };
+  end: {
+    dateTime?: string;
+    date?: string;
+  };
 }
 
 const AppointmentClient = () => {
-  const [events, setEvents] = useState<ScheduleEvent[]>([]);
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
 
   useEffect(() => {
-    const savedEvents = localStorage.getItem("scheduleEvents");
-    if (savedEvents) {
-      setEvents(JSON.parse(savedEvents) as ScheduleEvent[]);
-    }
+    const getEvents = async () => {
+      try {
+        const calendarEvents = await fetchCalendarEvents();
+        setEvents(calendarEvents);
+      } catch (error) {
+        console.error("Error fetching calendar events:", error);
+      }
+    };
+
+    getEvents();
   }, []);
-
-  const saveEventsToLocalStorage = (updatedEvents: ScheduleEvent[]) => {
-    localStorage.setItem("scheduleEvents", JSON.stringify(updatedEvents));
-  };
-
-  const onActionComplete = (args: ActionEventArgs): void => {
-    let updatedEvents: ScheduleEvent[] = [];
-
-    if (args.requestType === "eventCreated") {
-      updatedEvents = [...events, ...(args.addedRecords as ScheduleEvent[])];
-    } else if (args.requestType === "eventChanged") {
-      updatedEvents = events.map((event) =>
-        event.Id === (args.changedRecords?.[0] as ScheduleEvent).Id
-          ? (args.changedRecords?.[0] as ScheduleEvent)
-          : event
-      );
-    } else if (args.requestType === "eventRemoved") {
-      updatedEvents = events.filter(
-        (event) => event.Id !== (args.deletedRecords?.[0] as ScheduleEvent).Id
-      );
-    }
-
-    setEvents(updatedEvents);
-    saveEventsToLocalStorage(updatedEvents); // Save updated events to localStorage
-  };
-
-  const eventSettings: EventSettingsModel = {
-    dataSource: events,
-  };
-
   return (
-    <div className="flex justify-center items-center">
-      <ScheduleComponent
-        height="700"
-        currentView="Month"
-        actionComplete={onActionComplete}
-        eventSettings={eventSettings}
-        selectedDate={new Date()}
-      >
-        <ViewsDirective>
-          <ViewDirective option="Day" />
-          <ViewDirective option="Week" />
-          <ViewDirective option="Month" />
-        </ViewsDirective>
-        <Inject services={[Day, Week, Month]} />
-      </ScheduleComponent>
+    <div>
+      <iframe
+        src="https://calendar.google.com/calendar/embed?src=casmaabadental%40gmail.com&amp;ctz=Asia%2FManila"
+        width="100%"
+        height="1000"
+        frameBorder="0"
+        scrolling="no"
+      ></iframe>
+
+      {/* <table className="min-w-full divide-y divide-gray-200">
+        <thead>
+          <tr>
+            <th className="px-6 py-3 bg-gray-50">Event Title</th>
+            <th className="px-6 py-3 bg-gray-50">Start Date</th>
+            <th className="px-6 py-3 bg-gray-50">End Date</th>
+            <th className="px-6 py-3 bg-gray-50">Description</th>
+          </tr>
+        </thead>
+        <tbody className="bg-white divide-y divide-gray-200">
+          {events.map((event) => (
+            <tr key={event.id}>
+              <td className="px-6 py-4">{event.summary || "No Title"}</td>
+              <td className="px-6 py-4">
+                {new Date(
+                  event.start.dateTime || event.start.date || ""
+                ).toLocaleString()}
+              </td>
+              <td className="px-6 py-4">
+                {new Date(
+                  event.end.dateTime || event.end.date || ""
+                ).toLocaleString()}
+              </td>
+              <td className="px-6 py-4">
+                {event.description || "No Description"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table> */}
     </div>
   );
 };

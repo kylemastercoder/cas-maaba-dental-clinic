@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
+import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
+import { formatTimeStamp } from "@/lib/utils";
 import { PatientSchema } from "@/lib/validators";
 import { z } from "zod";
 
@@ -25,6 +27,7 @@ export const getAllPatients = async () => {
 };
 
 export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
+  const { user } = await getUserFromCookies();
   const validatedField = PatientSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -71,6 +74,16 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (patient) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "Patient created successfully", patient };
   } catch (error: any) {
     return {
@@ -82,6 +95,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
 };
 
 export const updatePatient = async (values: z.infer<typeof PatientSchema>, patientId: string) => {
+  const { user } = await getUserFromCookies();
   const validatedField = PatientSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -131,6 +145,16 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
       }
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (patient) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} updated ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "Patient updated successfully", patient };
   } catch (error: any) {
     return {
@@ -142,6 +166,7 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
 };
 
 export const deletePatient = async (patientId: string) => {
+  const { user } = await getUserFromCookies();
   if (!patientId) {
     return { error: "Patient ID is required." };
   }
@@ -152,6 +177,16 @@ export const deletePatient = async (patientId: string) => {
         id: patientId,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (patient) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} deleted ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Patient deleted successfully", patient };
   } catch (error: any) {

@@ -16,7 +16,6 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   branch    Branch[]
-  logs Logs[]
 }
 
 model Patient {
@@ -36,7 +35,6 @@ model Patient {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  appointments  Appointments[]
   treatmentPlan TreatmentPlan[]
 }
 
@@ -71,25 +69,14 @@ model Supplies {
   updatedAt DateTime @updatedAt
 }
 
-model Appointments {
-  id        String   @id @default(cuid())
-  date      DateTime
-  time      String
-  status    String
-  type      String
-  title     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  patientId String?
-  patient   Patient? @relation(fields: [patientId], references: [id])
-}
-
 model TreatmentPlan {
   id            String   @id @default(cuid())
   toothNumber   Int
   diagnosis     String
   dentalRemarks String?
+  paymentMethod String
+  isPaid        Boolean  @default(false)
+  status        String   @default("Pending")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -105,7 +92,4 @@ model Logs {
   action    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  userId String?
-  user   User? @relation(fields: [userId], references: [id])
 }

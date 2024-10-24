@@ -7,6 +7,7 @@ import bcryptjs from "bcryptjs";
 import { UserLoginSchema, UserRegistrationSchema } from "@/lib/validators";
 import * as jose from "jose";
 import { cookies } from "next/headers";
+import { formatTimeStamp } from "@/lib/utils";
 
 export const getAllUsers = async () => {
   try {
@@ -82,6 +83,16 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
       return { error: "Invalid Password" };
     }
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (user) {
+      await db.logs.create({
+        data: {
+          action: `${user.name} logged in on ${loginTime}`,
+        },
+      });
+    }
+
     // Create JWT token
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
@@ -133,6 +144,16 @@ export const createUser = async (
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if(user) {
+      await db.logs.create({
+        data: {
+          action: `${user.name} created on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "User created successfully", user };
   } catch (error: any) {
     return {
@@ -173,6 +194,16 @@ export const updateUser = async (
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if(user) {
+      await db.logs.create({
+        data: {
+          action: `${user.name} updated on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "User updated successfully", user };
   } catch (error: any) {
     return {
@@ -192,6 +223,16 @@ export const deleteUser = async (userId: string) => {
         id: userId,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if(user) {
+      await db.logs.create({
+        data: {
+          action: `${user.name} deleted on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "User deleted successfully", user };
   } catch (error: any) {

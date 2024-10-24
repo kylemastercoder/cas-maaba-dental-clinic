@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
+import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
+import { formatTimeStamp } from "@/lib/utils";
 import { ServiceSchema } from "@/lib/validators";
 import { z } from "zod";
 
@@ -25,6 +27,7 @@ export const getAllServices = async () => {
 };
 
 export const createService = async (values: z.infer<typeof ServiceSchema>) => {
+  const { user } = await getUserFromCookies();
   const validatedField = ServiceSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -42,6 +45,16 @@ export const createService = async (values: z.infer<typeof ServiceSchema>) => {
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (service) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${service.name} on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "Service created successfully", service };
   } catch (error: any) {
     return {
@@ -56,6 +69,7 @@ export const updateService = async (
   values: z.infer<typeof ServiceSchema>,
   serviceId: string
 ) => {
+  const { user } = await getUserFromCookies();
   const validatedField = ServiceSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -76,6 +90,16 @@ export const updateService = async (
       },
     });
 
+    const loginTime = formatTimeStamp(new Date());
+
+    if (service) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} updated ${service.name} on ${loginTime}`,
+        },
+      });
+    }
+
     return { success: "Service updated successfully", service };
   } catch (error: any) {
     return {
@@ -87,6 +111,7 @@ export const updateService = async (
 };
 
 export const deleteService = async (serviceId: string) => {
+  const { user } = await getUserFromCookies();
   if (!serviceId) {
     return { error: "Service ID is required." };
   }
@@ -97,6 +122,16 @@ export const deleteService = async (serviceId: string) => {
         id: serviceId,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (service) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} deleted ${service.name} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Service deleted successfully", service };
   } catch (error: any) {

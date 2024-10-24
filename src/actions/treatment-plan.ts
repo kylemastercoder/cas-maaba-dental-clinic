@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
+import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
+import { formatTimeStamp } from "@/lib/utils";
 import { TreatmentPlanSchema } from "@/lib/validators";
 import { z } from "zod";
 
@@ -12,8 +14,8 @@ export const getAllTreatmentPlanByPatient = async (patientId: string) => {
         createdAt: "asc",
       },
       where: {
-        patientId
-      }
+        patientId,
+      },
     });
 
     if (!data) {
@@ -31,6 +33,7 @@ export const createTreatmentPlan = async (
   values: z.infer<typeof TreatmentPlanSchema>,
   patientId: string
 ) => {
+  const { user } = await getUserFromCookies();
   const validatedField = TreatmentPlanSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -38,7 +41,7 @@ export const createTreatmentPlan = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { toothNumber, service, diagnosis, remarks } = validatedField.data;
+  const { toothNumber, service, diagnosis, remarks, status, isPaid, paymentMethod } = validatedField.data;
 
   try {
     const treatmentPlan = await db.treatmentPlan.create({
@@ -48,8 +51,25 @@ export const createTreatmentPlan = async (
         diagnosis,
         dentalRemarks: remarks ?? "",
         patientId,
+        paymentMethod,
+        status,
+        isPaid
+      },
+      include: {
+        patient: true,
+        service: true,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (treatmentPlan) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${treatmentPlan.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Treatment plan created successfully", treatmentPlan };
   } catch (error: any) {

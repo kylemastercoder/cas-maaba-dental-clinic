@@ -4,8 +4,11 @@
 import { z } from "zod";
 import { BranchSchema } from "@/lib/validators";
 import db from "@/lib/db";
+import { formatTimeStamp } from "@/lib/utils";
+import { getUserFromCookies } from "@/hooks/use-user";
 
 export const createBranch = async (values: z.infer<typeof BranchSchema>) => {
+  const { user } = await getUserFromCookies();
   const validatedField = BranchSchema.safeParse(values);
 
   if (!validatedField.success) {
@@ -23,6 +26,16 @@ export const createBranch = async (values: z.infer<typeof BranchSchema>) => {
         userId: branchHead,
       },
     });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (branch) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${branch.name} on ${loginTime}`,
+        },
+      });
+    }
 
     return { success: "Branch created successfully", branch };
   } catch (error: any) {

@@ -48,6 +48,9 @@ const TreatmentModal = ({
           service: "",
           diagnosis: "",
           remarks: "",
+          isPaid: true,
+          paymentMethod: "",
+          status: "Completed",
         },
   });
 
@@ -139,6 +142,34 @@ const TreatmentModal = ({
                   placeholder="Enter dental remarks"
                   isRequired={false}
                   name="remarks"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.SELECT}
+                  label="Payment Method"
+                  selectOptions={[
+                    { label: "E-Wallet", value: "E-Wallet" },
+                    { label: "Bank Transfer", value: "Bank Transfer" },
+                    { label: "Credit Card", value: "Credit Card" },
+                    { label: "Cash", value: "Cash" },
+                    {
+                      label: "HMO",
+                      value: "HMO",
+                    },
+                  ]}
+                  placeholder="Select payment method"
+                  isRequired={true}
+                  name="paymentMethod"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.SWITCH}
+                  label="Is Paid"
+                  description="Check if the treatment plan is already paid."
+                  isRequired={true}
+                  name="isPaid"
                   disabled={isSaving}
                 />
                 <Button type="submit" disabled={isSaving} size="sm">

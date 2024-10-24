@@ -32,7 +32,15 @@ const Header = ({ user }: { user: User | null }) => {
       case "/admin/supplies":
         return <CustomBreadcrumb page="Supplies" />;
       case `/admin/patients/${params.patientId}/treatment-plan`:
-        return <CustomBreadcrumb subPage="Treatment Plan" page="Patients" subLink="/admin/patients" />;
+        return (
+          <CustomBreadcrumb
+            subPage="Treatment Plan"
+            page="Patients"
+            subLink="/admin/patients"
+          />
+        );
+      case "/admin/logs":
+        return <CustomBreadcrumb page="Logs" />;
       default:
         return "";
     }

@@ -55,5 +55,8 @@ export const TreatmentPlanSchema = z.object({
   toothNumber: z.coerce.number().min(1, { message: "Tooth number is required" }),
   service: z.string().min(1, { message: "Service is required" }),
   diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
+  paymentMethod: z.string().min(1, { message: "Payment method is required" }),
+  isPaid: z.boolean().optional(),
+  status: z.string().min(1, { message: "Status is required" }),
   remarks: z.string().optional(),
 });

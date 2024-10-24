@@ -3,12 +3,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
 
 export type TreatmentColumn = {
   id: string;
   service: string;
   diagnosis: string;
+  paymentMethod: string;
+  status: string;
   remarks: string;
   toothNumber: number;
   createdAt: string;
@@ -30,6 +33,21 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
   {
     accessorKey: "diagnosis",
     header: "Diagnosis",
+  },
+  {
+    accessorKey: "paymentMethod",
+    header: "Payment Method",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <Badge
+        variant={row.original.status === "Completed" ? "default" : "secondary"}
+      >
+        {row.original.status}
+      </Badge>
+    ),
   },
   {
     accessorKey: "remarks",

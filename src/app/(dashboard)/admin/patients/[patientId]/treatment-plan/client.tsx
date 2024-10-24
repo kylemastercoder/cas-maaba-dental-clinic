@@ -93,6 +93,8 @@ const TreatmentClient = ({
         toothNumber: item.toothNumber,
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
+        paymentMethod: item.paymentMethod,
+        status: item.status,
         createdAt: format(item.createdAt, "MMMM do, yyyy"),
       };
     }) || [];
@@ -159,7 +161,7 @@ const TreatmentClient = ({
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Patient History</h1>
+          <h1 className="font-semibold text-lg">Treatment Rendered</h1>
           <DataTable
             data={formattedData}
             searchKey="service"

@@ -24,3 +24,15 @@ export function parseAddress(address: string) {
     barangay,
   };
 }
+
+export const formatTimeStamp = (date: Date): string => {
+  return `${date.toLocaleString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  })} at ${date.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  })}`;
+};
