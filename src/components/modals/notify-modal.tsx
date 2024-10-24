@@ -12,6 +12,7 @@ import { NotifySchema } from "@/lib/validators";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { sendEmail } from "@/lib/send-email";
 
 const NotifyModal = ({
   isOpen,
@@ -33,20 +34,26 @@ const NotifyModal = ({
       email: patientEmail,
       title: "",
       description: "",
+      followUpDate: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof NotifySchema>) {
     try {
       setLoading(true);
-      //   backend call
-      console.log(values);
-      setLoading(false);
-      onClose();
-      toast.success("Notification sent successfully.");
+      const response = await sendEmail(values);
+      if (response.success) {
+        toast.success(response.message);
+        onClose();
+        window.location.reload();
+      } else {
+        toast.error(response.message);
+      }
     } catch (error) {
       console.error(error);
       toast.error("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -94,6 +101,16 @@ const NotifyModal = ({
                 label="Description"
                 isRequired={true}
                 name="description"
+                disabled={loading}
+              />
+              <CustomFormField
+                label="Follow-up Date"
+                name="followUpDate"
+                placeholder="dd/mm/yyyy"
+                isRequired
+                type="date"
+                fieldType={FormFieldType.DATE_PICKER}
+                control={form.control}
                 disabled={loading}
               />
               <Button type="submit" disabled={loading} size="sm">

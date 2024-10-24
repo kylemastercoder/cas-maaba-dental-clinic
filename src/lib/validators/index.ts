@@ -48,6 +48,7 @@ export const NotifySchema = z.object({
   email: z.string().min(1, { message: "Email address is required" }),
   title: z.string().min(1, { message: "Title is required" }),
   description: z.string().min(1, { message: "Description is required" }),
+  followUpDate: z.string().min(1, { message: "Follow-up date is required" }),
 });
 
 

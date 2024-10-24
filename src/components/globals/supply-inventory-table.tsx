@@ -31,7 +31,7 @@ const SupplyInventoryTable = ({ data }: { data: Supplies[] }) => {
               data.map((supply) => (
                 <TableRow key={supply.id}>
                   <TableCell>{supply.name}</TableCell>
-                  <TableCell>{supply.quantity}</TableCell>
+                  <TableCell>{supply.quantity - supply.used}</TableCell>
                   <TableCell>
                     <Badge variant="destructive">Running out of stock</Badge>
                   </TableCell>

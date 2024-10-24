@@ -39,11 +39,9 @@ const getAgeSexDistribution = (patients: any) => {
   patients.forEach((patient: any) => {
     const age = calculateAge(patient.birthdate);
     const sex = patient.sex?.toLowerCase(); // Assuming sex is "Male" or "Female"
-    
+
     // Find the corresponding bracket
-    const bracket = distribution.find(
-      (br) => age >= br.min && age <= br.max
-    );
+    const bracket = distribution.find((br) => age >= br.min && age <= br.max);
 
     if (bracket) {
       if (sex === "male") {
@@ -62,24 +60,30 @@ const AdminPage = async () => {
   const supplies = await db.supplies.findMany();
   const services = await db.service.findMany();
   const staff = await db.user.findMany();
-  const runningSupplies = await db.supplies.findMany({
-    where: {
-      quantity: {
-        lte: 10,
-      },
-    },
-  });
+  const runningSupplies = supplies
+    .map((supply) => ({
+      ...supply,
+      remaining: supply.quantity - supply.used,
+    }))
+    .filter((supply) => supply.remaining <= 10);
 
   const totalUsed = supplies.reduce((acc, supply) => acc + supply.used, 0);
-  const totalRemaining = supplies.reduce((acc, supply) => acc + supply.quantity, 0);
-  
+  const totalRemaining = supplies.reduce(
+    (acc, supply) => acc + supply.quantity,
+    0
+  );
+
   const pieData = [
     { label: "Supplies Used", value: totalUsed, fill: "hsl(var(--chart-5))" },
-    { label: "Remaining Supplies", value: totalRemaining, fill: "hsl(var(--chart-3))" },
+    {
+      label: "Remaining Supplies",
+      value: totalRemaining,
+      fill: "hsl(var(--chart-3))",
+    },
   ];
 
   const ageSexDistribution = getAgeSexDistribution(patient);
-  
+
   return (
     <div>
       <div className="grid md:grid-cols-4 grid-cols-1 gap-6 mt-5">
