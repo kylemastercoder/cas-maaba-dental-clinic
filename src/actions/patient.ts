@@ -194,6 +194,7 @@ export const deletePatient = async (patientId: string) => {
 
     return { success: "Patient deleted successfully", patient };
   } catch (error: any) {
+    console.error(error);
     return {
       error: `Failed to delete patient. Please try again. ${error.message || ""}`,
     };

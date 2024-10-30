@@ -22,9 +22,9 @@ import {
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useDeleteUser } from "@/data/user";
 import { useParams, useRouter } from "next/navigation";
 import NotifyModal from "@/components/modals/notify-modal";
+import { useDeletePatient } from "@/data/patient";
 
 interface CellActionProps {
   data: PatientColumn;
@@ -40,7 +40,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
+  const { mutate: deleteUser, isPending: isDeleting } = useDeletePatient();
 
   const onDelete = async () => {
     deleteUser(data.id, {
