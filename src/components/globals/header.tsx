@@ -58,7 +58,7 @@ const Header = ({ user }: { user: User | null }) => {
 
   return (
     <div className="flex items-center justify-between py-5 border-b px-5">
-      <div className="md:block hidden">{user?.role === "Administrator" ? getHeaderText() : `${user?.branch[0].name}`}</div>
+      <div className="md:block hidden">{user?.role === "Administrator" && !params.branchId ? getHeaderText() : `${user?.branch[0].name}`}</div>
       <div className="flex items-center gap-2">
         <div className="flex items-center space-x-2">
           <Switch

@@ -121,7 +121,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href={`${user?.role === "Administrator" ? "/admin" : `/${params.branchId}`}`}>
+              <a href={`${user?.role === "Administrator" && !params.branchId ? "/admin" : `/${params.branchId}`}`}>
                 <Image
                   src="/images/logo-icon.png"
                   alt="Logo"
