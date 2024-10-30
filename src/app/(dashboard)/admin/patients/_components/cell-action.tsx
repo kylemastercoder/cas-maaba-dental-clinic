@@ -45,6 +45,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteUser(data.id, {
       onSuccess: () => {
         setOpen(false);
+        window.location.reload();
       },
     });
   };

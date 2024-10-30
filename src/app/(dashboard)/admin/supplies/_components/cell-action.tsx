@@ -14,7 +14,6 @@ import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useRouter } from "next/navigation";
 import { SupplyColumn } from "./column";
 import { useDeleteSupply } from "@/data/supply";
 import SupplyForm from "@/components/modals/supply-modal";
@@ -26,7 +25,6 @@ interface CellActionProps {
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [branches, setBranches] = useState<Branch[]>([]);
   useEffect(() => {
@@ -49,14 +47,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteSupply(data.id, {
       onSuccess: () => {
         setOpen(false);
-        router.refresh();
+        window.location.reload();
       },
     });
   };
 
   const onUpdate = () => {
     setInitialData(data);
-    router.refresh();
+    window.location.reload();
     setFormOpen(true);
   };
 
