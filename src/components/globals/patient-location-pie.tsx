@@ -19,7 +19,7 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff7f50", "#d0ed57", "#8dd1e1"
 
 export function PatientLocation({ data }: { data: any[] }) {
   return (
-    <Card className="md:h-[405px]">
+    <Card className="md:h-[405px] w-full">
       <CardHeader className="pb-0">
         <CardTitle>Patient Location Distribution</CardTitle>
       </CardHeader>

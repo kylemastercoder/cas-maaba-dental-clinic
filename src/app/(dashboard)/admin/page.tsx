@@ -120,13 +120,13 @@ const AdminPage = async () => {
         />
       </div>
       <div className="mt-6 mb-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
-        <div className="col-span-4">
+        <div className="md:col-span-4">
           <PatientLocation data={locationDistribution} />
           <div className="mt-6">
             <SupplyInventoryTable data={runningSupplies} />
           </div>
         </div>
-        <div className="col-span-6">
+        <div className="md:col-span-6">
           <AgeSexBar data={ageSexDistribution} />
         </div>
       </div>
