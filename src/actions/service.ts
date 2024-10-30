@@ -35,13 +35,14 @@ export const createService = async (values: z.infer<typeof ServiceSchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, description } = validatedField.data;
+  const { name, description, branchId } = validatedField.data;
 
   try {
     const service = await db.service.create({
       data: {
         name,
         description,
+        branchId
       },
     });
 
@@ -77,13 +78,14 @@ export const updateService = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, description } = validatedField.data;
+  const { name, description, branchId } = validatedField.data;
 
   try {
     const service = await db.service.update({
       data: {
         name,
         description,
+        branchId
       },
       where: {
         id: serviceId,

@@ -26,6 +26,9 @@ export const getUserFromCookies = async () => {
       where: {
         id: userId,
       },
+      include: {
+        branch: true,
+      }
     });
 
     if (!user) {

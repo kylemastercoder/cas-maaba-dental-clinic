@@ -13,14 +13,19 @@ import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveSupply } from "@/data/supply";
+import { Branch } from "@prisma/client";
+import { useParams } from "next/navigation";
 
 const SupplyForm = ({
   initialData,
   onClose,
+  branches,
 }: {
   initialData: any;
   onClose: () => void;
+  branches: Branch[];
 }) => {
+  const params = useParams();
   const title = initialData ? "Edit Supply" : "Add Supply";
   const description = initialData
     ? "Make sure to click save changes after you update the supply."
@@ -32,6 +37,7 @@ const SupplyForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          branchId: initialData.branchId,
         }
       : {
           name: "",
@@ -39,6 +45,9 @@ const SupplyForm = ({
           unit: "",
           stocks: 0,
           used: 0,
+          branchId: Array.isArray(params.branchId)
+            ? params.branchId[0]
+            : params.branchId ?? "",
         },
   });
 
@@ -96,6 +105,21 @@ const SupplyForm = ({
                   name="unit"
                   disabled={isSaving}
                 />
+                {!params.branchId && (
+                  <CustomFormField
+                    label="Branch"
+                    name="branchId"
+                    placeholder="Select your branch"
+                    isRequired
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    selectOptions={branches.map((option) => ({
+                      label: option.name,
+                      value: option.id,
+                    }))}
+                    disabled={isSaving}
+                  />
+                )}
                 <div className="grid grid-cols-2 gap-4">
                   <CustomFormField
                     control={form.control}

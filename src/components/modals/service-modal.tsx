@@ -14,6 +14,7 @@ import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveService } from "@/data/service";
 import { Branch } from "@prisma/client";
+import { useParams } from "next/navigation";
 
 const ServiceForm = ({
   initialData,
@@ -24,6 +25,7 @@ const ServiceForm = ({
   onClose: () => void;
   branches: Branch[];
 }) => {
+  const params = useParams();
   const title = initialData ? "Edit Service" : "Add Service";
   const description = initialData
     ? "Make sure to click save changes after you update the service."
@@ -35,11 +37,14 @@ const ServiceForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          branchId: initialData.branchId,
         }
       : {
           name: "",
           description: "",
-          branchId: ""
+          branchId: Array.isArray(params.branchId)
+            ? params.branchId[0]
+            : params.branchId ?? "",
         },
   });
 
@@ -73,19 +78,21 @@ const ServiceForm = ({
                   name="name"
                   disabled={isSaving}
                 />
-                <CustomFormField
-                  label="Branch"
-                  name="branchId"
-                  placeholder="Select your branch"
-                  isRequired
-                  fieldType={FormFieldType.SELECT}
-                  control={form.control}
-                  selectOptions={branches.map((option) => ({
-                    label: option.name,
-                    value: option.id,
-                  }))}
-                  disabled={isSaving}
-                />
+                {!params.branchId && (
+                  <CustomFormField
+                    label="Branch"
+                    name="branchId"
+                    placeholder="Select your branch"
+                    isRequired
+                    fieldType={FormFieldType.SELECT}
+                    control={form.control}
+                    selectOptions={branches.map((option) => ({
+                      label: option.name,
+                      value: option.id,
+                    }))}
+                    disabled={isSaving}
+                  />
+                )}
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.TEXTAREA}

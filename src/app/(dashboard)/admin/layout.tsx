@@ -13,7 +13,7 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   }
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar user={user} />
       <SidebarInset>
         <Header user={user} />
         <div className="px-5 py-3">{children}</div>

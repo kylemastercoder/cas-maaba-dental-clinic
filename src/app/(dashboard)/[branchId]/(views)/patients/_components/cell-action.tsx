@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ServiceColumn } from "./column";
+import { PatientColumn } from "./column";
 
 import {
   DropdownMenu,
@@ -11,53 +11,44 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Bell,
+  BriefcaseMedical,
+  Copy,
+  Edit,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
-import { useRouter } from "next/navigation";
-import { useDeleteService } from "@/data/service";
-import ServiceForm from "@/components/modals/service-modal";
-import { getAllBranches } from "@/actions/branch";
-import { Branch } from "@prisma/client";
+import { useDeleteUser } from "@/data/user";
+import { useParams, useRouter } from "next/navigation";
+import NotifyModal from "@/components/modals/notify-modal";
 
 interface CellActionProps {
-  data: ServiceColumn;
+  data: PatientColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
+  const params = useParams();
   const [open, setOpen] = useState(false);
-  const [branches, setBranches] = useState<Branch[]>([]);
-  useEffect(() => {
-    const fetchBranches = async () => {
-      const response = await getAllBranches();
-      setBranches(response?.data || []);
-    };
-    fetchBranches();
-  }, []);
-  const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<ServiceColumn | null>(null);
+  const [openNotifyModal, setOpenNotifyModal] = useState(false);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
+  const { mutate: deleteUser, isPending: isDeleting } = useDeleteUser();
 
   const onDelete = async () => {
-    deleteService(data.id, {
+    deleteUser(data.id, {
       onSuccess: () => {
         setOpen(false);
-        router.refresh();
+        window.location.reload();
       },
     });
-  };
-
-  const onUpdate = () => {
-    setInitialData(data);
-    router.refresh();
-    setFormOpen(true);
   };
 
   return (
@@ -69,13 +60,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onConfirm={onDelete}
       />
 
-      {formOpen && (
-        <ServiceForm
-          branches={branches}
-          initialData={initialData}
-          onClose={() => setFormOpen(false)}
-        />
-      )}
+      <NotifyModal
+        patientName={data.name}
+        patientEmail={data.email}
+        isOpen={openNotifyModal}
+        onClose={() => setOpenNotifyModal(false)}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -85,7 +75,21 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onUpdate}>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`${params.branchId ? `/${params.branchId}/patients/${data.id}/treatment-plan` : `/admin/patients/${data.id}/treatment-plan`}`)
+            }
+          >
+            <BriefcaseMedical className="w-4 h-4 mr-2" />
+            Treatment Plan
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
+            <Bell className="w-4 h-4 mr-2" />
+            Notify for Follow-up
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => router.push(`${params.branchId ? `/${params.branchId}/patients/${data.id}` : `/admin/patients/${data.id}`}`)}
+          >
             <Edit className="w-4 h-4 mr-2" />
             Update
           </DropdownMenuItem>

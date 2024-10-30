@@ -6,10 +6,13 @@ import { toast } from "sonner";
 import { columns, SupplyColumn } from "./column";
 import { format } from "date-fns";
 import { useGetSupplies } from "@/data/supply";
+import { useParams } from "next/navigation";
 
 const SupplyClient = () => {
   const { data: supplyData, error, isLoading } = useGetSupplies();
   const [isMounted, setIsMounted] = useState(false);
+  const params = useParams();
+  const branchId = params.branchId;
 
   useEffect(() => {
     setIsMounted(true);
@@ -22,7 +25,8 @@ const SupplyClient = () => {
   }, [error]);
 
   const formattedData: SupplyColumn[] =
-    supplyData?.data?.map((item) => ({
+    supplyData?.data?.filter((item) => (branchId ? item.branchId === branchId : true))
+    .map((item) => ({
       id: item.id,
       name: item.name,
       category: item.category,

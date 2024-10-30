@@ -6,25 +6,37 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 
-export type ServiceColumn = {
+export type PatientColumn = {
   id: string;
   name: string;
-  description: string;
+  address: string;
+  email: string;
+  sex: string;
+  age: any;
+  contactNumber: string;
   createdAt: string;
-  branchId: string;
 };
 
-export const columns: ColumnDef<ServiceColumn>[] = [
+export const columns: ColumnDef<PatientColumn>[] = [
   {
     accessorKey: "name",
     header: "Name",
   },
   {
-    accessorKey: "description",
-    header: "Description",
-    cell: ({row}) => (
-      <div className="truncate w-[500px]">{row.original.description}</div>
-    )
+    accessorKey: "address",
+    header: "Address",
+  },
+  {
+    accessorKey: "sex",
+    header: "Sex",
+  },
+  {
+    accessorKey: "age",
+    header: "Age",
+  },
+  {
+    accessorKey: "contactNumber",
+    header: "Contact Number",
   },
   {
     accessorKey: "createdAt",

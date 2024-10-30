@@ -6,7 +6,13 @@ import { Branch } from "@prisma/client";
 import { useBranchModal } from "@/hooks/use-branch-modal";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import { Check, ChevronsUpDown, PlusCircle, StoreIcon } from "lucide-react";
+import {
+  Check,
+  ChevronLeft,
+  ChevronsUpDown,
+  PlusCircle,
+  StoreIcon,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Command,
@@ -27,10 +33,7 @@ interface BranchSwitcherProps extends PopoverTriggerProps {
   className?: string;
 }
 
-const BranchSwitcher = ({
-  items = [],
-  className,
-}: BranchSwitcherProps) => {
+const BranchSwitcher = ({ items = [], className }: BranchSwitcherProps) => {
   const [open, setOpen] = useState(false);
   const branchModal = useBranchModal();
   const params = useParams();
@@ -108,6 +111,18 @@ const BranchSwitcher = ({
                 Create Branch
               </CommandItem>
             </CommandGroup>
+            {params.branchId && (
+              <CommandGroup>
+                <CommandItem
+                  onSelect={() => {
+                    router.push("/admin");
+                  }}
+                >
+                  <ChevronLeft className="mr-2 h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+                  Back to Admin
+                </CommandItem>
+              </CommandGroup>
+            )}
           </CommandList>
         </Command>
       </PopoverContent>

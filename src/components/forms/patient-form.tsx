@@ -4,7 +4,7 @@ import { parseAddress } from "@/lib/utils";
 import { PatientSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Branch, Patient } from "@prisma/client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,9 +17,16 @@ import { Loader2 } from "lucide-react";
 import { useAddressData } from "@/lib/address-selection";
 import { useSavePatient } from "@/data/patient";
 
-const PatientForm = ({ initialData, branches }: { initialData: Patient | null; branches: Branch[] }) => {
+const PatientForm = ({
+  initialData,
+  branches,
+}: {
+  initialData: Patient | null;
+  branches: Branch[];
+}) => {
   const router = useRouter();
   const addressComponents = parseAddress(initialData?.address ?? "");
+  const params = useParams();
 
   const title = initialData ? "Edit Patient" : "Add Patient";
   const description = initialData
@@ -67,15 +74,18 @@ const PatientForm = ({ initialData, branches }: { initialData: Patient | null; b
           maritalStatus: "",
           occupation: "",
           contactNumber: "",
-          branchId: "",
+          branchId: Array.isArray(params.branchId)
+            ? params.branchId[0]
+            : params.branchId ?? "",
         },
   });
 
-  const { mutate: savePatient, isPending: isLoading } = useSavePatient(initialData);
+  const { mutate: savePatient, isPending: isLoading } =
+    useSavePatient(initialData);
 
   async function onSubmit(values: z.infer<typeof PatientSchema>) {
     savePatient(values, {
-      onSuccess: () => router.push("/admin/patients"),
+      onSuccess: () => router.push(`${params.branchId ? `/${params.branchId}/patients` : "/admin/patients"}`),
     });
   }
 
@@ -284,19 +294,21 @@ const PatientForm = ({ initialData, branches }: { initialData: Patient | null; b
               disabled={isLoading || !selectedMunicipalityName}
             />
           </div>
-          <CustomFormField
-            label="Branch"
-            name="branchId"
-            placeholder="Select your branch"
-            isRequired
-            fieldType={FormFieldType.SELECT}
-            control={form.control}
-            selectOptions={branches.map((option) => ({
-              label: option.name,
-              value: option.id,
-            }))}
-            disabled={isLoading}
-          />
+          {!params.branchId && (
+            <CustomFormField
+              label="Branch"
+              name="branchId"
+              placeholder="Select your branch"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              selectOptions={branches.map((option) => ({
+                label: option.name,
+                value: option.id,
+              }))}
+              disabled={isLoading}
+            />
+          )}
         </div>
         <div className="flex items-center justify-end mt-5">
           <div className="space-x-3">

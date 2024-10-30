@@ -35,7 +35,7 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId } = validatedField.data;
 
   try {
     const supply = await db.supplies.create({
@@ -45,6 +45,7 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
         used: used || 0,
         unit,
         quantity: stocks,
+        branchId,
       },
     });
 
@@ -80,7 +81,7 @@ export const updateSupply = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId } = validatedField.data;
 
   try {
     const supply = await db.supplies.update({
@@ -90,6 +91,7 @@ export const updateSupply = async (
         used: used || 0,
         unit,
         quantity: stocks,
+        branchId,
       },
       where: {
         id: supplyId,

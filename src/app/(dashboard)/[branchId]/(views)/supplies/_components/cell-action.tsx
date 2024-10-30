@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ServiceColumn } from "./column";
 
 import {
   DropdownMenu,
@@ -16,13 +15,14 @@ import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useRouter } from "next/navigation";
-import { useDeleteService } from "@/data/service";
-import ServiceForm from "@/components/modals/service-modal";
-import { getAllBranches } from "@/actions/branch";
+import { SupplyColumn } from "./column";
+import { useDeleteSupply } from "@/data/supply";
+import SupplyForm from "@/components/modals/supply-modal";
 import { Branch } from "@prisma/client";
+import { getAllBranches } from "@/actions/branch";
 
 interface CellActionProps {
-  data: ServiceColumn;
+  data: SupplyColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -37,19 +37,19 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     fetchBranches();
   }, []);
   const [formOpen, setFormOpen] = useState(false);
-  const [initialData, setInitialData] = useState<ServiceColumn | null>(null);
+  const [initialData, setInitialData] = useState<SupplyColumn | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const { mutate: deleteService, isPending: isDeleting } = useDeleteService();
+  const { mutate: deleteSupply, isPending: isDeleting } = useDeleteSupply();
 
   const onDelete = async () => {
-    deleteService(data.id, {
+    deleteSupply(data.id, {
       onSuccess: () => {
         setOpen(false);
-        router.refresh();
+        window.location.reload();
       },
     });
   };
@@ -70,7 +70,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       />
 
       {formOpen && (
-        <ServiceForm
+        <SupplyForm
           branches={branches}
           initialData={initialData}
           onClose={() => setFormOpen(false)}

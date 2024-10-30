@@ -4,7 +4,11 @@ import { useParams, usePathname } from "next/navigation";
 import React from "react";
 import UserProfile from "./user-profile";
 import CustomBreadcrumb from "./custom-breadcrumb";
-import { User } from "@prisma/client";
+import { User as PrismaUser } from "@prisma/client";
+
+interface User extends PrismaUser {
+  branch: { name: string }[];
+}
 import { Switch } from "../ui/switch";
 import { Label } from "../ui/label";
 import { useTheme } from "next-themes";
@@ -54,7 +58,7 @@ const Header = ({ user }: { user: User | null }) => {
 
   return (
     <div className="flex items-center justify-between py-5 border-b px-5">
-      <div className="md:block hidden">{getHeaderText()}</div>
+      <div className="md:block hidden">{user?.role === "Administrator" ? getHeaderText() : `${user?.branch[0].name}`}</div>
       <div className="flex items-center gap-2">
         <div className="flex items-center space-x-2">
           <Switch

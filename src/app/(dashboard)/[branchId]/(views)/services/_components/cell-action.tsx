@@ -49,7 +49,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     deleteService(data.id, {
       onSuccess: () => {
         setOpen(false);
-        router.refresh();
+        window.location.reload();
       },
     });
   };

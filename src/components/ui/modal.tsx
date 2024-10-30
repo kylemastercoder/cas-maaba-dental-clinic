@@ -26,6 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
   const onChange = (open: boolean) => {
     if (!open) {
       onClose();
+      window.location.reload();
     }
   };
 

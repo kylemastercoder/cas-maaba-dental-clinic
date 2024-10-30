@@ -2,6 +2,9 @@ import { redirect } from "next/navigation";
 import React from "react";
 import db from "@/lib/db";
 import { getUserFromCookies } from "@/hooks/use-user";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import Header from "@/components/globals/header";
 
 const DashboardLayout = async ({
   children,
@@ -45,10 +48,13 @@ const DashboardLayout = async ({
   }
 
   return (
-    <>
-      <div>This will be the sidebar</div>
-      {children}
-    </>
+    <SidebarProvider>
+      <AppSidebar user={user} />
+      <SidebarInset>
+        <Header user={user} />
+        <div className="px-5 py-3">{children}</div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 
