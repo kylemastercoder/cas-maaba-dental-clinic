@@ -50,7 +50,7 @@ const TreatmentModal = ({
           remarks: "",
           isPaid: true,
           paymentMethod: "",
-          status: "Completed",
+          status: "",
         },
   });
 
@@ -165,11 +165,16 @@ const TreatmentModal = ({
                 />
                 <CustomFormField
                   control={form.control}
-                  fieldType={FormFieldType.SWITCH}
-                  label="Is Paid"
-                  description="Check if the treatment plan is already paid."
+                  fieldType={FormFieldType.SELECT}
+                  label="Status"
+                  selectOptions={[
+                    { label: "Pending", value: "Pending" },
+                    { label: "Not Yet Paid", value: "Not Yet Paid" },
+                    { label: "Paid", value: "Paid" },
+                  ]}
+                  placeholder="Select status"
                   isRequired={true}
-                  name="isPaid"
+                  name="status"
                   disabled={isSaving}
                 />
                 <Button type="submit" disabled={isSaving} size="sm">

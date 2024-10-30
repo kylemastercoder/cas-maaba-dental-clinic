@@ -238,7 +238,11 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               }
               fromYear={DATE_YEAR_MIN}
               toYear={new Date().getFullYear()}
-              disabled={(date) => date > new Date()}
+              disabled={(date) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                return date < today;
+              }}
             />
           </PopoverContent>
         </Popover>
