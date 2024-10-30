@@ -52,6 +52,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
     maritalStatus,
     occupation,
     contactNumber,
+    branchId
   } = validatedField.data;
 
   const address = `${houseNumber}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -71,6 +72,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
         maritalStatus,
         occupation,
         contactNumber,
+        branchId
       },
     });
 
@@ -120,6 +122,7 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
     maritalStatus,
     occupation,
     contactNumber,
+    branchId
   } = validatedField.data;
 
   const address = `${houseNumber}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -139,6 +142,7 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
         maritalStatus,
         occupation,
         contactNumber,
+        branchId
       },
       where: {
         id: patientId,

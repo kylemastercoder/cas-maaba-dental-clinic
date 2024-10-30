@@ -24,12 +24,10 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<
 
 interface BranchSwitcherProps extends PopoverTriggerProps {
   items: Branch[];
-  isOpen: boolean;
   className?: string;
 }
 
 const BranchSwitcher = ({
-  isOpen,
   items = [],
   className,
 }: BranchSwitcherProps) => {
@@ -55,25 +53,21 @@ const BranchSwitcher = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        {isOpen ? (
-          <Button
-            variant="outline"
-            size="sm"
-            role="combobox"
-            aria-expanded={open}
-            aria-label="Select a branch"
-            className={cn(
-              `justify-between w-full text-neutral-700 dark:text-neutral-200 text-sm`,
-              className
-            )}
-          >
-            <StoreIcon className="mr-2 h-5 w-5 text-neutral-700 dark:text-neutral-200" />
-            {currentBranch?.label || "Select a branch"}
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        ) : (
-          <StoreIcon className="h-5 w-5 flex-shrink-0 text-neutral-700 dark:text-neutral-200" />
-        )}
+        <Button
+          variant="outline"
+          size="sm"
+          role="combobox"
+          aria-expanded={open}
+          aria-label="Select a branch"
+          className={cn(
+            `justify-between w-full text-neutral-700 dark:text-neutral-200 text-sm`,
+            className
+          )}
+        >
+          <StoreIcon className="mr-2 h-5 w-5 text-neutral-700 dark:text-neutral-200" />
+          {currentBranch?.label || "Select a branch"}
+          <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-full">
         <Command>

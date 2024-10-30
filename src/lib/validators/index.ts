@@ -36,11 +36,13 @@ export const PatientSchema = z.object({
   maritalStatus: z.string().min(1, { message: "Marital status is required" }),
   occupation: z.string().min(1, { message: "Occupation is required" }),
   contactNumber: z.string().min(1, { message: "Contact number is required" }),
+  branchId: z.string().min(1, { message: "Branch is required" }),
 });
 
 export const ServiceSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string().min(1, { message: "Description is required" }),
+  branchId: z.string().min(1, { message: "Branch is required" }),
 });
 
 export const NotifySchema = z.object({

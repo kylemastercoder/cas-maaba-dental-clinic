@@ -21,7 +21,7 @@ const Services = async () => {
   // Hydrate the query data for the client
   const dehydratedState = dehydrate(queryClient);
   return (
-    <div className="grid flex-1 items-start gap-4 md:gap-8">
+    <div className="md:grid items-start gap-4 md:gap-8">
       <div className="flex items-center justify-between">
         <Heading
           title="Supply Records"

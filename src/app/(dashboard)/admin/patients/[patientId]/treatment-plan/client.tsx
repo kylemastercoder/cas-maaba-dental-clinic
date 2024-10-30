@@ -109,7 +109,7 @@ const TreatmentClient = ({
       <Card>
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg">Patient Information</h1>
-          <div className="grid w-full grid-cols-2 gap-5 mt-2">
+          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Name: </p>
               <p>{fullName}</p>
@@ -119,7 +119,7 @@ const TreatmentClient = ({
               <p>{patient?.sex}</p>
             </div>
           </div>
-          <div className="grid w-full grid-cols-2 gap-5 mt-3">
+          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Email Address: </p>
               <p>{patient?.email}</p>
@@ -129,7 +129,7 @@ const TreatmentClient = ({
               <p>{patient?.facebookName}</p>
             </div>
           </div>
-          <div className="grid w-full grid-cols-2 gap-5 mt-3">
+          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Birthday: </p>
               <p>
@@ -147,7 +147,7 @@ const TreatmentClient = ({
               </p>
             </div>
           </div>
-          <div className="grid w-full grid-cols-2 gap-5 mt-3">
+          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Occupation: </p>
               <p>{patient?.occupation}</p>
@@ -172,13 +172,13 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg">Dental Chart</h1>
-          <div className="grid grid-cols-10 mt-2 gap-5">
+          <div className="grid md:grid-cols-10 grid-cols-1 mt-2 gap-5">
             <div className="col-span-6 flex flex-col">
               <div className="flex justify-center items-center gap-1">
                 {UPPER_TEETH.map((tooth) => (
                   <div
                     key={tooth}
-                    className={`relative w-[50px] h-[50px] ${
+                    className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                       patient?.treatmentPlan.find(
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
@@ -202,7 +202,7 @@ const TreatmentClient = ({
                       alt="Tooth"
                       fill
                     />
-                    <p className="text-xs absolute inset-0 flex items-center mb-2 font-semibold justify-center">
+                    <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                       {tooth}
                     </p>
                     <div
@@ -214,13 +214,13 @@ const TreatmentClient = ({
                 ))}
               </div>
               <div className="flex justify-center items-center gap-1 mt-2">
-                <p className="mx-10 font-semibold">RIGHT</p>
+                <p className="md:mx-10 mx-2 md:text-md text-sm font-semibold">RIGHT</p>
                 <div className="flex items-center justify-center flex-col">
                   <div className="flex items-center gap-1">
                     {UPPER_MIDDLE_TEETH.map((tooth) => (
                       <div
                         key={tooth}
-                        className={`relative w-[50px] h-[50px] ${
+                        className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                           patient?.treatmentPlan.find(
                             (t) =>
                               t.toothNumber === tooth &&
@@ -246,7 +246,7 @@ const TreatmentClient = ({
                           alt="Tooth"
                           fill
                         />
-                        <p className="text-xs absolute inset-0 flex items-center mb-2 font-semibold justify-center">
+                        <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                           {tooth}
                         </p>
                         <div
@@ -257,13 +257,13 @@ const TreatmentClient = ({
                       </div>
                     ))}
                   </div>
-                  <p className="font-semibold">lingual</p>
+                  <p className="font-semibold md:text-md text-sm">lingual</p>
                   <div className="flex items-center gap-1">
                     <div className="flex items-center gap-1">
                       {LOWER_MIDDLE_TEETH.map((tooth) => (
                         <div
                           key={tooth}
-                          className={`relative w-[50px] h-[50px] ${
+                          className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                             patient?.treatmentPlan.find(
                               (t) =>
                                 t.toothNumber === tooth &&
@@ -289,7 +289,7 @@ const TreatmentClient = ({
                             alt="Tooth"
                             fill
                           />
-                          <p className="text-xs absolute inset-0 flex items-center mb-2 font-semibold justify-center">
+                          <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                             {tooth}
                           </p>
                           <div
@@ -302,7 +302,7 @@ const TreatmentClient = ({
                     </div>
                   </div>
                 </div>
-                <p className="mx-10 font-semibold">LEFT</p>
+                <p className="md:mx-10 mx-2 font-semibold md:text-md text-sm">LEFT</p>
               </div>
               <div className="flex justify-center items-center gap-1 mt-2">
                 {LOWER_TEETH.map((tooth) => (
@@ -332,7 +332,7 @@ const TreatmentClient = ({
                       alt="Tooth"
                       fill
                     />
-                    <p className="text-xs absolute inset-0 flex items-center mb-2 font-semibold justify-center">
+                    <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                       {tooth}
                     </p>
                     <div

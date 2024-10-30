@@ -13,7 +13,7 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
     },
   });
   return (
-    <div className="grid flex-1 items-start gap-4 md:gap-8">
+    <div className="md:grid items-start gap-4 md:gap-8">
       <Heading
         title={`Treatment Plan`}
         description="A detailed overview of the patient's treatment, including personal information, medical history, dental chart, and ongoing care for improved dental health."

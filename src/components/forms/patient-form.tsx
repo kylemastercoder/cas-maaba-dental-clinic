@@ -3,7 +3,7 @@
 import { parseAddress } from "@/lib/utils";
 import { PatientSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Patient } from "@prisma/client";
+import { Branch, Patient } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,7 @@ import { Loader2 } from "lucide-react";
 import { useAddressData } from "@/lib/address-selection";
 import { useSavePatient } from "@/data/patient";
 
-const PatientForm = ({ initialData }: { initialData: Patient | null }) => {
+const PatientForm = ({ initialData, branches }: { initialData: Patient | null; branches: Branch[] }) => {
   const router = useRouter();
   const addressComponents = parseAddress(initialData?.address ?? "");
 
@@ -67,6 +67,7 @@ const PatientForm = ({ initialData }: { initialData: Patient | null }) => {
           maritalStatus: "",
           occupation: "",
           contactNumber: "",
+          branchId: "",
         },
   });
 
@@ -283,6 +284,19 @@ const PatientForm = ({ initialData }: { initialData: Patient | null }) => {
               disabled={isLoading || !selectedMunicipalityName}
             />
           </div>
+          <CustomFormField
+            label="Branch"
+            name="branchId"
+            placeholder="Select your branch"
+            isRequired
+            fieldType={FormFieldType.SELECT}
+            control={form.control}
+            selectOptions={branches.map((option) => ({
+              label: option.name,
+              value: option.id,
+            }))}
+            disabled={isLoading}
+          />
         </div>
         <div className="flex items-center justify-end mt-5">
           <div className="space-x-3">

@@ -4,11 +4,14 @@ import { fetchCalendarEvents } from "@/actions/appointments";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
+import { Badge } from "../ui/badge";
+import { format } from "date-fns";
 
 export interface CalendarEvent {
   id: string;
   summary: string;
   description?: string;
+  status: string;
   start: {
     dateTime?: string;
     date?: string;
@@ -22,6 +25,8 @@ export interface CalendarEvent {
 export type AppointmentColumn = {
   name: string;
   service: string;
+  status: string;
+  createdAt: string;
 };
 
 const columns: ColumnDef<AppointmentColumn>[] = [
@@ -30,21 +35,23 @@ const columns: ColumnDef<AppointmentColumn>[] = [
     header: "Name",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({row}) => (
+      <Badge className="capitalize">
+        {row.original.status}
+      </Badge>
+    )
+  },
+  {
     accessorKey: "service",
     header: "Service",
   },
+  {
+    accessorKey: "createdAt",
+    header: "Date Added",
+  },
 ];
-
-const isToday = (dateString: string | undefined): boolean => {
-  if (!dateString) return false;
-  const eventDate = new Date(dateString);
-  const today = new Date();
-  return (
-    eventDate.getFullYear() === today.getFullYear() &&
-    eventDate.getMonth() === today.getMonth() &&
-    eventDate.getDate() === today.getDate()
-  );
-};
 
 const PatientDayTable = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -54,12 +61,7 @@ const PatientDayTable = () => {
       try {
         setIsLoading(true);
         const calendarEvents = await fetchCalendarEvents();
-        // Filter events that are happening today
-        const todayEvents = calendarEvents.filter((event: CalendarEvent) =>
-          isToday(event.start.dateTime || event.start.date)
-        );
-
-        setEvents(todayEvents);
+        setEvents(calendarEvents);
       } catch (error) {
         console.error("Error fetching calendar events:", error);
       } finally {
@@ -74,6 +76,8 @@ const PatientDayTable = () => {
     events?.map((item) => ({
       name: item.summary,
       service: item.description || "N/A",
+      status: item.status,
+      createdAt: `${format(item.start.dateTime ? new Date(item.start.dateTime) : new Date(item.start.date || ""), "MMMM dd, yyyy | hh:mm a")} - ${format(item.end.dateTime ? new Date(item.end.dateTime) : new Date(item.end.date || ""), "hh:mm a")}`,
     })) || [];
 
   return (

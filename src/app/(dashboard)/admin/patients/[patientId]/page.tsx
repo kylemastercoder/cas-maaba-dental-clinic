@@ -7,11 +7,16 @@ const PatientPage = async ({ params }: { params: { patientId: string } }) => {
     where: {
       id: params.patientId,
     },
+    include: {
+      branch: true,
+    }
   });
+
+  const branches = await db.branch.findMany();
 
   return (
     <div className="flex-1 space-y-4">
-      <PatientForm initialData={patient} />
+      <PatientForm initialData={patient} branches={branches} />
     </div>
   );
 };

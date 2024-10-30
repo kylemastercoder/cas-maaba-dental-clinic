@@ -1,7 +1,8 @@
+import { AppSidebar } from "@/components/app-sidebar";
 import Header from "@/components/globals/header";
-import { Sidebar } from "@/components/globals/sidebar";
+
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { getUserFromCookies } from "@/hooks/use-user";
-import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import React from "react";
 
@@ -11,18 +12,13 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/");
   }
   return (
-    <div
-      className={cn(
-        "rounded-md flex flex-col md:flex-row bg-white flex-1 w-full",
-        "h-[100vh]"
-      )}
-    >
-      <Sidebar />
-      <main className="flex-1">
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
         <Header user={user} />
         <div className="px-5 py-3">{children}</div>
-      </main>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 };
 

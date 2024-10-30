@@ -13,13 +13,16 @@ import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveService } from "@/data/service";
+import { Branch } from "@prisma/client";
 
 const ServiceForm = ({
   initialData,
   onClose,
+  branches,
 }: {
   initialData: any;
   onClose: () => void;
+  branches: Branch[];
 }) => {
   const title = initialData ? "Edit Service" : "Add Service";
   const description = initialData
@@ -36,10 +39,12 @@ const ServiceForm = ({
       : {
           name: "",
           description: "",
+          branchId: ""
         },
   });
 
-  const { mutate: saveService, isPending: isSaving } = useSaveService(initialData);
+  const { mutate: saveService, isPending: isSaving } =
+    useSaveService(initialData);
 
   async function onSubmit(values: z.infer<typeof ServiceSchema>) {
     saveService(values, {
@@ -66,6 +71,19 @@ const ServiceForm = ({
                   label="Name"
                   isRequired={true}
                   name="name"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  label="Branch"
+                  name="branchId"
+                  placeholder="Select your branch"
+                  isRequired
+                  fieldType={FormFieldType.SELECT}
+                  control={form.control}
+                  selectOptions={branches.map((option) => ({
+                    label: option.name,
+                    value: option.id,
+                  }))}
                   disabled={isSaving}
                 />
                 <CustomFormField

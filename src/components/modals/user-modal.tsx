@@ -45,7 +45,10 @@ const UserForm = ({
 
   async function onSubmit(values: z.infer<typeof UserRegistrationSchema>) {
     saveUser(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

@@ -1,12 +1,22 @@
 "use client";
 
+import { getAllBranches } from "@/actions/branch";
 import ServiceForm from "@/components/modals/service-modal";
 import { Button } from "@/components/ui/button";
+import { Branch } from "@prisma/client";
 import { IconCirclePlus } from "@tabler/icons-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const AddService = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [branches, setBranches] = useState<Branch[]>([])
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const response = await getAllBranches();
+      setBranches(response?.data || []);
+    }
+    fetchBranches();
+  }, [])
   return (
     <>
       <Button
@@ -24,6 +34,7 @@ const AddService = () => {
         <ServiceForm
           initialData={null}
           onClose={() => setOpenModal(false)}
+          branches={branches}
         />
       )}
     </>

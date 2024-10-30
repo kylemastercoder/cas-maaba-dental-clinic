@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { AgeSexBar } from "@/components/globals/age-sex-bar";
 import PatientDayTable from "@/components/globals/patient-day-table";
+import { PatientLocation } from "@/components/globals/patient-location-pie";
 import StatCard from "@/components/globals/stat-card";
-import { SuppliesPie } from "@/components/globals/supplies-pie";
 import SupplyInventoryTable from "@/components/globals/supply-inventory-table";
 import {
   Card,
@@ -55,6 +55,23 @@ const getAgeSexDistribution = (patients: any) => {
   return distribution;
 };
 
+const getLocationDistribution = (barangays: string[]) => {
+  const locationCounts: { [key: string]: number } = {};
+
+  barangays.forEach((barangay) => {
+    if (locationCounts[barangay]) {
+      locationCounts[barangay] += 1;
+    } else {
+      locationCounts[barangay] = 1;
+    }
+  });
+
+  return Object.entries(locationCounts).map(([label, value]) => ({
+    label,
+    value,
+  }));
+};
+
 const AdminPage = async () => {
   const patient = await db.patient.findMany();
   const supplies = await db.supplies.findMany();
@@ -67,22 +84,12 @@ const AdminPage = async () => {
     }))
     .filter((supply) => supply.remaining <= 10);
 
-  const totalUsed = supplies.reduce((acc, supply) => acc + supply.used, 0);
-  const totalRemaining = supplies.reduce(
-    (acc, supply) => acc + supply.quantity,
-    0
-  );
-
-  const pieData = [
-    { label: "Supplies Used", value: totalUsed, fill: "hsl(var(--chart-5))" },
-    {
-      label: "Remaining Supplies",
-      value: totalRemaining,
-      fill: "hsl(var(--chart-3))",
-    },
-  ];
-
   const ageSexDistribution = getAgeSexDistribution(patient);
+  const barangays = patient.map(p => {
+    const match = p.address ? p.address.match(/,\s*([A-Za-z\s]+),/) : null;
+    return match ? match[1].trim() : 'Barangay not found';
+  });
+  const locationDistribution = getLocationDistribution(barangays);
 
   return (
     <div>
@@ -114,7 +121,7 @@ const AdminPage = async () => {
       </div>
       <div className="mt-6 mb-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
         <div className="col-span-4">
-          <SuppliesPie data={pieData} />
+          <PatientLocation data={locationDistribution} />
           <div className="mt-6">
             <SupplyInventoryTable data={runningSupplies} />
           </div>
@@ -126,7 +133,7 @@ const AdminPage = async () => {
       <div className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Appointed Patients for Today</CardTitle>
+            <CardTitle>Todos for Today</CardTitle>
             <CardDescription>
               Today is{" "}
               {formatDate(new Date().toLocaleDateString(), "MMMM dd, yyyy")}

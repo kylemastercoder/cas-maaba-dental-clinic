@@ -26,6 +26,7 @@ const AppointmentClient = () => {
     const getEvents = async () => {
       try {
         const calendarEvents = await fetchCalendarEvents();
+        console.log("Fetched events:", calendarEvents);
         setEvents(calendarEvents);
       } catch (error) {
         console.error("Error fetching calendar events:", error);
@@ -35,7 +36,7 @@ const AppointmentClient = () => {
     getEvents();
   }, []);
   return (
-    <div>
+    <div className="mt-3">
       <iframe
         src="https://calendar.google.com/calendar/embed?src=casmaabadental%40gmail.com&amp;ctz=Asia%2FManila"
         width="100%"
@@ -44,7 +45,7 @@ const AppointmentClient = () => {
         scrolling="no"
       ></iframe>
 
-      <table className="min-w-full divide-y divide-gray-200">
+      {/* <table className="min-w-full divide-y divide-gray-200">
         <thead>
           <tr>
             <th className="px-6 py-3 bg-gray-50">Event Title</th>
@@ -73,7 +74,7 @@ const AppointmentClient = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </div>
   );
 };

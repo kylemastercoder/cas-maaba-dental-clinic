@@ -23,8 +23,8 @@ const Patients = async () => {
   // Hydrate the query data for the client
   const dehydratedState = dehydrate(queryClient);
   return (
-    <div className="grid flex-1 items-start gap-4 md:gap-8">
-      <div className="flex items-center justify-between">
+    <div className="md:grid items-start gap-4 md:gap-8">
+      <div className="flex md:flex-row flex-col md:items-center items-start md:justify-between gap-3">
         <Heading
           title="Patient Records"
           description="Manage and view all patient information, including personal details, medical history, and appointments."

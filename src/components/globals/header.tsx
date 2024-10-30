@@ -2,14 +2,20 @@
 
 import { useParams, usePathname } from "next/navigation";
 import React from "react";
-import Notification from "./notification";
 import UserProfile from "./user-profile";
-import { IconSearch } from "@tabler/icons-react";
-import { Input } from "../ui/input";
 import CustomBreadcrumb from "./custom-breadcrumb";
 import { User } from "@prisma/client";
+import { Switch } from "../ui/switch";
+import { Label } from "../ui/label";
+import { useTheme } from "next-themes";
 
 const Header = ({ user }: { user: User | null }) => {
+  const { theme, setTheme } = useTheme();
+
+  // Handle toggle change
+  const handleToggle = (checked: boolean) => {
+    setTheme(checked ? "light" : "dark");
+  };
   const params = useParams();
   const pathname = usePathname();
 
@@ -50,15 +56,16 @@ const Header = ({ user }: { user: User | null }) => {
     <div className="flex items-center justify-between py-5 border-b px-5">
       <div className="md:block hidden">{getHeaderText()}</div>
       <div className="flex items-center gap-2">
-        <div className="relative flex-1 mr-3 md:grow-0">
-          <IconSearch className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search..."
-            className="w-full rounded-lg bg-background pl-8 md:w-[320px]"
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="dark-mode"
+            checked={theme === "light"}
+            onCheckedChange={handleToggle}
           />
+          <Label htmlFor="dark-mode">
+            {theme === "light" ? "Dark" : "Light"} Mode
+          </Label>
         </div>
-        <Notification />
         <UserProfile user={user} />
       </div>
     </div>

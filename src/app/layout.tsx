@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ModalProvider } from "@/components/providers/modal-provider";
 import { TanstackProvider } from "@/components/providers/tanstack-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -24,9 +25,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn("antialiased", poppins.className)}>
-        <Toaster richColors position="top-right" />
-        <ModalProvider />
-        <TanstackProvider>{children}</TanstackProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Toaster richColors position="top-right" />
+          <ModalProvider />
+          <TanstackProvider>{children}</TanstackProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
