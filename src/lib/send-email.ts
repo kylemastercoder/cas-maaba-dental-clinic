@@ -17,13 +17,13 @@ export const sendEmail = async (values: z.infer<typeof NotifySchema>) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "kylemastercoder14@gmail.com",
-      pass: "qhrjuoqxjfupkbdq",
+      user: "casmaabadentalservices@gmail.com",
+      pass: "hvyncisjmrgotigs",
     },
   });
 
   const message = {
-    from: "casmaabadental@gmail.com",
+    from: "casmaabadentalservices@gmail.com",
     to: values.email,
     subject: "Cas-Maaba Dental Clinic",
     text: `Notification from Cas-Maaba Dental Clinic`,
