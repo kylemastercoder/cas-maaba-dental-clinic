@@ -5,11 +5,13 @@
 
 import { Badge } from "@/components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
+import { CellAction } from "./cell-action";
 
 export type TreatmentColumn = {
   id: string;
   service: string;
   diagnosis: string;
+  serviceId: string;
   paymentMethod: string;
   status: string;
   remarks: string;
@@ -43,7 +45,7 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     header: "Status",
     cell: ({ row }) => (
       <Badge
-        variant={row.original.status === "Completed" ? "default" : "secondary"}
+        variant={row.original.status === "Paid" ? "default" : "secondary"}
       >
         {row.original.status}
       </Badge>
@@ -52,5 +54,12 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
   {
     accessorKey: "remarks",
     header: "Remarks",
+  },
+  {
+    accessorKey: "action",
+    header: "Action",
+    cell: ({ row }) => (
+      <CellAction data={row.original} />
+    )
   },
 ];

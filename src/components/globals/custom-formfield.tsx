@@ -237,7 +237,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                 date && field.onChange(format(date, DATE_DEFAULT_FORMAT))
               }
               fromYear={DATE_YEAR_MIN}
-              toYear={new Date().getFullYear()}
+              toYear={2030}
               disabled={(date) => {
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);

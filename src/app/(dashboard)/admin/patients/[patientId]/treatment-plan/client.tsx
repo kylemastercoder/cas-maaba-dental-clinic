@@ -90,6 +90,7 @@ const TreatmentClient = ({
       return {
         id: item.id,
         service: service,
+        serviceId: item.serviceId ?? '',
         toothNumber: item.toothNumber,
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
