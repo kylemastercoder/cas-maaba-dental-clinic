@@ -13,6 +13,9 @@ import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveUser } from "@/data/user";
+import { Branch } from "@prisma/client";
+import { getAllBranches } from "@/actions/branch";
+import { toast } from "sonner";
 
 const UserForm = ({
   initialData,
@@ -21,6 +24,7 @@ const UserForm = ({
   initialData: any;
   onClose: () => void;
 }) => {
+  const [branches, setBranches] = React.useState<Branch[]>([]);
   const title = initialData ? "Edit User" : "Add User";
   const description = initialData
     ? "Make sure to click save changes after you update the user."
@@ -38,10 +42,22 @@ const UserForm = ({
           username: "",
           password: "",
           role: "",
+          branch: "",
         },
   });
 
   const { mutate: saveUser, isPending: isSaving } = useSaveUser(initialData);
+  React.useEffect(() => {
+    const fetchBranches = async () => {
+      const response = await getAllBranches();
+      if (response.data) {
+        setBranches(response.data);
+      } else {
+        toast.error(response.error);
+      }
+    };
+    fetchBranches();
+  }, []);
 
   async function onSubmit(values: z.infer<typeof UserRegistrationSchema>) {
     saveUser(values, {
@@ -90,6 +106,19 @@ const UserForm = ({
                   type="password"
                   isRequired={true}
                   name="password"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.SELECT}
+                  placeholder="Select Branch"
+                  selectOptions={branches.map((branch) => ({
+                    value: branch.id,
+                    label: branch.name,
+                  }))}
+                  label="Branch"
+                  isRequired={true}
+                  name="branch"
                   disabled={isSaving}
                 />
                 <CustomFormField

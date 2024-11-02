@@ -59,6 +59,7 @@ interface CustomProps {
   type?: string | number;
   placeholder?: string;
   description?: string | React.ReactNode;
+  calendarMode?: string;
   dateFormat?: string;
   showTimeSelect?: boolean;
   disabled?: boolean;
@@ -83,6 +84,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     label,
     autoFocus,
     renderedValue,
+    calendarMode,
   } = props;
 
   const [showPassword, setShowPassword] = useState(false);
@@ -228,7 +230,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               </Button>
             </FormControl>
           </PopoverTrigger>
-          <PopoverContent align="start" className=" w-auto p-0">
+          <PopoverContent align="start" className="w-auto p-0">
             <Calendar
               mode="single"
               captionLayout="dropdown-buttons"
@@ -237,12 +239,14 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                 date && field.onChange(format(date, DATE_DEFAULT_FORMAT))
               }
               fromYear={DATE_YEAR_MIN}
-              toYear={2030}
-              disabled={(date) => {
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                return date < today;
-              }}
+              toYear={
+                calendarMode === "birthdate" ? new Date().getFullYear() : 2030
+              }
+              disabled={(date) =>
+                calendarMode === "birthdate"
+                  ? date > new Date()
+                  : date < new Date()
+              }
             />
           </PopoverContent>
         </Popover>

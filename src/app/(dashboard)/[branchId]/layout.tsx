@@ -13,7 +13,7 @@ const DashboardLayout = async ({
   children: React.ReactNode;
   params: { branchId: string };
 }) => {
-  const { authToken, userId, user } = await getUserFromCookies();
+  const { authToken, user, userId } = await getUserFromCookies();
 
   // Check if user is authenticated
   if (!authToken) {
@@ -37,7 +37,11 @@ const DashboardLayout = async ({
     const branch = await db.branch.findFirst({
       where: {
         id: params.branchId,
-        userId, // Must match userId for non-admins
+        user: {
+          some: {
+            id: userId, // Must match userId for non-admins
+          },
+        },
       },
     });
 

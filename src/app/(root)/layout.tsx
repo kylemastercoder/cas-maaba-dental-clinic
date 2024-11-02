@@ -16,7 +16,11 @@ const SetupLayout = async ({ children }: { children: React.ReactNode }) => {
 
   const branch = await db.branch.findFirst({
     where: {
-      userId,
+      user: {
+        some: {
+          id: userId,
+        },
+      },
     },
   });
 

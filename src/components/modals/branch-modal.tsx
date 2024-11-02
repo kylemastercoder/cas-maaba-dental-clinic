@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "../ui/modal";
 import { useBranchModal } from "@/hooks/use-branch-modal";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,28 +14,10 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { createBranch } from "@/actions/branch";
 import { toast } from "sonner";
-import { User } from "@prisma/client";
-import { getAllBranchHead } from "@/actions/user";
 
 const BranchModal = () => {
   const branchModal = useBranchModal();
   const [isLoading, setIsLoading] = useState(false);
-  const [userData, setUserData] = useState<User[]>([]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const response = await getAllBranchHead();
-      if (response.error) {
-        toast.error(response.error);
-      } else {
-        if (response.data) {
-          setUserData(response.data);
-        }
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   const form = useForm<z.infer<typeof BranchSchema>>({
     resolver: zodResolver(BranchSchema),
@@ -43,7 +25,6 @@ const BranchModal = () => {
     defaultValues: {
       name: "",
       address: "",
-      branchHead: "",
     },
   });
 
@@ -55,9 +36,7 @@ const BranchModal = () => {
           toast.error(response.error);
         } else {
           toast.success(response.success);
-          if (response.branch) {
-            window.location.assign(`/${response.branch.id || ""}`);
-          }
+          window.location.reload();
         }
       })
       .finally(() => {
@@ -93,19 +72,6 @@ const BranchModal = () => {
                 placeholder="Enter branch address"
                 isRequired
                 fieldType={FormFieldType.INPUT}
-              />
-              <CustomFormField
-                control={form.control}
-                name="branchHead"
-                label="Branch Head"
-                disabled={isLoading}
-                placeholder="Select branch head"
-                selectOptions={userData.map((user) => ({
-                  label: user.name,
-                  value: user.id,
-                }))}
-                isRequired
-                fieldType={FormFieldType.SELECT}
               />
               <div className="pt-6 space-x-2 flex items-center justify-end w-full">
                 <Button

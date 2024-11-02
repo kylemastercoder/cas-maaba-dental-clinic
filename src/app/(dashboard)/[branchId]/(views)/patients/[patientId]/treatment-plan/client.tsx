@@ -15,6 +15,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { columns, TreatmentColumn } from "./column";
 import { getAllServices } from "@/actions/service";
+import { useTheme } from "next-themes";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
@@ -25,6 +26,7 @@ const TreatmentClient = ({
 }: {
   patient: PatientWithTreatment | null;
 }) => {
+  const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
   const fullName = `${patient?.firstName} ${patient?.middleName} ${patient?.lastName}`;
   const [modalData, setModalData] = useState<{
@@ -198,9 +200,14 @@ const TreatmentClient = ({
                   >
                     <Image
                       className="w-full h-full"
-                      src="/images/tooth.svg"
+                      src={`${
+                        theme === "light"
+                          ? "/dark-tooth.svg"
+                          : "/light-tooth.svg"
+                      }`}
                       alt="Tooth"
-                      fill
+                      layout="fill"
+                      objectFit="contain"
                     />
                     <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                       {tooth}
@@ -214,7 +221,9 @@ const TreatmentClient = ({
                 ))}
               </div>
               <div className="flex justify-center items-center gap-1 mt-2">
-                <p className="md:mx-10 mx-2 md:text-md text-sm font-semibold">RIGHT</p>
+                <p className="md:mx-10 mx-2 md:text-md text-sm font-semibold">
+                  RIGHT
+                </p>
                 <div className="flex items-center justify-center flex-col">
                   <div className="flex items-center gap-1">
                     {UPPER_MIDDLE_TEETH.map((tooth) => (
@@ -242,9 +251,14 @@ const TreatmentClient = ({
                       >
                         <Image
                           className="w-full h-full"
-                          src="/images/tooth.svg"
+                          src={`${
+                            theme === "light"
+                              ? "/dark-tooth.svg"
+                              : "/light-tooth.svg"
+                          }`}
                           alt="Tooth"
-                          fill
+                          layout="fill"
+                          objectFit="contain"
                         />
                         <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                           {tooth}
@@ -285,9 +299,14 @@ const TreatmentClient = ({
                         >
                           <Image
                             className="w-full h-full"
-                            src="/images/tooth.svg"
+                            src={`${
+                              theme === "light"
+                                ? "/dark-tooth.svg"
+                                : "/light-tooth.svg"
+                            }`}
                             alt="Tooth"
-                            fill
+                            layout="fill"
+                            objectFit="contain"
                           />
                           <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                             {tooth}
@@ -302,7 +321,9 @@ const TreatmentClient = ({
                     </div>
                   </div>
                 </div>
-                <p className="md:mx-10 mx-2 font-semibold md:text-md text-sm">LEFT</p>
+                <p className="md:mx-10 mx-2 font-semibold md:text-md text-sm">
+                  LEFT
+                </p>
               </div>
               <div className="flex justify-center items-center gap-1 mt-2">
                 {LOWER_TEETH.map((tooth) => (
@@ -328,9 +349,14 @@ const TreatmentClient = ({
                   >
                     <Image
                       className="w-full h-full"
-                      src="/images/tooth.svg"
+                      src={`${
+                        theme === "light"
+                          ? "/dark-tooth.svg"
+                          : "/light-tooth.svg"
+                      }`}
                       alt="Tooth"
-                      fill
+                      layout="fill"
+                      objectFit="contain"
                     />
                     <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                       {tooth}

@@ -187,6 +187,7 @@ const PatientForm = ({
               isRequired
               type="date"
               fieldType={FormFieldType.DATE_PICKER}
+              calendarMode="birthdate"
               control={form.control}
               disabled={isLoading}
             />

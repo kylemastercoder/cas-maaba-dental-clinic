@@ -9,7 +9,6 @@ export const UserLoginSchema = z.object({
 export const BranchSchema = z.object({
   name: z.string().min(1, { message: "Branch name is required" }),
   address: z.string().min(1, { message: "Branch address is required" }),
-  branchHead: z.string().min(1, { message: "Branch head is required" }),
 });
 
 export const UserRegistrationSchema = z.object({
@@ -17,6 +16,7 @@ export const UserRegistrationSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   role: z.string().min(1, { message: "Role is required" }),
   password: z.string().min(1, { message: "Password is required" }),
+  branch: z.string().min(1, { message: "Branch is required" }),
 });
 
 export const PatientSchema = z.object({

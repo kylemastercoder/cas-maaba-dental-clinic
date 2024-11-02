@@ -15,7 +15,8 @@ model User {
   role      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  branch    Branch[]
+  branchId  String
+  branch    Branch  @relation(fields: [branchId], references: [id])
 }
 
 model Patient {
@@ -56,14 +57,13 @@ model Branch {
   id        String   @id @default(cuid())
   name      String
   address   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  patient Patient[]
-  service Service[]
+  patient  Patient[]
+  service  Service[]
   supplies Supplies[]
+  user User[]
 }
 
 model Supplies {

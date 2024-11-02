@@ -130,7 +130,7 @@ export const createUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, username, password, role } = validatedField.data;
+  const { name, username, password, role, branch } = validatedField.data;
 
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
@@ -141,6 +141,7 @@ export const createUser = async (
         username,
         password: hashedPassword,
         role,
+        branchId: branch,
       },
     });
 
@@ -177,7 +178,7 @@ export const updateUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, username, password, role } = validatedField.data;
+  const { name, username, password, role, branch } = validatedField.data;
 
   const hashedPassword = bcryptjs.hashSync(password, 10);
 
@@ -191,6 +192,7 @@ export const updateUser = async (
         username,
         password: hashedPassword,
         role,
+        branchId: branch,
       },
     });
 

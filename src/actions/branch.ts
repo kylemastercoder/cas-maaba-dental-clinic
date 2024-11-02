@@ -16,14 +16,13 @@ export const createBranch = async (values: z.infer<typeof BranchSchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, address, branchHead } = validatedField.data;
+  const { name, address } = validatedField.data;
 
   try {
     const branch = await db.branch.create({
       data: {
         name,
         address,
-        userId: branchHead,
       },
     });
 

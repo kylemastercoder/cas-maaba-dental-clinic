@@ -115,13 +115,35 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       },
     ],
   };
+
+  const dentistDataBar = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: `/${params.branchId}`,
+        icon: IconBrandTabler,
+      },
+      {
+        title: "Patients",
+        url: `/${params.branchId}/patients`,
+        icon: IconUserSquareRounded,
+      },
+    ],
+  };
+
   return (
     <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href={`${user?.role === "Administrator" && !params.branchId ? "/admin" : `/${params.branchId}`}`}>
+              <a
+                href={`${
+                  user?.role === "Administrator" && !params.branchId
+                    ? "/admin"
+                    : `/${params.branchId}`
+                }`}
+              >
                 <Image
                   src="/images/logo-icon.png"
                   alt="Logo"
@@ -142,6 +164,8 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           items={
             user?.role === "Administrator" && !params.branchId
               ? data.navMain
+              : user?.role === "Dentist"
+              ? dentistDataBar.navMain
               : branchDataBar.navMain
           }
         />
