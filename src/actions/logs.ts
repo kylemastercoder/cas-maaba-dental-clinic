@@ -6,7 +6,7 @@ export const getAllLogs = async () => {
   try {
     const data = await db.logs.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
