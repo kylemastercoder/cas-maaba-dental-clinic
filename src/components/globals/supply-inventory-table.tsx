@@ -13,7 +13,7 @@ import { Badge } from "../ui/badge";
 
 const SupplyInventoryTable = ({ data }: { data: Supplies[] }) => {
   return (
-    <Card className="md:h-[210px] w-full overflow-auto">
+    <Card className="w-full max-h-[700px] overflow-auto">
       <CardHeader>
         <CardTitle>Inventories Running Out of Stocks</CardTitle>
       </CardHeader>

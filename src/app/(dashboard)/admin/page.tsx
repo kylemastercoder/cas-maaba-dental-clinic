@@ -4,6 +4,7 @@ import PatientDayTable from "@/components/globals/patient-day-table";
 import { PatientLocation } from "@/components/globals/patient-location-pie";
 import StatCard from "@/components/globals/stat-card";
 import SupplyInventoryTable from "@/components/globals/supply-inventory-table";
+import { TreatmentRenderedPie } from "@/components/globals/treatment-rendered-pie";
 import {
   Card,
   CardContent,
@@ -69,6 +70,25 @@ const getLocationDistribution = (barangays: string[]) => {
   return Object.entries(locationCounts).map(([label, value]) => ({
     label,
     value,
+    date: new Date().toISOString().split("T")[0], // Adding current date as a string in YYYY-MM-DD format
+  }));
+};
+
+const getTreatmentRenderedDistribution = (services: string[]) => {
+  const treatmentCount: { [key: string]: number } = {};
+
+  services.forEach((service) => {
+    if (treatmentCount[service]) {
+      treatmentCount[service] += 1;
+    } else {
+      treatmentCount[service] = 1;
+    }
+  });
+
+  return Object.entries(treatmentCount).map(([label, value]) => ({
+    label,
+    value,
+    date: new Date().toISOString().split("T")[0], // Adding current date as a string in YYYY-MM-DD format
   }));
 };
 
@@ -76,6 +96,9 @@ const AdminPage = async () => {
   const patient = await db.patient.findMany();
   const supplies = await db.supplies.findMany();
   const services = await db.service.findMany();
+  const treatmentRendered = await db.treatmentPlan.findMany({
+    include: { service: true },
+  });
   const staff = await db.user.findMany();
   const runningSupplies = supplies
     .map((supply) => ({
@@ -85,10 +108,15 @@ const AdminPage = async () => {
     .filter((supply) => supply.remaining <= 10);
 
   const ageSexDistribution = getAgeSexDistribution(patient);
-  const barangays = patient.map(p => {
+  const barangays = patient.map((p) => {
     const match = p.address ? p.address.match(/,\s*([A-Za-z\s]+),/) : null;
-    return match ? match[1].trim() : 'Barangay not found';
+    return match ? match[1].trim() : "Barangay not found";
   });
+  const treatmentGroups = treatmentRendered
+    .map((item) => item.service?.name)
+    .filter((name): name is string => !!name);
+  const treatmentDistribution =
+    getTreatmentRenderedDistribution(treatmentGroups);
   const locationDistribution = getLocationDistribution(barangays);
 
   return (
@@ -119,17 +147,6 @@ const AdminPage = async () => {
           icon={Stethoscope}
         />
       </div>
-      <div className="mt-6 mb-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
-        <div className="md:col-span-4">
-          <PatientLocation data={locationDistribution} />
-          <div className="mt-6">
-            <SupplyInventoryTable data={runningSupplies} />
-          </div>
-        </div>
-        <div className="md:col-span-6">
-          <AgeSexBar data={ageSexDistribution} />
-        </div>
-      </div>
       <div className="mt-6">
         <Card>
           <CardHeader>
@@ -143,6 +160,20 @@ const AdminPage = async () => {
             <PatientDayTable />
           </CardContent>
         </Card>
+      </div>
+      <div className="mt-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
+        <div className="col-span-4">
+          <PatientLocation data={locationDistribution} />
+          <div className="mt-6">
+            <SupplyInventoryTable data={runningSupplies} />
+          </div>
+        </div>
+        <div className="col-span-6">
+          <AgeSexBar data={ageSexDistribution} />
+          <div className="mt-6">
+            <TreatmentRenderedPie data={treatmentDistribution} />
+          </div>
+        </div>
       </div>
     </div>
   );

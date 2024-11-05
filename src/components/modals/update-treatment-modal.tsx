@@ -105,7 +105,7 @@ const UpdateTreatmentModal = ({
                     value: service.id,
                   }))}
                   name="service"
-                  disabled={isSaving}
+                  disabled
                 />
                 <CustomFormField
                   control={form.control}
@@ -129,7 +129,7 @@ const UpdateTreatmentModal = ({
                   placeholder="Select diagnosis"
                   isRequired={true}
                   name="diagnosis"
-                  disabled={isSaving}
+                  disabled
                 />
                 <CustomFormField
                   control={form.control}
@@ -138,7 +138,7 @@ const UpdateTreatmentModal = ({
                   placeholder="Enter dental remarks"
                   isRequired={false}
                   name="remarks"
-                  disabled={isSaving}
+                  disabled
                 />
                 <CustomFormField
                   control={form.control}
@@ -157,7 +157,7 @@ const UpdateTreatmentModal = ({
                   placeholder="Select payment method"
                   isRequired={true}
                   name="paymentMethod"
-                  disabled={isSaving}
+                  disabled
                 />
                 <CustomFormField
                   control={form.control}

@@ -6,6 +6,7 @@ import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "../ui/badge";
 import { format } from "date-fns";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export interface CalendarEvent {
   id: string;
@@ -37,11 +38,9 @@ const columns: ColumnDef<AppointmentColumn>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({row}) => (
-      <Badge className="capitalize">
-        {row.original.status}
-      </Badge>
-    )
+    cell: ({ row }) => (
+      <Badge className="capitalize">{row.original.status}</Badge>
+    ),
   },
   {
     accessorKey: "service",
@@ -77,16 +76,42 @@ const PatientDayTable = () => {
       name: item.summary,
       service: item.description || "N/A",
       status: item.status,
-      createdAt: `${format(item.start.dateTime ? new Date(item.start.dateTime) : new Date(item.start.date || ""), "MMMM dd, yyyy | hh:mm a")} - ${format(item.end.dateTime ? new Date(item.end.dateTime) : new Date(item.end.date || ""), "hh:mm a")}`,
+      createdAt: `${format(
+        item.start.dateTime
+          ? new Date(item.start.dateTime)
+          : new Date(item.start.date || ""),
+        "MMMM dd, yyyy | hh:mm a"
+      )} - ${format(
+        item.end.dateTime
+          ? new Date(item.end.dateTime)
+          : new Date(item.end.date || ""),
+        "hh:mm a"
+      )}`,
     })) || [];
 
   return (
-    <DataTable
-      loading={isLoading}
-      searchKey="name"
-      columns={columns}
-      data={formattedData}
-    />
+    <Tabs defaultValue="account">
+      <TabsList>
+        <TabsTrigger value="account">Today</TabsTrigger>
+        <TabsTrigger value="password">Tomorrow</TabsTrigger>
+      </TabsList>
+      <TabsContent value="account">
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={formattedData}
+        />
+      </TabsContent>
+      <TabsContent value="password">
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={formattedData}
+        />
+      </TabsContent>
+    </Tabs>
   );
 };
 

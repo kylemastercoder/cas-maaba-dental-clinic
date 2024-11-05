@@ -30,7 +30,7 @@ const PatientClient = () => {
       sex: item.sex ?? "N/A",
       age: differenceInYears(new Date(), new Date(item.birthdate)),
       contactNumber: item.contactNumber,
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
     })) || [];
 
   if (!isMounted) {

@@ -252,7 +252,7 @@ const PatientForm = ({
               label: option,
               value: option,
             }))}
-            disabled
+            disabled={isLoading}
           />
           <CustomFormField
             label="Province"
@@ -265,7 +265,7 @@ const PatientForm = ({
               label: option,
               value: option,
             }))}
-            disabled
+            disabled={isLoading || !selectedRegionName}
           />
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
             <CustomFormField
@@ -279,7 +279,7 @@ const PatientForm = ({
                 label: option,
                 value: option,
               }))}
-              disabled={isLoading}
+              disabled={isLoading || !selectedProvinceName}
             />
             <CustomFormField
               label="Barangay"

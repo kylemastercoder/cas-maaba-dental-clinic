@@ -98,7 +98,7 @@ const TreatmentClient = ({
         remarks: item.dentalRemarks || "N/A",
         paymentMethod: item.paymentMethod,
         status: item.status,
-        createdAt: format(item.createdAt, "MMMM do, yyyy"),
+        createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
     }) || [];
 

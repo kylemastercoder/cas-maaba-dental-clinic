@@ -124,6 +124,14 @@ const TreatmentModal = ({
                       label: "Abraided/Attrition",
                       value: "Abraided/Attrition",
                     },
+                    {
+                      label: "Incipient",
+                      value: "Incipient",
+                    },
+                    {
+                      label: "Impacted",
+                      value: "Impacted",
+                    },
                     { label: "Severe", value: "Severe" },
                     { label: "CO or AM", value: "CO or AM" },
                     { label: "Erupting", value: "Erupting" },
