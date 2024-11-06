@@ -17,8 +17,9 @@ import AlertModal from "@/components/ui/alert-modal";
 import { SupplyColumn } from "./column";
 import { useDeleteSupply } from "@/data/supply";
 import SupplyForm from "@/components/modals/supply-modal";
-import { Branch } from "@prisma/client";
+import { Branch, Units } from "@prisma/client";
 import { getAllBranches } from "@/actions/branch";
+import { getAllUnits } from "@/actions/unit";
 
 interface CellActionProps {
   data: SupplyColumn;
@@ -27,12 +28,20 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [branches, setBranches] = useState<Branch[]>([]);
+  const [units, setUnits] = useState<Units[]>([]);
   useEffect(() => {
     const fetchBranches = async () => {
       const response = await getAllBranches();
       setBranches(response?.data || []);
     };
     fetchBranches();
+  }, []);
+  useEffect(() => {
+    const fetchUnits = async () => {
+      const response = await getAllUnits();
+      setUnits(response?.data || []);
+    };
+    fetchUnits();
   }, []);
   const [formOpen, setFormOpen] = useState(false);
   const [initialData, setInitialData] = useState<SupplyColumn | null>(null);
@@ -69,6 +78,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       {formOpen && (
         <SupplyForm
+          units={units}
           branches={branches}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
