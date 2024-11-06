@@ -13,12 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useDeleteService } from "@/data/service";
 import ServiceForm from "@/components/modals/service-modal";
-import { getAllBranches } from "@/actions/branch";
-import { Branch } from "@prisma/client";
 
 interface CellActionProps {
   data: ServiceColumn;
@@ -26,14 +24,6 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
-  const [branches, setBranches] = useState<Branch[]>([]);
-  useEffect(() => {
-    const fetchBranches = async () => {
-      const response = await getAllBranches();
-      setBranches(response?.data || []);
-    };
-    fetchBranches();
-  }, []);
   const [formOpen, setFormOpen] = useState(false);
   const [initialData, setInitialData] = useState<ServiceColumn | null>(null);
   const onCopy = (name: string) => {
@@ -69,7 +59,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
 
       {formOpen && (
         <ServiceForm
-          branches={branches}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
         />
