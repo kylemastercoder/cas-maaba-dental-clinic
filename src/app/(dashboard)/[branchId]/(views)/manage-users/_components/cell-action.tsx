@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -100,10 +101,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onUpdate}>
+          {/* <DropdownMenuItem onClick={onUpdate}>
             <Edit className="w-4 h-4 mr-2" />
             Update
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy

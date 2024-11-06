@@ -11,14 +11,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Copy, MoreHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useActiveUser, useInactiveUser } from "@/data/user";
-import UserForm from "@/components/modals/user-modal";
-import { getAllRoles } from "@/actions/roles";
-import { Role } from "@prisma/client";
 
 interface CellActionProps {
   data: UserColumn;
@@ -27,16 +24,7 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  const [formOpen, setFormOpen] = useState(false);
-  const [roles, setRoles] = useState<Role[]>([]);
-  useEffect(() => {
-    const fetchRoles = async () => {
-      const response = await getAllRoles();
-      setRoles(response?.data || []);
-    };
-    fetchRoles();
-  }, []);
-  const [initialData, setInitialData] = useState<UserColumn | null>(null);
+  // const [initialData, setInitialData] = useState<UserColumn | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
@@ -63,10 +51,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
-  const onUpdate = () => {
-    setInitialData(data);
-    setFormOpen(true);
-  };
+  // const onUpdate = () => {
+  //   setInitialData(data);
+  //   setFormOpen(true);
+  // };
 
   return (
     <>
@@ -84,13 +72,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={isActive}
         onConfirm={onActive}
       />
-      {formOpen && (
+      {/* {formOpen && (
         <UserForm
           roles={roles}
           initialData={initialData}
           onClose={() => setFormOpen(false)}
         />
-      )}
+      )} */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -100,10 +88,10 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onUpdate}>
+          {/* <DropdownMenuItem onClick={onUpdate}>
             <Edit className="w-4 h-4 mr-2" />
             Update
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy
