@@ -11,8 +11,11 @@ export const getAllSupplies = async () => {
   try {
     const data = await db.supplies.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
+      include: {
+        unit: true,
+      }
     });
 
     if (!data) {
@@ -35,15 +38,16 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit, branchId } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId, sku } = validatedField.data;
 
   try {
     const supply = await db.supplies.create({
       data: {
         name,
+        sku,
         category,
         used: used || 0,
-        unit,
+        unitId: unit,
         quantity: stocks,
         branchId,
       },
@@ -55,6 +59,7 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
       await db.logs.create({
         data: {
           action: `${user?.name} added ${supply.name} on ${loginTime}`,
+          branchId: user?.branchId || "",
         },
       });
     }
@@ -81,15 +86,16 @@ export const updateSupply = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit, branchId } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId, sku } = validatedField.data;
 
   try {
     const supply = await db.supplies.update({
       data: {
         name,
         category,
+        sku,
         used: used || 0,
-        unit,
+        unitId: unit,
         quantity: stocks,
         branchId,
       },
@@ -104,6 +110,7 @@ export const updateSupply = async (
       await db.logs.create({
         data: {
           action: `${user?.name} updated ${supply.name} on ${loginTime}`,
+          branchId: user?.branchId || "",
         },
       });
     }
@@ -137,6 +144,7 @@ export const deleteSupply = async (supplyId: string) => {
       await db.logs.create({
         data: {
           action: `${user?.name} deleted ${supply.name} on ${loginTime}`,
+          branchId: user?.branchId || "",
         },
       });
     }

@@ -11,7 +11,7 @@ export const getAllServices = async () => {
   try {
     const data = await db.service.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
@@ -35,14 +35,13 @@ export const createService = async (values: z.infer<typeof ServiceSchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, description, branchId } = validatedField.data;
+  const { name, description } = validatedField.data;
 
   try {
     const service = await db.service.create({
       data: {
         name,
-        description,
-        branchId
+        description: description || "",
       },
     });
 
@@ -78,14 +77,13 @@ export const updateService = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, description, branchId } = validatedField.data;
+  const { name, description } = validatedField.data;
 
   try {
     const service = await db.service.update({
       data: {
         name,
-        description,
-        branchId
+        description: description || "",
       },
       where: {
         id: serviceId,

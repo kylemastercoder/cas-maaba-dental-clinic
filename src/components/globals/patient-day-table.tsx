@@ -1,6 +1,9 @@
 "use client";
 
-import { fetchCalendarEvents } from "@/actions/appointments";
+import {
+  fetchCalendarEventsToday,
+  fetchCalendarEventsTomorrow,
+} from "@/actions/appointments";
 import React, { useEffect, useState } from "react";
 import { DataTable } from "../ui/data-table";
 import { ColumnDef } from "@tanstack/react-table";
@@ -54,25 +57,57 @@ const columns: ColumnDef<AppointmentColumn>[] = [
 
 const PatientDayTable = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [eventsToday, setEventsToday] = useState<CalendarEvent[]>([]);
+  const [eventsTomorrow, setEventsTomorrow] = useState<CalendarEvent[]>([]);
   useEffect(() => {
-    const getEvents = async () => {
+    const getEventsToday = async () => {
       try {
         setIsLoading(true);
-        const calendarEvents = await fetchCalendarEvents();
-        setEvents(calendarEvents);
+        const calendarEvents = await fetchCalendarEventsToday();
+        setEventsToday(calendarEvents);
       } catch (error) {
-        console.error("Error fetching calendar events:", error);
+        console.error("Error fetching calendar events today:", error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    getEvents();
+    const getEventsTomorrow = async () => {
+      try {
+        setIsLoading(true);
+        const calendarEvents = await fetchCalendarEventsTomorrow();
+        setEventsTomorrow(calendarEvents);
+      } catch (error) {
+        console.error("Error fetching calendar events tomorrow:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getEventsToday();
+    getEventsTomorrow();
   }, []);
 
-  const formattedData: AppointmentColumn[] =
-    events?.map((item) => ({
+  const formattedDataToday: AppointmentColumn[] =
+    eventsToday?.map((item) => ({
+      name: item.summary,
+      service: item.description || "N/A",
+      status: item.status,
+      createdAt: `${format(
+        item.start.dateTime
+          ? new Date(item.start.dateTime)
+          : new Date(item.start.date || ""),
+        "MMMM dd, yyyy | hh:mm a"
+      )} - ${format(
+        item.end.dateTime
+          ? new Date(item.end.dateTime)
+          : new Date(item.end.date || ""),
+        "hh:mm a"
+      )}`,
+    })) || [];
+
+  const formattedDataTomorrow: AppointmentColumn[] =
+    eventsTomorrow?.map((item) => ({
       name: item.summary,
       service: item.description || "N/A",
       status: item.status,
@@ -100,7 +135,7 @@ const PatientDayTable = () => {
           loading={isLoading}
           searchKey="name"
           columns={columns}
-          data={formattedData}
+          data={formattedDataToday}
         />
       </TabsContent>
       <TabsContent value="password">
@@ -108,7 +143,7 @@ const PatientDayTable = () => {
           loading={isLoading}
           searchKey="name"
           columns={columns}
-          data={formattedData}
+          data={formattedDataTomorrow}
         />
       </TabsContent>
     </Tabs>

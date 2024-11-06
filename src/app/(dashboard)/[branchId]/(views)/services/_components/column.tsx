@@ -11,7 +11,6 @@ export type ServiceColumn = {
   name: string;
   description: string;
   createdAt: string;
-  branchId: string;
 };
 
 export const columns: ColumnDef<ServiceColumn>[] = [

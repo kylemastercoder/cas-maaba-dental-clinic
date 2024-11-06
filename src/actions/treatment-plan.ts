@@ -11,7 +11,7 @@ export const getAllTreatmentPlanByPatient = async (patientId: string) => {
   try {
     const data = await db.treatmentPlan.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       where: {
         patientId,

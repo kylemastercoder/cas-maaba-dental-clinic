@@ -74,7 +74,10 @@ const TreatmentModal = ({
 
   async function onSubmit(values: z.infer<typeof TreatmentPlanSchema>) {
     saveTreatmentPlan(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
 

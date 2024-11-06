@@ -9,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -106,7 +105,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Copy className="w-4 h-4 mr-2" />
             Copy
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator /> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

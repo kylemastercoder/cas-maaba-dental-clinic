@@ -11,7 +11,7 @@ export const getAllPatients = async () => {
   try {
     const data = await db.patient.findMany({
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     });
 
@@ -176,10 +176,13 @@ export const deletePatient = async (patientId: string) => {
   }
 
   try {
-    const patient = await db.patient.delete({
+    const patient = await db.patient.update({
       where: {
         id: patientId,
       },
+      data: {
+        isActive: false,
+      }
     });
 
     const loginTime = formatTimeStamp(new Date());
@@ -187,16 +190,16 @@ export const deletePatient = async (patientId: string) => {
     if (patient) {
       await db.logs.create({
         data: {
-          action: `${user?.name} deleted ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+          action: `${user?.name} became inactive ${patient.firstName} ${patient.lastName} on ${loginTime}`,
         },
       });
     }
 
-    return { success: "Patient deleted successfully", patient };
+    return { success: "Patient inactive successfully", patient };
   } catch (error: any) {
     console.error(error);
     return {
-      error: `Failed to delete patient. Please try again. ${error.message || ""}`,
+      error: `Failed to inactive patient. Please try again. ${error.message || ""}`,
     };
   }
 };

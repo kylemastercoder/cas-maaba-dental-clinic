@@ -24,13 +24,14 @@ const SupplyClient = () => {
   const formattedData: SupplyColumn[] =
     supplyData?.data?.map((item) => ({
       id: item.id,
+      sku: item.sku,
       name: item.name,
       category: item.category,
-      unit: item.unit,
+      unit: item.unit.name,
       used: item.used,
       stocks: item.quantity,
       remaining: item.quantity - item.used,
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
+      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       branchId: item.branchId,
     })) || [];
 

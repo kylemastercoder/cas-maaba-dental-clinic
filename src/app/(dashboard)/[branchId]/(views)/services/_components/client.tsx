@@ -6,13 +6,10 @@ import { toast } from "sonner";
 import { columns, ServiceColumn } from "./column";
 import { format } from "date-fns";
 import { useGetServices } from "@/data/service";
-import { useParams } from "next/navigation";
 
 const ServiceClient = () => {
   const { data: serviceData, error, isLoading } = useGetServices();
   const [isMounted, setIsMounted] = useState(false);
-  const params = useParams();
-  const branchId = params.branchId;
 
   useEffect(() => {
     setIsMounted(true);
@@ -25,15 +22,12 @@ const ServiceClient = () => {
   }, [error]);
 
   const formattedData: ServiceColumn[] =
-    serviceData?.data
-      ?.filter((item) => (branchId ? item.branchId === branchId : true))
-      .map((item) => ({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        createdAt: format(item.createdAt, "MMMM do, yyyy"),
-        branchId: item.branchId,
-      })) || [];
+    serviceData?.data?.map((item) => ({
+      id: item.id,
+      name: item.name,
+      description: item.description || "N/A",
+      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
+    })) || [];
 
   if (!isMounted) {
     return null;

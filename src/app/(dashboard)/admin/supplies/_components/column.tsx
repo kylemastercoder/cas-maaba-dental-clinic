@@ -10,6 +10,7 @@ export type SupplyColumn = {
   id: string;
   name: string;
   category: string;
+  sku: string;
   used: number;
   stocks: number;
   remaining: number;
@@ -19,6 +20,10 @@ export type SupplyColumn = {
 };
 
 export const columns: ColumnDef<SupplyColumn>[] = [
+  {
+    accessorKey: "sku",
+    header: "SKU",
+  },
   {
     accessorKey: "name",
     header: "Name",

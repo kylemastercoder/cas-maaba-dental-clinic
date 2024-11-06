@@ -9,8 +9,10 @@ import React from "react";
 import ServiceClient from "./_components/client";
 import { getAllServices } from "@/actions/service";
 import AddService from "./_components/add-service";
+import { getUserFromCookies } from "@/hooks/use-user";
 
 const Services = async () => {
+  const {user} = await getUserFromCookies();
   const queryClient = new QueryClient();
 
   // Prefetch the data from the server
@@ -28,7 +30,7 @@ const Services = async () => {
           title="Service Records"
           description="Manage and track all your services in one place. View detailed records, add new services, and ensure your service data is always up-to-date with easy-to-use tools."
         />
-        <AddService />
+        {user?.role?.name === "Front Desk" && <AddService />}
       </div>
       <HydrationBoundary state={dehydratedState}>
         <ServiceClient />

@@ -53,12 +53,12 @@ const TreatmentClient = ({
           return "size-3 rounded-full border-2 border-black"; // Recurrent status
         case "For EXO":
           return "bg-red-600 w-[2px] h-6 rotate-45"; // For EXO status
-        case "Abraided/Attrition abraided":
-          return "text-red-600"; // Abraided/Attrition status
+        case "Abraided/Attrition":
+          return "text-red-600 abraided"; // Abraided/Attrition status
         case "Severe":
           return "w-3 h-2 bg-red-500 rotate-12"; // Severe status
         case "Impacted":
-          return "text-red-600"; // Impacted status
+          return "text-red-600 impacted"; // Impacted status
         case "Incipient":
           return "bg-red-600 w-4 h-[2px]"; // Incipient status
         case "CO or AM":
@@ -255,7 +255,7 @@ const TreatmentClient = ({
                           {tooth}
                         </p>
                         <div
-                          className={`absolute top-1 right-2 ${getToothStatus(
+                          className={`absolute text-xl top-1 right-2 ${getToothStatus(
                             tooth
                           )}`}
                         ></div>

@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 export const UserLoginSchema = z.object({
@@ -11,13 +10,32 @@ export const BranchSchema = z.object({
   address: z.string().min(1, { message: "Branch address is required" }),
 });
 
-export const UserRegistrationSchema = z.object({
-  username: z.string().min(1, { message: "Username is required" }),
-  name: z.string().min(1, { message: "Name is required" }),
-  role: z.string().min(1, { message: "Role is required" }),
-  password: z.string().min(1, { message: "Password is required" }),
-  branch: z.string().min(1, { message: "Branch is required" }),
-});
+export const UserRegistrationSchema = z
+  .object({
+    username: z.string().min(1, { message: "Username is required" }),
+    name: z.string().min(1, { message: "Name is required" }),
+    role: z.string().min(1, { message: "Role is required" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters long" })
+      .regex(/[A-Z]/, {
+        message: "Password must contain at least one uppercase letter",
+      })
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, {
+        message: "Password must contain at least one special character",
+      }),
+    cpassword: z.string().min(1, { message: "Confirm password is required" }),
+    branch: z.string().min(1, { message: "Branch is required" }),
+  })
+  .superRefine((data, ctx) => {
+    if (data.password !== data.cpassword) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Passwords must match",
+        path: ["cpassword"],
+      });
+    }
+  });
 
 export const PatientSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required" }),
@@ -25,7 +43,10 @@ export const PatientSchema = z.object({
   lastName: z.string().min(1, { message: "Last name is required" }),
   suffix: z.string().optional(),
   facebookName: z.string().optional(),
-  email: z.string().email({ message: "Invalid email address" }).min(1, { message: "Email is required" }),
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .min(1, { message: "Email is required" }),
   houseNumber: z.string().min(1, { message: "House number is required" }),
   region: z.string().min(1, { message: "Region is required" }),
   province: z.string().min(1, { message: "Province is required" }),
@@ -41,8 +62,7 @@ export const PatientSchema = z.object({
 
 export const ServiceSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
-  branchId: z.string().min(1, { message: "Branch is required" }),
+  description: z.string().optional(),
 });
 
 export const NotifySchema = z.object({
@@ -53,8 +73,8 @@ export const NotifySchema = z.object({
   followUpDate: z.string().min(1, { message: "Follow-up date is required" }),
 });
 
-
 export const SupplySchema = z.object({
+  sku: z.string().min(1, { message: "SKU is required" }),
   name: z.string().min(1, { message: "Name is required" }),
   category: z.string().min(1, { message: "Category is required" }),
   stocks: z.coerce.number().min(1, { message: "Stocks is required" }),
@@ -64,7 +84,9 @@ export const SupplySchema = z.object({
 });
 
 export const TreatmentPlanSchema = z.object({
-  toothNumber: z.coerce.number().min(1, { message: "Tooth number is required" }),
+  toothNumber: z.coerce
+    .number()
+    .min(1, { message: "Tooth number is required" }),
   service: z.string().min(1, { message: "Service is required" }),
   diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
   paymentMethod: z.string().min(1, { message: "Payment method is required" }),

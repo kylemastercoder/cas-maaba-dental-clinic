@@ -9,7 +9,10 @@ export type UserColumn = {
   id: string;
   name: string;
   username: string;
+  roleId: string;
   role: string;
+  branch: string;
+  isActive: boolean;
   createdAt: string;
 };
 
@@ -25,6 +28,10 @@ export const columns: ColumnDef<UserColumn>[] = [
   {
     accessorKey: "role",
     header: "Role",
+  },
+  {
+    accessorKey: "branch",
+    header: "Branch",
   },
   {
     accessorKey: "createdAt",

@@ -11,6 +11,7 @@ export type PatientColumn = {
   name: string;
   address: string;
   email: string;
+  isActive: boolean;
   sex: string;
   age: any;
   contactNumber: string;

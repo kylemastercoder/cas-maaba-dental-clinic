@@ -8,7 +8,7 @@ import React from "react";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   const { user } = await getUserFromCookies();
-  if (user?.role !== "Administrator") {
+  if (user?.role.name !== "Administrator") {
     redirect("/");
   }
   return (

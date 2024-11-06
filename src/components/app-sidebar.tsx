@@ -23,13 +23,17 @@ import {
 } from "@tabler/icons-react";
 import Image from "next/image";
 import BranchSwitcher from "./globals/branch-switcher";
-import { Branch, User } from "@prisma/client";
+import { Branch, Role, User } from "@prisma/client";
 import { getAllBranches } from "@/actions/branch";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
 
+interface UserRole extends User {
+  role: Role | null;
+}
+
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
-  user: User | null;
+  user: UserRole | null;
 }
 
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
@@ -104,6 +108,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         icon: IconUserSquareRounded,
       },
       {
+        title: "Appointments",
+        url: `/${params.branchId}/appointments`,
+        icon: IconCalendarMonth,
+      },
+      {
         title: "Services",
         url: `/${params.branchId}/services`,
         icon: IconFiles,
@@ -112,6 +121,16 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Supplies",
         url: `/${params.branchId}/supplies`,
         icon: IconMedicineSyrup,
+      },
+      {
+        title: "Manage Users",
+        url: `/${params.branchId}/manage-users`,
+        icon: IconUsers,
+      },
+      {
+        title: "Logs",
+        url: `/${params.branchId}/logs`,
+        icon: IconLogs,
       },
     ],
   };
@@ -128,6 +147,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         url: `/${params.branchId}/patients`,
         icon: IconUserSquareRounded,
       },
+      {
+        title: "Appointments",
+        url: `/${params.branchId}/appointments`,
+        icon: IconCalendarMonth,
+      },
     ],
   };
 
@@ -139,7 +163,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <SidebarMenuButton size="lg" asChild>
               <a
                 href={`${
-                  user?.role === "Administrator" && !params.branchId
+                  user?.role?.name === "Administrator" && !params.branchId
                     ? "/admin"
                     : `/${params.branchId}`
                 }`}
@@ -162,16 +186,16 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       <SidebarContent>
         <NavMain
           items={
-            user?.role === "Administrator" && !params.branchId
+            user?.role?.name === "Administrator" && !params.branchId
               ? data.navMain
-              : user?.role === "Dentist"
+              : user?.role?.name === "Dentist"
               ? dentistDataBar.navMain
               : branchDataBar.navMain
           }
         />
       </SidebarContent>
       <SidebarFooter>
-        {user?.role === "Administrator" && (
+        {user?.role?.name === "Administrator" && (
           <BranchSwitcher items={branchData} />
         )}
       </SidebarFooter>

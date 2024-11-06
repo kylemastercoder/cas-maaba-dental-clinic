@@ -7,6 +7,7 @@ import { columns, PatientColumn } from "./column";
 import { differenceInYears, format } from "date-fns";
 import { useGetPatients } from "@/data/patient";
 import { useParams } from "next/navigation";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const PatientClient = () => {
   const { data: patientData, error, isLoading } = useGetPatients();
@@ -33,23 +34,41 @@ const PatientClient = () => {
         address: item.address ?? "N/A",
         email: item.email ?? "N/A",
         sex: item.sex ?? "N/A",
+        isActive: item.isActive,
         age: differenceInYears(new Date(), new Date(item.birthdate)),
         contactNumber: item.contactNumber,
-        createdAt: format(item.createdAt, "MMMM do, yyyy"),
+        createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       })) || [];
+
+  const activePatients = formattedData.filter((patient) => patient.isActive);
+  const inactivePatients = formattedData.filter((patient) => !patient.isActive);
 
   if (!isMounted) {
     return null;
   }
   return (
-    <>
-      <DataTable
-        loading={isLoading}
-        searchKey="name"
-        columns={columns}
-        data={formattedData}
-      />
-    </>
+    <Tabs defaultValue="active">
+      <TabsList>
+        <TabsTrigger value="active">Active</TabsTrigger>
+        <TabsTrigger value="inactive">Inactive</TabsTrigger>
+      </TabsList>
+      <TabsContent value="active">
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={activePatients}
+        />
+      </TabsContent>
+      <TabsContent value="inactive">
+        <DataTable
+          loading={isLoading}
+          searchKey="name"
+          columns={columns}
+          data={inactivePatients}
+        />
+      </TabsContent>
+    </Tabs>
   );
 };
 

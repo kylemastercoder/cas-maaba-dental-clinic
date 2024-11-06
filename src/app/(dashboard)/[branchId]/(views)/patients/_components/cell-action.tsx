@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -17,10 +17,9 @@ import {
   Copy,
   Edit,
   MoreHorizontal,
-  Trash,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useParams, useRouter } from "next/navigation";
 import NotifyModal from "@/components/modals/notify-modal";
@@ -50,6 +49,16 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
       },
     });
   };
+
+  useEffect(() => {
+    const createdAtDate = new Date(data.createdAt);
+    const sixYearsAgo = new Date();
+    sixYearsAgo.setFullYear(sixYearsAgo.getFullYear() - 6);
+
+    if (createdAtDate <= sixYearsAgo) {
+      onDelete(); // Trigger delete if more than six years old
+    }
+  }, [data.createdAt]);
 
   return (
     <>
@@ -97,11 +106,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Copy className="w-4 h-4 mr-2" />
             Copy
           </DropdownMenuItem>
-          <DropdownMenuSeparator />
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

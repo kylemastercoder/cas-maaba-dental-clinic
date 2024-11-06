@@ -2,79 +2,36 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { fetchCalendarEvents } from "@/actions/appointments";
-import React, { useEffect, useState } from "react";
-
-export interface CalendarEvent {
-  id: string;
-  summary: string;
-  description?: string;
-  start: {
-    dateTime?: string;
-    date?: string;
-  };
-  end: {
-    dateTime?: string;
-    date?: string;
-  };
-}
+import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const AppointmentClient = () => {
-  const [events, setEvents] = useState<CalendarEvent[]>([]);
-
-  useEffect(() => {
-    const getEvents = async () => {
-      try {
-        const calendarEvents = await fetchCalendarEvents();
-        console.log("Fetched events:", calendarEvents);
-        setEvents(calendarEvents);
-      } catch (error) {
-        console.error("Error fetching calendar events:", error);
-      }
-    };
-
-    getEvents();
-  }, []);
   return (
     <div className="mt-3">
-      <iframe
-        src="https://calendar.google.com/calendar/embed?src=casmaabadental%40gmail.com&amp;ctz=Asia%2FManila"
-        width="100%"
-        height="1000"
-        frameBorder="0"
-        scrolling="no"
-      ></iframe>
-
-      {/* <table className="min-w-full divide-y divide-gray-200">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 bg-gray-50">Event Title</th>
-            <th className="px-6 py-3 bg-gray-50">Start Date</th>
-            <th className="px-6 py-3 bg-gray-50">End Date</th>
-            <th className="px-6 py-3 bg-gray-50">Description</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {events.map((event) => (
-            <tr key={event.id}>
-              <td className="px-6 py-4">{event.summary || "No Title"}</td>
-              <td className="px-6 py-4">
-                {new Date(
-                  event.start.dateTime || event.start.date || ""
-                ).toLocaleString()}
-              </td>
-              <td className="px-6 py-4">
-                {new Date(
-                  event.end.dateTime || event.end.date || ""
-                ).toLocaleString()}
-              </td>
-              <td className="px-6 py-4">
-                {event.description || "No Description"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
+      <Tabs defaultValue="dasma">
+        <TabsList>
+          <TabsTrigger value="dasma">Dasmarinas</TabsTrigger>
+          <TabsTrigger value="molino">Molino-Bacoor</TabsTrigger>
+        </TabsList>
+        <TabsContent value="dasma">
+          <iframe
+            src="https://calendar.google.com/calendar/embed?src=casmaabadentalservices%40gmail.com&amp;ctz=Asia%2FManila"
+            width="100%"
+            height="1000"
+            frameBorder="0"
+            scrolling="no"
+          ></iframe>
+        </TabsContent>
+        <TabsContent value="molino">
+          <iframe
+            src="https://calendar.google.com/calendar/embed?src=clybuenaflor12221%40gmail.com&amp;ctz=Asia%2FManila"
+            width="100%"
+            height="1000"
+            frameBorder="0"
+            scrolling="no"
+          ></iframe>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

@@ -25,9 +25,8 @@ const ServiceClient = () => {
     serviceData?.data?.map((item) => ({
       id: item.id,
       name: item.name,
-      description: item.description,
-      createdAt: format(item.createdAt, "MMMM do, yyyy"),
-      branchId: item.branchId,
+      description: item.description || "N/A",
+      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
     })) || [];
 
   if (!isMounted) {

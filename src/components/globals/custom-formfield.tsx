@@ -39,6 +39,7 @@ import { format } from "date-fns";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "./image-uploader";
+import { DynamicSelect } from "./dynamic-select";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -78,6 +79,8 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     placeholder,
     disabled,
     description,
+    dynamicOptions,
+    onCreate,
     type,
     options,
     selectOptions,
@@ -205,6 +208,20 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                 ))}
             </SelectContent>
           </Select>
+        </FormControl>
+      );
+
+    case FormFieldType.DYNAMICSELECT:
+      return (
+        <FormControl>
+          <DynamicSelect
+            onChange={field.onChange}
+            disabled={disabled}
+            placeholder={placeholder}
+            options={dynamicOptions}
+            onCreate={(value) => onCreate && onCreate(value)}
+            value={field.value || ""}
+          />
         </FormControl>
       );
 

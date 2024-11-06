@@ -70,7 +70,7 @@ const getLocationDistribution = (barangays: string[]) => {
   return Object.entries(locationCounts).map(([label, value]) => ({
     label,
     value,
-    date: new Date().toISOString().split("T")[0], // Adding current date as a string in YYYY-MM-DD format
+    date: new Date().toISOString().split("T")[0],
   }));
 };
 
@@ -99,7 +99,9 @@ const AdminPage = async () => {
   const treatmentRendered = await db.treatmentPlan.findMany({
     include: { service: true },
   });
-  const staff = await db.user.findMany();
+  const staff = await db.user.findMany({
+    where: { role: { isNot: { name: "Administrator" } } },
+  });
   const runningSupplies = supplies
     .map((supply) => ({
       ...supply,

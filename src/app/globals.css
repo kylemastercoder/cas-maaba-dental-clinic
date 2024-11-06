@@ -44,7 +44,11 @@ body {
 }
 
 .abraided::after {
-  content: "/\\/\\/\\"; /* Escape each backslash */
+  content: "/\\/\\"; /* Escape each backslash */
+}
+
+.impacted::after {
+  content: "IMP"; /* Escape each backslash */
 }
 
 @layer utilities {

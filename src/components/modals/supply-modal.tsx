@@ -13,17 +13,22 @@ import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveSupply } from "@/data/supply";
-import { Branch } from "@prisma/client";
+import { Branch, Units } from "@prisma/client";
 import { useParams } from "next/navigation";
+import { generateRandomSKU } from "@/lib/utils";
+import { createUnit } from "@/actions/unit";
+import { toast } from "sonner";
 
 const SupplyForm = ({
   initialData,
   onClose,
   branches,
+  units,
 }: {
   initialData: any;
   onClose: () => void;
   branches: Branch[];
+  units: Units[];
 }) => {
   const params = useParams();
   const title = initialData ? "Edit Supply" : "Add Supply";
@@ -38,11 +43,14 @@ const SupplyForm = ({
       ? {
           ...initialData,
           branchId: initialData.branchId,
+          sku: initialData.sku,
+          unit: initialData.unit || "",
         }
       : {
+          sku: generateRandomSKU() || "",
           name: "",
           category: "",
-          unit: "",
+          unit: initialData.unit || "",
           stocks: 0,
           used: 0,
           branchId: Array.isArray(params.branchId)
@@ -56,9 +64,22 @@ const SupplyForm = ({
 
   async function onSubmit(values: z.infer<typeof SupplySchema>) {
     saveSupply(values, {
-      onSuccess: () => onClose(),
+      onSuccess: () => {
+        onClose();
+        window.location.reload();
+      },
     });
   }
+
+  const onCreate = async (name: string) => {
+    const response = await createUnit(name);
+    if (response.error) {
+      toast.error(response.error);
+    } else {
+      toast.success(response.success);
+      window.location.reload();
+    }
+  };
 
   return (
     <>
@@ -72,6 +93,15 @@ const SupplyForm = ({
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="mx-auto grid flex-1 auto-rows-max gap-4">
               <div className="grid gap-4">
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.INPUT}
+                  placeholder="Enter sku"
+                  label="SKU"
+                  isRequired={true}
+                  name="sku"
+                  disabled
+                />
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.INPUT}
@@ -92,18 +122,17 @@ const SupplyForm = ({
                 />
                 <CustomFormField
                   control={form.control}
-                  fieldType={FormFieldType.SELECT}
-                  placeholder="Select supply unit"
+                  fieldType={FormFieldType.DYNAMICSELECT}
+                  dynamicOptions={units.map((unit) => ({
+                    value: unit.id,
+                    label: unit.name,
+                  }))}
+                  placeholder="Select Unit"
                   label="Unit"
-                  selectOptions={[
-                    { label: "pcs", value: "pcs" },
-                    { label: "box", value: "box" },
-                    { label: "bottle", value: "bottle" },
-                    { label: "sachet", value: "sachet" },
-                  ]}
                   isRequired={true}
                   name="unit"
                   disabled={isSaving}
+                  onCreate={onCreate}
                 />
                 {!params.branchId && (
                   <CustomFormField

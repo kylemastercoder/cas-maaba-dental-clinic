@@ -10,7 +10,7 @@ const SetupLayout = async ({ children }: { children: React.ReactNode }) => {
     redirect("/sign-in");
   }
 
-  if (user?.role == "Administrator") {
+  if (user?.role.name == "Administrator") {
     redirect("/admin");
   }
 

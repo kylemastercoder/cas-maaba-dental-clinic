@@ -16,6 +16,7 @@ import {
 import React from "react";
 import { differenceInYears, formatDate } from "date-fns";
 import PatientDayTable from "@/components/globals/patient-day-table";
+import { TreatmentRenderedPie } from "@/components/globals/treatment-rendered-pie";
 
 const calculateAge = (birthdate: string): number => {
   return differenceInYears(new Date(), new Date(birthdate));
@@ -70,6 +71,25 @@ const getLocationDistribution = (barangays: string[]) => {
   return Object.entries(locationCounts).map(([label, value]) => ({
     label,
     value,
+    date: new Date().toISOString().split("T")[0],
+  }));
+};
+
+const getTreatmentRenderedDistribution = (services: string[]) => {
+  const treatmentCount: { [key: string]: number } = {};
+
+  services.forEach((service) => {
+    if (treatmentCount[service]) {
+      treatmentCount[service] += 1;
+    } else {
+      treatmentCount[service] = 1;
+    }
+  });
+
+  return Object.entries(treatmentCount).map(([label, value]) => ({
+    label,
+    value,
+    date: new Date().toISOString().split("T")[0], // Adding current date as a string in YYYY-MM-DD format
   }));
 };
 
@@ -79,17 +99,20 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
     where: {
       branchId: params.branchId,
     },
+    include: {
+      treatmentPlan: {
+        include: {
+          service: true,
+        },
+      },
+    },
   });
   const supplies = await db.supplies.findMany({
     where: {
       branchId: params.branchId,
     },
   });
-  const services = await db.service.findMany({
-    where: {
-      branchId: params.branchId,
-    },
-  });
+  const services = await db.service.findMany();
   const runningSupplies = supplies
     .map((supply) => ({
       ...supply,
@@ -102,6 +125,12 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
     const match = p.address ? p.address.match(/,\s*([A-Za-z\s]+),/) : null;
     return match ? match[1].trim() : "Barangay not found";
   });
+  const treatmentGroups = patient
+    .map((item) => item.treatmentPlan.map((t) => t.service?.name))
+    .flat() // Flatten the resulting array of arrays
+    .filter((name): name is string => !!name); // Filter out undefined values
+  const treatmentDistribution =
+    getTreatmentRenderedDistribution(treatmentGroups);
   const locationDistribution = getLocationDistribution(barangays);
   return (
     <div>
@@ -109,7 +138,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
         <StatCard
           title="Patients"
           href={`${
-            user?.role === "admin"
+            user?.role.name === "admin"
               ? "/admin/patients"
               : `/${params.branchId}/patients`
           }`}
@@ -119,7 +148,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
         <StatCard
           title="Services"
           href={`${
-            user?.role === "admin"
+            user?.role.name === "admin"
               ? "/admin/services"
               : `/${params.branchId}/services`
           }`}
@@ -129,24 +158,13 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
         <StatCard
           title="Supplies"
           href={`${
-            user?.role === "admin"
+            user?.role.name === "admin"
               ? "/admin/supplies"
               : `/${params.branchId}/supplies`
           }`}
           description={supplies.length}
           icon={Syringe}
         />
-      </div>
-      <div className="mt-6 mb-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
-        <div className="col-span-4">
-          <PatientLocation data={locationDistribution} />
-          <div className="mt-6">
-            <SupplyInventoryTable data={runningSupplies} />
-          </div>
-        </div>
-        <div className="col-span-6">
-          <AgeSexBar data={ageSexDistribution} />
-        </div>
       </div>
       <div className="mt-6">
         <Card>
@@ -162,6 +180,29 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
           </CardContent>
         </Card>
       </div>
+      {user?.role.name === "Administrator" ||
+      user?.role.name === "Branch Head" ? (
+        <div className="mt-6 mb-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
+          <div className="col-span-4">
+            <PatientLocation data={locationDistribution} />
+            <div className="mt-6">
+              <SupplyInventoryTable data={runningSupplies} />
+            </div>
+          </div>
+          <div className="col-span-6">
+            <AgeSexBar data={ageSexDistribution} />
+            <div className="mt-6">
+              <TreatmentRenderedPie data={treatmentDistribution} />
+            </div>
+          </div>
+        </div>
+      ) : user?.role.name === "Dentist" ? (
+        null
+      ) : (
+        <div className="mt-6 mb-6 grid h-auto grid-cols-1 gap-6">
+          <SupplyInventoryTable data={runningSupplies} />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createUser, deleteUser, getAllUsers, updateUser } from "@/actions/user";
+import { createUser, getAllUsers, setActiveUser, setInactiveUser, updateUser } from "@/actions/user";
 import { UserRegistrationSchema } from "@/lib/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -35,12 +35,31 @@ export function useSaveUser(initialData?: any) {
   });
 }
 
-export function useDeleteUser() {
+export function useInactiveUser() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (userId: string) => {
-      return deleteUser(userId);
+      return setInactiveUser(userId);
+    },
+    onSuccess: (data) => {
+      if (data?.success) {
+        toast.success(data.success);
+        queryClient.invalidateQueries({ queryKey: ["users"] });
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "An error occurred");
+    },
+  });
+}
+
+export function useActiveUser() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      return setActiveUser(userId);
     },
     onSuccess: (data) => {
       if (data?.success) {

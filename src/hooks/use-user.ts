@@ -28,6 +28,7 @@ export const getUserFromCookies = async () => {
       },
       include: {
         branch: true,
+        role: true,
       }
     });
 

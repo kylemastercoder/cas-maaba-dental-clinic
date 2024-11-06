@@ -21,7 +21,7 @@ const DashboardLayout = async ({
   }
 
   // If the user is an Administrator, allow access to all branches
-  if (user.role === "Administrator") {
+  if (user.role.name === "Administrator") {
     const branch = await db.branch.findFirst({
       where: {
         id: params.branchId, // Allow any branch access for admin

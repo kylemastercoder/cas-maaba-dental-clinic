@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Form } from "../ui/form";
 import { z } from "zod";
@@ -13,18 +13,21 @@ import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
 import { useSaveUser } from "@/data/user";
-import { Branch } from "@prisma/client";
+import { Branch, Role } from "@prisma/client";
 import { getAllBranches } from "@/actions/branch";
 import { toast } from "sonner";
+import { createRole } from "@/actions/roles";
 
 const UserForm = ({
   initialData,
   onClose,
+  roles,
 }: {
   initialData: any;
   onClose: () => void;
+  roles: Role[];
 }) => {
-  const [branches, setBranches] = React.useState<Branch[]>([]);
+  const [branches, setBranches] = useState<Branch[]>([]);
   const title = initialData ? "Edit User" : "Add User";
   const description = initialData
     ? "Make sure to click save changes after you update the user."
@@ -41,6 +44,7 @@ const UserForm = ({
           name: "",
           username: "",
           password: "",
+          cpassword: "",
           role: "",
           branch: "",
         },
@@ -67,6 +71,16 @@ const UserForm = ({
       },
     });
   }
+
+  const onCreate = async (name: string) => {
+    const response = await createRole(name);
+    if (response.error) {
+      toast.error(response.error);
+    } else {
+      toast.success(response.success);
+      window.location.reload();
+    }
+  };
 
   return (
     <>
@@ -110,6 +124,16 @@ const UserForm = ({
                 />
                 <CustomFormField
                   control={form.control}
+                  fieldType={FormFieldType.INPUT}
+                  placeholder="--------"
+                  label="Confirm Password"
+                  type="password"
+                  isRequired={true}
+                  name="cpassword"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
                   fieldType={FormFieldType.SELECT}
                   placeholder="Select Branch"
                   selectOptions={branches.map((branch) => ({
@@ -123,17 +147,17 @@ const UserForm = ({
                 />
                 <CustomFormField
                   control={form.control}
-                  fieldType={FormFieldType.SELECT}
-                  selectOptions={[
-                    { value: "Dentist", label: "Dentist" },
-                    { value: "Front Desk", label: "Front Desk" },
-                    { value: "Branch Head", label: "Branch Head" },
-                  ]}
+                  fieldType={FormFieldType.DYNAMICSELECT}
+                  dynamicOptions={roles.map((role) => ({
+                    value: role.id,
+                    label: role.name,
+                  }))}
                   placeholder="Select Role"
                   label="Role"
                   isRequired={true}
                   name="role"
                   disabled={isSaving}
+                  onCreate={onCreate}
                 />
                 <Button type="submit" disabled={isSaving} size="sm">
                   {isSaving && <Loader className="animate-spin w-4 h-4 mr-2" />}

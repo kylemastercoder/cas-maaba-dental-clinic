@@ -36,3 +36,9 @@ export const formatTimeStamp = (date: Date): string => {
     hour12: true,
   })}`;
 };
+
+export function generateRandomSKU(): string {
+  const randomNumber = Math.floor(100000 + Math.random() * 900000); // Generates a random 6-digit number
+  return `DS-${randomNumber}`;
+}
+

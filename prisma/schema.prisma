@@ -12,11 +12,14 @@ model User {
   username  String   @unique
   password  String
   name      String
-  role      String
+  isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   branchId  String
-  branch    Branch  @relation(fields: [branchId], references: [id])
+  branch    Branch   @relation(fields: [branchId], references: [id])
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
 }
 
 model Patient {
@@ -33,6 +36,7 @@ model Patient {
   maritalStatus String?
   occupation    String?
   contactNumber String
+  isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -44,12 +48,10 @@ model Patient {
 model Service {
   id          String   @id @default(cuid())
   name        String
-  description String
+  description String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  branchId      String
-  branch        Branch          @relation(fields: [branchId], references: [id])
   treatmentPlan TreatmentPlan[]
 }
 
@@ -61,16 +63,16 @@ model Branch {
   updatedAt DateTime @updatedAt
 
   patient  Patient[]
-  service  Service[]
   supplies Supplies[]
-  user User[]
+  user     User[]
+  logs     Logs[]
 }
 
 model Supplies {
   id        String   @id @default(cuid())
+  sku       String
   name      String
   category  String
-  unit      String
   used      Int
   quantity  Int
   createdAt DateTime @default(now())
@@ -78,6 +80,27 @@ model Supplies {
 
   branchId String
   branch   Branch @relation(fields: [branchId], references: [id])
+
+  unitId String
+  unit   Units  @relation(fields: [unitId], references: [id])
+}
+
+model Units {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  supplies Supplies[]
+}
+
+model Role {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User[]
 }
 
 model TreatmentPlan {
@@ -103,4 +126,7 @@ model Logs {
   action    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
 }

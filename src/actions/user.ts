@@ -17,6 +17,7 @@ export const getAllUsers = async () => {
       },
       include: {
         branch: true,
+        role: true,
       },
     });
 
@@ -35,13 +36,16 @@ export const getAllBranchHead = async () => {
   try {
     const data = await db.user.findMany({
       where: {
-        role: "Branch Head",
+        role: {
+          name: "Branch Head",
+        },
       },
       orderBy: {
         createdAt: "asc",
       },
       include: {
         branch: true,
+        role: true,
       },
     });
 
@@ -83,12 +87,17 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
       return { error: "Invalid Password" };
     }
 
+    if(user.isActive === false) {
+      return { error: "User is inactive. Can't access the system." };
+    }
+
     const loginTime = formatTimeStamp(new Date());
 
     if (user) {
       await db.logs.create({
         data: {
           action: `${user.name} logged in on ${loginTime}`,
+          branchId: user.branchId,
         },
       });
     }
@@ -140,17 +149,18 @@ export const createUser = async (
         name,
         username,
         password: hashedPassword,
-        role,
+        roleId: role,
         branchId: branch,
       },
     });
 
     const loginTime = formatTimeStamp(new Date());
 
-    if(user) {
+    if (user) {
       await db.logs.create({
         data: {
           action: `${user.name} created on ${loginTime}`,
+          branchId: user.branchId,
         },
       });
     }
@@ -191,17 +201,18 @@ export const updateUser = async (
         name,
         username,
         password: hashedPassword,
-        role,
+        roleId: role,
         branchId: branch,
       },
     });
 
     const loginTime = formatTimeStamp(new Date());
 
-    if(user) {
+    if (user) {
       await db.logs.create({
         data: {
           action: `${user.name} updated on ${loginTime}`,
+          branchId: user.branchId,
         },
       });
     }
@@ -214,32 +225,72 @@ export const updateUser = async (
   }
 };
 
-export const deleteUser = async (userId: string) => {
+export const setInactiveUser = async (userId: string) => {
   if (!userId) {
     return { error: "User ID is required." };
   }
 
   try {
-    const user = await db.user.delete({
+    const user = await db.user.update({
       where: {
         id: userId,
+      },
+      data: {
+        isActive: false,
       },
     });
 
     const loginTime = formatTimeStamp(new Date());
 
-    if(user) {
+    if (user) {
       await db.logs.create({
         data: {
-          action: `${user.name} deleted on ${loginTime}`,
+          action: `${user.name} set inactive on ${loginTime}`,
+          branchId: user.branchId,
         },
       });
     }
 
-    return { success: "User deleted successfully", user };
+    return { success: "User inactive successfully", user };
   } catch (error: any) {
     return {
-      error: `Failed to delete user. Please try again. ${error.message || ""}`,
+      error: `Failed to inactive user. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const setActiveUser = async (userId: string) => {
+  if (!userId) {
+    return { error: "User ID is required." };
+  }
+
+  try {
+    const user = await db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        isActive: true,
+      },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (user) {
+      await db.logs.create({
+        data: {
+          action: `${user.name} set active on ${loginTime}`,
+          branchId: user.branchId,
+        },
+      });
+    }
+
+    return { success: "User active successfully", user };
+  } catch (error: any) {
+    return {
+      error: `Failed to active user. Please try again. ${error.message || ""}`,
     };
   }
 };

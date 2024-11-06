@@ -32,6 +32,7 @@ export const createBranch = async (values: z.infer<typeof BranchSchema>) => {
       await db.logs.create({
         data: {
           action: `${user?.name} added ${branch.name} on ${loginTime}`,
+          branchId: branch.id,
         },
       });
     }
