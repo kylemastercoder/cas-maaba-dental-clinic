@@ -41,7 +41,15 @@ export const createTreatmentPlan = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { toothNumber, service, diagnosis, remarks, status, isPaid, paymentMethod } = validatedField.data;
+  const {
+    toothNumber,
+    service,
+    diagnosis,
+    remarks,
+    status,
+    isPaid,
+    paymentMethod,
+  } = validatedField.data;
 
   try {
     const treatmentPlan = await db.treatmentPlan.create({
@@ -53,7 +61,7 @@ export const createTreatmentPlan = async (
         patientId,
         paymentMethod,
         status,
-        isPaid
+        isPaid,
       },
       include: {
         patient: true,
@@ -67,6 +75,7 @@ export const createTreatmentPlan = async (
       await db.logs.create({
         data: {
           action: `${user?.name} added ${treatmentPlan.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -93,7 +102,15 @@ export const updateTreatmentPlan = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { toothNumber, service, diagnosis, remarks, status, isPaid, paymentMethod } = validatedField.data;
+  const {
+    toothNumber,
+    service,
+    diagnosis,
+    remarks,
+    status,
+    isPaid,
+    paymentMethod,
+  } = validatedField.data;
 
   try {
     const treatmentPlan = await db.treatmentPlan.update({
@@ -107,7 +124,7 @@ export const updateTreatmentPlan = async (
         dentalRemarks: remarks ?? "",
         paymentMethod,
         status,
-        isPaid
+        isPaid,
       },
       include: {
         patient: true,
@@ -121,6 +138,7 @@ export const updateTreatmentPlan = async (
       await db.logs.create({
         data: {
           action: `${user?.name} updated ${treatmentPlan.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -135,9 +153,7 @@ export const updateTreatmentPlan = async (
   }
 };
 
-export const deleteTreatmentPlan = async (
-  treatmentId: string
-) => {
+export const deleteTreatmentPlan = async (treatmentId: string) => {
   const { user } = await getUserFromCookies();
 
   try {
@@ -157,6 +173,7 @@ export const deleteTreatmentPlan = async (
       await db.logs.create({
         data: {
           action: `${user?.name} deleted ${treatmentPlan.toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }

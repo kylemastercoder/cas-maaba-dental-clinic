@@ -51,6 +51,7 @@ export const createService = async (values: z.infer<typeof ServiceSchema>) => {
       await db.logs.create({
         data: {
           action: `${user?.name} added ${service.name} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -96,6 +97,7 @@ export const updateService = async (
       await db.logs.create({
         data: {
           action: `${user?.name} updated ${service.name} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -129,6 +131,7 @@ export const deleteService = async (serviceId: string) => {
       await db.logs.create({
         data: {
           action: `${user?.name} deleted ${service.name} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }

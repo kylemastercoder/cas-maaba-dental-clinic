@@ -52,7 +52,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
     maritalStatus,
     occupation,
     contactNumber,
-    branchId
+    branchId,
   } = validatedField.data;
 
   const address = `${houseNumber}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -72,7 +72,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
         maritalStatus,
         occupation,
         contactNumber,
-        branchId
+        branchId,
       },
     });
 
@@ -82,6 +82,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
       await db.logs.create({
         data: {
           action: `${user?.name} added ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -96,7 +97,10 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
   }
 };
 
-export const updatePatient = async (values: z.infer<typeof PatientSchema>, patientId: string) => {
+export const updatePatient = async (
+  values: z.infer<typeof PatientSchema>,
+  patientId: string
+) => {
   const { user } = await getUserFromCookies();
   const validatedField = PatientSchema.safeParse(values);
 
@@ -122,7 +126,7 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
     maritalStatus,
     occupation,
     contactNumber,
-    branchId
+    branchId,
   } = validatedField.data;
 
   const address = `${houseNumber}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -142,11 +146,11 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
         maritalStatus,
         occupation,
         contactNumber,
-        branchId
+        branchId,
       },
       where: {
         id: patientId,
-      }
+      },
     });
 
     const loginTime = formatTimeStamp(new Date());
@@ -155,6 +159,7 @@ export const updatePatient = async (values: z.infer<typeof PatientSchema>, patie
       await db.logs.create({
         data: {
           action: `${user?.name} updated ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -182,7 +187,7 @@ export const deletePatient = async (patientId: string) => {
       },
       data: {
         isActive: false,
-      }
+      },
     });
 
     const loginTime = formatTimeStamp(new Date());
@@ -191,6 +196,7 @@ export const deletePatient = async (patientId: string) => {
       await db.logs.create({
         data: {
           action: `${user?.name} became inactive ${patient.firstName} ${patient.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
         },
       });
     }
@@ -199,7 +205,9 @@ export const deletePatient = async (patientId: string) => {
   } catch (error: any) {
     console.error(error);
     return {
-      error: `Failed to inactive patient. Please try again. ${error.message || ""}`,
+      error: `Failed to inactive patient. Please try again. ${
+        error.message || ""
+      }`,
     };
   }
 };
