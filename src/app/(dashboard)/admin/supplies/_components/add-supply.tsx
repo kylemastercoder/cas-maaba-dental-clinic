@@ -12,20 +12,25 @@ const AddSupply = () => {
   const [openModal, setOpenModal] = useState(false);
   const [branches, setBranches] = useState<Branch[]>([]);
   const [units, setUnits] = useState<Units[]>([]);
+
   useEffect(() => {
     const fetchBranches = async () => {
       const response = await getAllBranches();
+      console.log("Fetched branches:", response);
       setBranches(response?.data || []);
     };
     fetchBranches();
   }, []);
+
   useEffect(() => {
     const fetchUnits = async () => {
       const response = await getAllUnits();
+      console.log("Fetched units:", response);
       setUnits(response?.data || []);
     };
     fetchUnits();
   }, []);
+
   return (
     <>
       <Button

@@ -4,7 +4,6 @@
 import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
 import { formatTimeStamp } from "@/lib/utils";
-import { revalidatePath } from "next/cache";
 
 export const getAllUnits = async () => {
   try {
@@ -45,7 +44,6 @@ export const createUnit = async (name: string) => {
       });
     }
 
-    revalidatePath("/");
     return { success: "Unit created successfully", unit };
   } catch (error: any) {
     return {

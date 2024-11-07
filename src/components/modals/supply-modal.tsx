@@ -42,15 +42,15 @@ const SupplyForm = ({
     defaultValues: initialData
       ? {
           ...initialData,
-          branchId: initialData.branchId,
-          sku: initialData.sku,
-          unit: initialData.unit || "",
+          branchId: initialData.branchId ?? "",
+          sku: initialData.sku ?? generateRandomSKU(),
+          unit: initialData.unit ?? "",
         }
       : {
           sku: generateRandomSKU() || "",
           name: "",
           category: "",
-          unit: initialData.unit || "",
+          unit: "",
           stocks: 0,
           used: 0,
           branchId: Array.isArray(params.branchId)
