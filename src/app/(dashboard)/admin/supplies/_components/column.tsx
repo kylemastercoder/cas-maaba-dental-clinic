@@ -14,6 +14,7 @@ export type SupplyColumn = {
   used: number;
   stocks: number;
   remaining: number;
+  branch: string;
   unit: string;
   createdAt: string;
   branchId: string;
@@ -47,6 +48,10 @@ export const columns: ColumnDef<SupplyColumn>[] = [
   {
     accessorKey: "remaining",
     header: "Remaining",
+  },
+  {
+    accessorKey: "branch",
+    header: "Branch",
   },
   {
     accessorKey: "createdAt",

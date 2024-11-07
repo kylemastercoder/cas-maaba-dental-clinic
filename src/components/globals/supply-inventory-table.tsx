@@ -8,10 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { Supplies } from "@prisma/client";
+import { Branch, Supplies } from "@prisma/client";
 import { Badge } from "../ui/badge";
 
-const SupplyInventoryTable = ({ data }: { data: Supplies[] }) => {
+interface SupplyBranch extends Supplies {
+  branch: Branch | null;
+}
+
+const SupplyInventoryTable = ({ data }: { data: SupplyBranch[] }) => {
   return (
     <Card className="w-full max-h-[700px] overflow-auto">
       <CardHeader>
@@ -23,6 +27,7 @@ const SupplyInventoryTable = ({ data }: { data: Supplies[] }) => {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Stocks</TableHead>
+              <TableHead>Branch</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -32,6 +37,7 @@ const SupplyInventoryTable = ({ data }: { data: Supplies[] }) => {
                 <TableRow key={supply.id}>
                   <TableCell>{supply.name}</TableCell>
                   <TableCell>{supply.quantity - supply.used}</TableCell>
+                  <TableCell>{supply.branch?.name}</TableCell>
                   <TableCell>
                     <Badge variant="destructive">Running out of stock</Badge>
                   </TableCell>

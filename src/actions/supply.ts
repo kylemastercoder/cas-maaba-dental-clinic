@@ -15,6 +15,7 @@ export const getAllSupplies = async () => {
       },
       include: {
         unit: true,
+        branch: true,
       }
     });
 

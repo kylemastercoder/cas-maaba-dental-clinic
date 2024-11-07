@@ -94,7 +94,9 @@ const getTreatmentRenderedDistribution = (services: string[]) => {
 
 const AdminPage = async () => {
   const patient = await db.patient.findMany();
-  const supplies = await db.supplies.findMany();
+  const supplies = await db.supplies.findMany({
+    include: { branch: true },
+  });
   const services = await db.service.findMany();
   const treatmentRendered = await db.treatmentPlan.findMany({
     include: { service: true },

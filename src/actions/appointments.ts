@@ -12,7 +12,7 @@ export const fetchCalendarEventsToday = async () => {
     // Fetch events from the first calendar
     const response1 = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "clybuenaflor12221@gmail.com"
+        "casmaabadental@gmail.com"
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`
@@ -55,7 +55,7 @@ export const fetchCalendarEventsTomorrow = async () => {
     // Fetch events from the first calendar
     const response1 = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "clybuenaflor12221@gmail.com"
+        "casmaabadental@gmail.com"
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`

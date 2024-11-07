@@ -30,6 +30,7 @@ const SupplyClient = () => {
       unit: item.unit.name,
       used: item.used,
       stocks: item.quantity,
+      branch: item.branch.name,
       remaining: item.quantity - item.used,
       createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       branchId: item.branchId,
