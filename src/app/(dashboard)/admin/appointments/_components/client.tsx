@@ -15,7 +15,7 @@ const AppointmentClient = () => {
         </TabsList>
         <TabsContent value="dasma">
           <iframe
-            src="https://calendar.google.com/calendar/embed?src=casmaabadentalservices%40gmail.com&amp;ctz=Asia%2FManila"
+            src="https://calendar.google.com/calendar/embed?src=casmaabadentalservices%40gmail.com&ctz=Asia%2FManila"
             width="100%"
             height="1000"
             frameBorder="0"
@@ -24,7 +24,7 @@ const AppointmentClient = () => {
         </TabsContent>
         <TabsContent value="molino">
           <iframe
-            src="https://calendar.google.com/calendar/embed?src=clybuenaflor12221%40gmail.com&amp;ctz=Asia%2FManila"
+            src="https://calendar.google.com/calendar/embed?src=clybuenaflor12221%40gmail.com&ctz=Asia%2FManila"
             width="100%"
             height="1000"
             frameBorder="0"
