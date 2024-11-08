@@ -12,6 +12,11 @@ export const getAllRoles = async () => {
       orderBy: {
         createdAt: "desc",
       },
+      where: {
+        NOT: {
+          name: "Administrator",
+        },
+      }
     });
 
     if (!data) {

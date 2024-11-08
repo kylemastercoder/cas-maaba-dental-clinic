@@ -9,7 +9,7 @@ import {
   UPPER_MIDDLE_TEETH,
   UPPER_TEETH,
 } from "@/constants";
-import { Patient, Service, TreatmentPlan } from "@prisma/client";
+import { Patient, Role, Service, TreatmentPlan, User } from "@prisma/client";
 import { differenceInYears, format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -21,10 +21,16 @@ export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
 }
 
+interface UserRole extends User {
+  role: Role | null;
+}
+
 const TreatmentClient = ({
   patient,
+  user,
 }: {
   patient: PatientWithTreatment | null;
+  user: UserRole | null;
 }) => {
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
@@ -187,6 +193,8 @@ const TreatmentClient = ({
                           t.toothNumber === tooth && t.patientId === patient.id
                       )
                         ? "cursor-not-allowed"
+                        : user?.role?.name === "Front Desk"
+                        ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
                     onClick={() => {
@@ -194,7 +202,7 @@ const TreatmentClient = ({
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       );
-                      if (!isNotClickable) {
+                      if (!isNotClickable && user?.role?.name !== "Front Desk") {
                         openModal(tooth);
                       }
                     }}
@@ -233,19 +241,19 @@ const TreatmentClient = ({
                         className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                           patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth &&
-                              t.patientId === patient.id
+                              t.toothNumber === tooth && t.patientId === patient.id
                           )
+                            ? "cursor-not-allowed"
+                            : user?.role?.name === "Front Desk"
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
                         }`}
                         onClick={() => {
                           const isNotClickable = patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth &&
-                              t.patientId === patient.id
+                              t.toothNumber === tooth && t.patientId === patient.id
                           );
-                          if (!isNotClickable) {
+                          if (!isNotClickable && user?.role?.name !== "Front Desk") {
                             openModal(tooth);
                           }
                         }}
@@ -281,19 +289,19 @@ const TreatmentClient = ({
                           className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                             patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth &&
-                                t.patientId === patient.id
+                                t.toothNumber === tooth && t.patientId === patient.id
                             )
+                              ? "cursor-not-allowed"
+                              : user?.role?.name === "Front Desk"
                               ? "cursor-not-allowed"
                               : "cursor-pointer"
                           }`}
                           onClick={() => {
                             const isNotClickable = patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth &&
-                                t.patientId === patient.id
+                                t.toothNumber === tooth && t.patientId === patient.id
                             );
-                            if (!isNotClickable) {
+                            if (!isNotClickable && user?.role?.name !== "Front Desk") {
                               openModal(tooth);
                             }
                           }}
@@ -330,11 +338,13 @@ const TreatmentClient = ({
                 {LOWER_TEETH.map((tooth) => (
                   <div
                     key={tooth}
-                    className={`relative w-[50px] h-[50px] ${
+                    className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                       patient?.treatmentPlan.find(
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       )
+                        ? "cursor-not-allowed"
+                        : user?.role?.name === "Front Desk"
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
@@ -343,7 +353,7 @@ const TreatmentClient = ({
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       );
-                      if (!isNotClickable) {
+                      if (!isNotClickable && user?.role?.name !== "Front Desk") {
                         openModal(tooth);
                       }
                     }}

@@ -16,7 +16,6 @@ import { useSaveUser } from "@/data/user";
 import { Branch, Role } from "@prisma/client";
 import { getAllBranches } from "@/actions/branch";
 import { toast } from "sonner";
-import { createRole } from "@/actions/roles";
 
 const UserForm = ({
   initialData,
@@ -71,16 +70,6 @@ const UserForm = ({
       },
     });
   }
-
-  const onCreate = async (name: string) => {
-    const response = await createRole(name);
-    if (response.error) {
-      toast.error(response.error);
-    } else {
-      toast.success(response.success);
-      window.location.reload();
-    }
-  };
 
   return (
     <>
@@ -147,8 +136,8 @@ const UserForm = ({
                 />
                 <CustomFormField
                   control={form.control}
-                  fieldType={FormFieldType.DYNAMICSELECT}
-                  dynamicOptions={roles.map((role) => ({
+                  fieldType={FormFieldType.SELECT}
+                  selectOptions={roles.map((role) => ({
                     value: role.id,
                     label: role.name,
                   }))}
@@ -157,7 +146,6 @@ const UserForm = ({
                   isRequired={true}
                   name="role"
                   disabled={isSaving}
-                  onCreate={onCreate}
                 />
                 <Button type="submit" disabled={isSaving} size="sm">
                   {isSaving && <Loader className="animate-spin w-4 h-4 mr-2" />}
