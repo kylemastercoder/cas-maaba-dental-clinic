@@ -161,15 +161,15 @@ const AdminPage = async () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PatientDayTable />
+            <PatientDayTable userRole={"Administrator"} />
           </CardContent>
         </Card>
       </div>
       <div className="mt-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
         <div className="col-span-4">
-          <PatientLocation data={locationDistribution} />
+          <PatientLocation userRole={"Administrator"} data={locationDistribution} />
           <div className="mt-6">
-            <SupplyInventoryTable data={runningSupplies} />
+            <SupplyInventoryTable userRole={"Administrator"} data={runningSupplies} />
           </div>
         </div>
         <div className="col-span-6">
