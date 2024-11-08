@@ -5,7 +5,7 @@ import StatCard from "@/components/globals/stat-card";
 import SupplyInventoryTable from "@/components/globals/supply-inventory-table";
 import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
-import { FileCheck2, Syringe, Users } from "lucide-react";
+import { FileCheck2, Stethoscope, Syringe, Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -107,9 +107,18 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
       },
     },
   });
+  const staff = await db.user.findMany({
+    where: {
+      role: { isNot: { name: "Administrator" } },
+      branchId: params.branchId,
+    },
+  });
   const supplies = await db.supplies.findMany({
     where: {
       branchId: params.branchId,
+    },
+    include: {
+      branch: true,
     },
   });
   const services = await db.service.findMany();
@@ -134,38 +143,50 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
   const locationDistribution = getLocationDistribution(barangays);
   return (
     <div>
-      <div className="grid md:grid-cols-3 grid-cols-1 gap-6 mt-5">
-        <StatCard
-          title="Patients"
-          href={`${
-            user?.role.name === "admin"
-              ? "/admin/patients"
-              : `/${params.branchId}/patients`
-          }`}
-          description={patient.length}
-          icon={Users}
-        />
-        <StatCard
-          title="Services"
-          href={`${
-            user?.role.name === "admin"
-              ? "/admin/services"
-              : `/${params.branchId}/services`
-          }`}
-          description={services.length}
-          icon={FileCheck2}
-        />
-        <StatCard
-          title="Supplies"
-          href={`${
-            user?.role.name === "admin"
-              ? "/admin/supplies"
-              : `/${params.branchId}/supplies`
-          }`}
-          description={supplies.length}
-          icon={Syringe}
-        />
-      </div>
+      {user?.role.name === "Dentist" ? null : (
+        <div className="grid md:grid-cols-4 grid-cols-1 gap-6 mt-5">
+          <StatCard
+            title="Patients"
+            href={`${
+              user?.role.name === "Administrator"
+                ? "/admin/patients"
+                : `/${params.branchId}/patients`
+            }`}
+            description={patient.length}
+            icon={Users}
+          />
+          <StatCard
+            title="Services"
+            href={`${
+              user?.role.name === "Administrator"
+                ? "/admin/services"
+                : `/${params.branchId}/services`
+            }`}
+            description={services.length}
+            icon={FileCheck2}
+          />
+          <StatCard
+            title="Supplies"
+            href={`${
+              user?.role.name === "Administrator"
+                ? "/admin/supplies"
+                : `/${params.branchId}/supplies`
+            }`}
+            description={supplies.length}
+            icon={Syringe}
+          />
+          <StatCard
+            title="Staff"
+            href={`${
+              user?.role.name === "Administrator"
+                ? "/admin/supplies"
+                : `/${params.branchId}/manage-users`
+            }`}
+            description={staff.length}
+            icon={Stethoscope}
+          />
+        </div>
+      )}
       <div className="mt-6">
         <Card>
           <CardHeader>
@@ -176,7 +197,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PatientDayTable />
+            <PatientDayTable userRole={user?.role.name as string} />
           </CardContent>
         </Card>
       </div>
@@ -186,7 +207,10 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
           <div className="col-span-4">
             <PatientLocation data={locationDistribution} />
             <div className="mt-6">
-              <SupplyInventoryTable data={runningSupplies} />
+              <SupplyInventoryTable
+                userRole={user.role.name as string}
+                data={runningSupplies}
+              />
             </div>
           </div>
           <div className="col-span-6">
@@ -196,11 +220,12 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             </div>
           </div>
         </div>
-      ) : user?.role.name === "Dentist" ? (
-        null
-      ) : (
+      ) : user?.role.name === "Dentist" ? null : (
         <div className="mt-6 mb-6 grid h-auto grid-cols-1 gap-6">
-          <SupplyInventoryTable data={runningSupplies} />
+          <SupplyInventoryTable
+            userRole={user?.role.name as string}
+            data={runningSupplies}
+          />
         </div>
       )}
     </div>

@@ -34,6 +34,7 @@ export const formatTimeStamp = (date: Date): string => {
     hour: "numeric",
     minute: "numeric",
     hour12: true,
+    timeZone: "Asia/Manila",
   })}`;
 };
 

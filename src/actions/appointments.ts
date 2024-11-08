@@ -1,50 +1,60 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import axios from "axios";
 
-// Function to fetch events for today
+// Function to fetch today's events for both Dasma and Molino branches
 export const fetchCalendarEventsToday = async () => {
   const today = new Date();
-  const timeMin = new Date(today.setHours(0, 0, 0, 0)).toISOString();
-  const timeMax = new Date(today.setHours(23, 59, 59, 999)).toISOString();
+  const timeMin = new Date(today.setHours(0, 0, 0, 0)).toISOString(); // Start of today
+  const timeMax = new Date(today.setHours(23, 59, 59, 999)).toISOString(); // End of today
 
   try {
-    // Fetch events from the first calendar
-    const response1 = await axios.get(
+    // Fetch Dasma events
+    const dasmaResponse = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "casmaabadental@gmail.com"
+        process.env.REACT_APP_CALENDAR_ID!
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`
     );
 
-    // Fetch events from the second calendar
-    const response2 = await axios.get(
+    // Fetch Molino events
+    const molinoResponse = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "casmaabadentalservices@gmail.com"
+        process.env.REACT_APP_CALENDAR_ID2!
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`
     );
 
-    // Combine events from both calendars
-    const combinedEvents = [...response1.data.items, ...response2.data.items];
+    // Add branch property to each event
+    const dasmaEvents = dasmaResponse.data.items.map((event: any) => ({
+      ...event,
+      branch: "Cas-Maaba Dasmariñas",
+    }));
+    const molinoEvents = molinoResponse.data.items.map((event: any) => ({
+      ...event,
+      branch: "Cas-Maaba Molino",
+    }));
 
-    // Sort combined events by start time (ascending order)
+    // Combine events from both branches
+    const combinedEvents = [...dasmaEvents, ...molinoEvents];
+
+    // Sort combined events by start time
     const sortedEvents = combinedEvents.sort(
       (a, b) =>
-        new Date(a.start.dateTime).getTime() -
-        new Date(b.start.dateTime).getTime()
+        new Date(a.start.dateTime).getTime() - new Date(b.start.dateTime).getTime()
     );
 
-    return sortedEvents; // Return the sorted events for use in your table
+    return sortedEvents;
   } catch (error) {
-    console.error("Error fetching calendar events:", error);
+    console.error("Error fetching today's calendar events:", error);
     return [];
   }
 };
 
-// Function to fetch events for tomorrow
+// Function to fetch tomorrow's events for both Dasma and Molino branches
 export const fetchCalendarEventsTomorrow = async () => {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1); // Move to the next day
@@ -52,37 +62,46 @@ export const fetchCalendarEventsTomorrow = async () => {
   const timeMax = new Date(tomorrow.setHours(23, 59, 59, 999)).toISOString(); // End of tomorrow
 
   try {
-    // Fetch events from the first calendar
-    const response1 = await axios.get(
+    // Fetch Dasma events
+    const dasmaResponse = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "casmaabadental@gmail.com"
+        process.env.REACT_APP_CALENDAR_ID!
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`
     );
 
-    // Fetch events from the second calendar
-    const response2 = await axios.get(
+    // Fetch Molino events
+    const molinoResponse = await axios.get(
       `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
-        "casmaabadentalservices@gmail.com"
+        process.env.REACT_APP_CALENDAR_ID2!
       )}/events?key=${
         process.env.REACT_APP_GOOGLE_API_KEY
       }&timeMin=${timeMin}&timeMax=${timeMax}`
     );
 
-    // Combine events from both calendars
-    const combinedEvents = [...response1.data.items, ...response2.data.items];
+    // Add branch property to each event
+    const dasmaEvents = dasmaResponse.data.items.map((event: any) => ({
+      ...event,
+      branch: "Cas-Maaba Dasmariñas",
+    }));
+    const molinoEvents = molinoResponse.data.items.map((event: any) => ({
+      ...event,
+      branch: "Cas-Maaba Molino",
+    }));
 
-    // Sort combined events by start time (ascending order)
+    // Combine events from both branches
+    const combinedEvents = [...dasmaEvents, ...molinoEvents];
+
+    // Sort combined events by start time
     const sortedEvents = combinedEvents.sort(
       (a, b) =>
-        new Date(a.start.dateTime).getTime() -
-        new Date(b.start.dateTime).getTime()
+        new Date(a.start.dateTime).getTime() - new Date(b.start.dateTime).getTime()
     );
 
-    return sortedEvents; // Return the sorted events for use in your table
+    return sortedEvents;
   } catch (error) {
-    console.error("Error fetching calendar events:", error);
+    console.error("Error fetching tomorrow's calendar events:", error);
     return [];
   }
 };

@@ -32,6 +32,7 @@ const SupplyClient = () => {
       category: item.category,
       unit: item.unit.name,
       used: item.used,
+      unitId: item.unitId,
       stocks: item.quantity,
       remaining: item.quantity - item.used,
       createdAt: format(item.createdAt, "MMMM dd, yyyy"),

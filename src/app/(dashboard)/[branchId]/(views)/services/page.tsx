@@ -30,7 +30,7 @@ const Services = async () => {
           title="Service Records"
           description="Manage and track all your services in one place. View detailed records, add new services, and ensure your service data is always up-to-date with easy-to-use tools."
         />
-        {user?.role?.name === "Front Desk" && <AddService />}
+        {user?.role?.name === "Administrator" && <AddService />}
       </div>
       <HydrationBoundary state={dehydratedState}>
         <ServiceClient />

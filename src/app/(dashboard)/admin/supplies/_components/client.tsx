@@ -28,6 +28,7 @@ const SupplyClient = () => {
       name: item.name,
       category: item.category,
       unit: item.unit.name,
+      unitId: item.unitId,
       used: item.used,
       stocks: item.quantity,
       branch: item.branch.name,

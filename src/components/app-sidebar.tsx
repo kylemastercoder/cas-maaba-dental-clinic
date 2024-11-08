@@ -135,6 +135,36 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
     ],
   };
 
+  const frontDeskDataBar = {
+    navMain: [
+      {
+        title: "Dashboard",
+        url: `/${params.branchId}`,
+        icon: IconBrandTabler,
+      },
+      {
+        title: "Patients",
+        url: `/${params.branchId}/patients`,
+        icon: IconUserSquareRounded,
+      },
+      {
+        title: "Appointments",
+        url: `/${params.branchId}/appointments`,
+        icon: IconCalendarMonth,
+      },
+      {
+        title: "Services",
+        url: `/${params.branchId}/services`,
+        icon: IconFiles,
+      },
+      {
+        title: "Supplies",
+        url: `/${params.branchId}/supplies`,
+        icon: IconMedicineSyrup,
+      },
+    ],
+  };
+
   const dentistDataBar = {
     navMain: [
       {
@@ -154,6 +184,15 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       },
     ],
   };
+
+  const navItems =
+    user?.role?.name === "Administrator" && !params.branchId
+      ? data.navMain
+      : user?.role?.name === "Dentist"
+      ? dentistDataBar.navMain
+      : user?.role?.name === "Front Desk"
+      ? frontDeskDataBar.navMain
+      : branchDataBar.navMain;
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -184,15 +223,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain
-          items={
-            user?.role?.name === "Administrator" && !params.branchId
-              ? data.navMain
-              : user?.role?.name === "Dentist"
-              ? dentistDataBar.navMain
-              : branchDataBar.navMain
-          }
-        />
+        <NavMain items={navItems} />
       </SidebarContent>
       <SidebarFooter>
         {user?.role?.name === "Administrator" && (

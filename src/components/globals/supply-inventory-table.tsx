@@ -15,7 +15,13 @@ interface SupplyBranch extends Supplies {
   branch: Branch | null;
 }
 
-const SupplyInventoryTable = ({ data }: { data: SupplyBranch[] }) => {
+const SupplyInventoryTable = ({
+  data,
+  userRole,
+}: {
+  data: SupplyBranch[];
+  userRole: string;
+}) => {
   return (
     <Card className="w-full max-h-[700px] overflow-auto">
       <CardHeader>
@@ -27,7 +33,7 @@ const SupplyInventoryTable = ({ data }: { data: SupplyBranch[] }) => {
             <TableRow>
               <TableHead>Name</TableHead>
               <TableHead>Stocks</TableHead>
-              <TableHead>Branch</TableHead>
+              {userRole === "Administrator" && <TableHead>Branch</TableHead>}
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -37,7 +43,11 @@ const SupplyInventoryTable = ({ data }: { data: SupplyBranch[] }) => {
                 <TableRow key={supply.id}>
                   <TableCell>{supply.name}</TableCell>
                   <TableCell>{supply.quantity - supply.used}</TableCell>
-                  <TableCell>{supply.branch?.name}</TableCell>
+                  {userRole === "Administrator" && (
+                    <TableCell>
+                      {supply.branch?.name}
+                    </TableCell>
+                  )}
                   <TableCell>
                     <Badge variant="destructive">Running out of stock</Badge>
                   </TableCell>

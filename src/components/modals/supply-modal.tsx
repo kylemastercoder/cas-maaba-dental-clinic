@@ -44,7 +44,7 @@ const SupplyForm = ({
           ...initialData,
           branchId: initialData.branchId ?? "",
           sku: initialData.sku ?? generateRandomSKU(),
-          unit: initialData.unit ?? "",
+          unit: initialData.unitId ?? "",
         }
       : {
           sku: generateRandomSKU() || "",

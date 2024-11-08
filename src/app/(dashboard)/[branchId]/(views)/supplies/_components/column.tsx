@@ -11,6 +11,7 @@ export type SupplyColumn = {
   name: string;
   category: string;
   used: number;
+  unitId: string;
   stocks: number;
   remaining: number;
   unit: string;

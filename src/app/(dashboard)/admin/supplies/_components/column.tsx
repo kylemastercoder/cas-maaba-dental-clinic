@@ -13,6 +13,7 @@ export type SupplyColumn = {
   sku: string;
   used: number;
   stocks: number;
+  unitId: string;
   remaining: number;
   branch: string;
   unit: string;
