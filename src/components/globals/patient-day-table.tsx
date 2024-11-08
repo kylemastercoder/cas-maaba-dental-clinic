@@ -35,7 +35,7 @@ export type AppointmentColumn = {
   createdAt: string;
 };
 
-const PatientDayTable = ({ userRole }: { userRole: string }) => {
+const PatientDayTable = ({ userRole }: { userRole?: string }) => {
   const columns: ColumnDef<AppointmentColumn>[] = [
     { accessorKey: "name", header: "Name" },
     {

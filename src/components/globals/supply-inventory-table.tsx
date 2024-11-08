@@ -20,7 +20,7 @@ const SupplyInventoryTable = ({
   userRole,
 }: {
   data: SupplyBranch[];
-  userRole: string;
+  userRole?: string;
 }) => {
   return (
     <Card className="w-full max-h-[700px] overflow-auto">
