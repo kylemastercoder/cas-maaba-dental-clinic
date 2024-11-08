@@ -167,7 +167,7 @@ const AdminPage = async () => {
       </div>
       <div className="mt-6 grid h-auto md:grid-cols-10 grid-cols-1 gap-6">
         <div className="col-span-4">
-          <PatientLocation userRole={"Administrator"} data={locationDistribution} />
+          <PatientLocation data={locationDistribution} />
           <div className="mt-6">
             <SupplyInventoryTable userRole={"Administrator"} data={runningSupplies} />
           </div>
