@@ -35,7 +35,13 @@ export type AppointmentColumn = {
   createdAt: string;
 };
 
-const PatientDayTable = ({ userRole }: { userRole?: string }) => {
+const PatientDayTable = ({
+  userRole,
+  branch,
+}: {
+  userRole?: string;
+  branch?: string;
+}) => {
   const columns: ColumnDef<AppointmentColumn>[] = [
     { accessorKey: "name", header: "Name" },
     {
@@ -60,8 +66,17 @@ const PatientDayTable = ({ userRole }: { userRole?: string }) => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        const todayEvents = await fetchCalendarEventsToday();
-        const tomorrowEvents = await fetchCalendarEventsTomorrow();
+        let todayEvents = await fetchCalendarEventsToday();
+        let tomorrowEvents = await fetchCalendarEventsTomorrow();
+
+        // Filter by branch if user is not an Administrator
+        if (userRole !== "Administrator" && branch) {
+          todayEvents = todayEvents.filter((event) => event.branch === branch);
+          tomorrowEvents = tomorrowEvents.filter(
+            (event) => event.branch === branch
+          );
+        }
+
         setEventsToday(todayEvents);
         setEventsTomorrow(tomorrowEvents);
       } catch (error) {
@@ -72,7 +87,7 @@ const PatientDayTable = ({ userRole }: { userRole?: string }) => {
     };
 
     fetchEvents();
-  }, []);
+  }, [userRole, branch]);
 
   const formatEvents = (events: CalendarEvent[], includeBranch: boolean) =>
     events.map((item) => ({
