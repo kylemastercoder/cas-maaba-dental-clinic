@@ -29,7 +29,6 @@ export interface CalendarEvent {
 
 export type AppointmentColumn = {
   name: string;
-  service: string;
   status: string;
   branch?: string;
   createdAt: string;
@@ -51,7 +50,6 @@ const PatientDayTable = ({
         <Badge className="capitalize">{row.original.status}</Badge>
       ),
     },
-    { accessorKey: "service", header: "Service" },
     ...(userRole === "Administrator"
       ? [{ accessorKey: "branch", header: "Branch" }]
       : []),
@@ -92,7 +90,6 @@ const PatientDayTable = ({
   const formatEvents = (events: CalendarEvent[], includeBranch: boolean) =>
     events.map((item) => ({
       name: item.summary,
-      service: item.description || "N/A",
       status: item.status,
       branch: includeBranch ? item.branch : undefined,
       createdAt: `${format(
