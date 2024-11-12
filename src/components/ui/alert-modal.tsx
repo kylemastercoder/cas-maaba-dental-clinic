@@ -31,7 +31,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
   return (
     <Modal
       title={title || "Are you sure you want to delete this data?"}
-      description="This action cannot be undone."
+      description="Press continue to confirm."
       isOpen={isOpen}
       onClose={onClose}
     >

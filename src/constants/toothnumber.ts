@@ -1,5 +1,4 @@
 
-
 export const UPPER_TEETH = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
 export const UPPER_MIDDLE_TEETH = [55, 54, 53, 52, 51, 61, 62, 63, 64, 65];
 export const LOWER_MIDDLE_TEETH = [85, 84, 83, 82, 81, 71, 72, 73, 74, 75];
