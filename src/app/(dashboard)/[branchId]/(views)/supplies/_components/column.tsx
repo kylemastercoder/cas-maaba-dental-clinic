@@ -5,6 +5,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import { ArrowUpDown } from "lucide-react";
 
 export type SupplyColumn = {
   id: string;
@@ -21,32 +22,130 @@ export type SupplyColumn = {
 
 export const columns: ColumnDef<SupplyColumn>[] = [
   {
+    accessorKey: "sku",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          SKU
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
+  },
+  {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "unit",
-    header: "Unit",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Unit
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "used",
-    header: "Used",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Used
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "stocks",
-    header: "Stocks",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Stocks
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "remaining",
-    header: "Remaining",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Remaining
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "branch",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Branch
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "createdAt",
-    header: "Date Created",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     id: "actions",

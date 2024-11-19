@@ -5,6 +5,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import { ArrowUpDown } from "lucide-react";
 
 export type ServiceColumn = {
   id: string;
@@ -16,18 +17,38 @@ export type ServiceColumn = {
 export const columns: ColumnDef<ServiceColumn>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "description",
     header: "Description",
-    cell: ({row}) => (
+    cell: ({ row }) => (
       <div className="truncate w-[500px]">{row.original.description}</div>
-    )
+    ),
   },
   {
     accessorKey: "createdAt",
-    header: "Date Created",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     id: "actions",

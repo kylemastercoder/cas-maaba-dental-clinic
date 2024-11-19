@@ -154,7 +154,7 @@ const AdminPage = async () => {
       <div className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>Todos for Today</CardTitle>
+            <CardTitle>To-dos for Today</CardTitle>
             <CardDescription>
               Today is{" "}
               {formatDate(new Date().toLocaleDateString(), "MMMM dd, yyyy")}

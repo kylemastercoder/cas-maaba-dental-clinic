@@ -5,6 +5,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
+import { ArrowUpDown } from "lucide-react";
 
 export type PatientColumn = {
   id: string;
@@ -21,19 +22,59 @@ export type PatientColumn = {
 export const columns: ColumnDef<PatientColumn>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "address",
-    header: "Address",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Address
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "sex",
-    header: "Sex",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Sex
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "age",
-    header: "Age",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Age
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     accessorKey: "contactNumber",
@@ -41,7 +82,17 @@ export const columns: ColumnDef<PatientColumn>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date Created",
+    header: ({ column }) => {
+      return (
+        <span
+          className="flex items-center cursor-pointer"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date Created
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </span>
+      );
+    },
   },
   {
     id: "actions",
