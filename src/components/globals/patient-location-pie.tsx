@@ -27,14 +27,12 @@ const COLORS = [
   "#8dd1e1",
 ];
 
-// Define the shape of each data item
 interface DataItem {
   label: string;
   value: number;
-  date: string; // Expecting date as a string in a valid format (e.g., YYYY-MM-DD)
+  date: string;
 }
 
-// Get the start of the current week
 const getStartOfWeek = (): Date => {
   const now = new Date();
   const dayOfWeek = now.getDay();
@@ -43,7 +41,6 @@ const getStartOfWeek = (): Date => {
   return startOfWeek;
 };
 
-// Filtering functions
 const filterWeeklyData = (data: DataItem[]): DataItem[] => {
   const startOfWeek = getStartOfWeek();
   return data.filter((item) => new Date(item.date) >= startOfWeek);
@@ -67,7 +64,21 @@ const filterYearlyData = (data: DataItem[]): DataItem[] => {
   );
 };
 
-// Define the props for the PatientLocation component
+// Normalize percentages to ensure they sum to 100%
+const normalizePercentages = (data: DataItem[]): DataItem[] => {
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+  const discrepancy = 100 - total;
+
+  if (discrepancy !== 0 && data.length > 0) {
+    const largest = data.reduce((prev, current) =>
+      current.value > prev.value ? current : prev
+    );
+    largest.value = parseFloat((largest.value + discrepancy).toFixed(2));
+  }
+
+  return data;
+};
+
 interface PatientLocationProps {
   data: DataItem[];
 }
@@ -76,10 +87,9 @@ export function PatientLocation({ data }: PatientLocationProps) {
   const [filter, setFilter] = useState<"Weekly" | "Monthly" | "Yearly">(
     "Weekly"
   );
-  const [filteredData, setFilteredData] = useState<DataItem[]>(data);
+  const [filteredData, setFilteredData] = useState<DataItem[]>([]);
 
   useEffect(() => {
-    console.log("Selected Filter:", filter); // Debugging: Check selected filter
     let updatedData: DataItem[] = [];
 
     if (filter === "Weekly") {
@@ -90,8 +100,14 @@ export function PatientLocation({ data }: PatientLocationProps) {
       updatedData = filterYearlyData(data);
     }
 
-    setFilteredData(updatedData);
-    console.log("Filtered Data:", updatedData); // Debugging: Check filtered data
+    // Recalculate percentages
+    const total = updatedData.reduce((sum, item) => sum + item.value, 0);
+    const normalizedData = updatedData.map((item) => ({
+      ...item,
+      value: parseFloat(((item.value / total) * 100).toFixed(2)),
+    }));
+
+    setFilteredData(normalizePercentages(normalizedData));
   }, [filter, data]);
 
   return (
@@ -132,7 +148,7 @@ export function PatientLocation({ data }: PatientLocationProps) {
               outerRadius={80}
               fill="#8884d8"
               label={({ name, value }: { name: string; value: number }) =>
-                `${name} = ${value}`
+                `${name}: ${value.toFixed(2)}%`
               }
             >
               {filteredData.map((entry, index) => (
@@ -152,7 +168,7 @@ export function PatientLocation({ data }: PatientLocationProps) {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             ></div>
-            {entry.label}
+            {entry.label}: {entry.value.toFixed(2)}%
           </div>
         ))}
       </CardFooter>

@@ -59,6 +59,7 @@ const getAgeSexDistribution = (patients: any) => {
 const getLocationDistribution = (barangays: string[]) => {
   const locationCounts: { [key: string]: number } = {};
 
+  // Count occurrences for each barangay
   barangays.forEach((barangay) => {
     if (locationCounts[barangay]) {
       locationCounts[barangay] += 1;
@@ -67,11 +68,30 @@ const getLocationDistribution = (barangays: string[]) => {
     }
   });
 
-  return Object.entries(locationCounts).map(([label, value]) => ({
+  const totalCount = Object.values(locationCounts).reduce(
+    (sum, count) => sum + count,
+    0
+  );
+
+  // Use const for the distribution array
+  const distribution = Object.entries(locationCounts).map(([label, count]) => ({
     label,
-    value,
+    value: parseFloat(((count / totalCount) * 100).toFixed(2)), // Round to 2 decimal places
     date: new Date().toISOString().split("T")[0],
   }));
+
+  // Adjust percentages to ensure they sum to 100%
+  const totalPercentage = distribution.reduce((sum, loc) => sum + loc.value, 0);
+  const discrepancy = 100 - totalPercentage;
+
+  if (discrepancy !== 0) {
+    const largest = distribution.reduce((prev, current) =>
+      current.value > prev.value ? current : prev
+    );
+    largest.value = parseFloat((largest.value + discrepancy).toFixed(2));
+  }
+
+  return distribution;
 };
 
 const getTreatmentRenderedDistribution = (services: string[]) => {
@@ -169,7 +189,10 @@ const AdminPage = async () => {
         <div className="col-span-4">
           <PatientLocation data={locationDistribution} />
           <div className="mt-6">
-            <SupplyInventoryTable userRole={"Administrator"} data={runningSupplies} />
+            <SupplyInventoryTable
+              userRole={"Administrator"}
+              data={runningSupplies}
+            />
           </div>
         </div>
         <div className="col-span-6">

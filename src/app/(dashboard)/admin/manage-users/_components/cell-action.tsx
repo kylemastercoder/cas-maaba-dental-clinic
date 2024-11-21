@@ -11,11 +11,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, MoreHorizontal, ShieldAlert, ShieldCheck } from "lucide-react";
+import {
+  Copy,
+  Lock,
+  MoreHorizontal,
+  ShieldAlert,
+  ShieldCheck,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import AlertModal from "@/components/ui/alert-modal";
 import { useActiveUser, useInactiveUser } from "@/data/user";
+import ResetPasswordForm from "@/components/modals/reset-password-modal";
 
 interface CellActionProps {
   data: UserColumn;
@@ -24,7 +31,8 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
-  // const [initialData, setInitialData] = useState<UserColumn | null>(null);
+  const [open3, setOpen3] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
@@ -51,11 +59,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     });
   };
 
-  // const onUpdate = () => {
-  //   setInitialData(data);
-  //   setFormOpen(true);
-  // };
-
   return (
     <>
       <AlertModal
@@ -72,6 +75,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={isActive}
         onConfirm={onActive}
       />
+
+      <ResetPasswordForm
+        userId={userId as string}
+        isOpen={open3}
+        onClose={() => setOpen3(false)}
+      />
+
       {/* {formOpen && (
         <UserForm
           roles={roles}
@@ -95,6 +105,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setUserId(data.id);
+              setOpen3(true);
+            }}
+          >
+            <Lock className="w-4 h-4 mr-2" />
+            Reset Password
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {data.isActive === true ? (

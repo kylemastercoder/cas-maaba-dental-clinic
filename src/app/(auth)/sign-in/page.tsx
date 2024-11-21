@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -88,12 +87,6 @@ const SignIn = () => {
                   placeholder="Password"
                 />
               </div>
-              <Link
-                className="text-right text-sm text-muted-foreground font-[500] hover:underline"
-                href="/forgot-password"
-              >
-                Forgot Password?
-              </Link>
               <Button type="submit" disabled={isLoading} className="w-full">
                 {isLoading && (
                   <Loader2 className="animate-spin mr-2" size="20" />

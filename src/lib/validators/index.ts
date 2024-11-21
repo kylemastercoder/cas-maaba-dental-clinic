@@ -10,6 +10,12 @@ export const BranchSchema = z.object({
   address: z.string().min(1, { message: "Branch address is required" }),
 });
 
+export const ResetPasswordSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required" }),
+  password: z.string().min(1, { message: "New password is required" }),
+  confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
+});
+
 export const UserRegistrationSchema = z
   .object({
     username: z.string().min(1, { message: "Username is required" }),
