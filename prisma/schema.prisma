@@ -23,26 +23,63 @@ model User {
 }
 
 model Patient {
-  id            String   @id @default(cuid())
-  firstName     String
-  middleName    String?
-  lastName      String
-  suffix        String?
-  facebookName  String?
-  email         String
-  address       String?
-  sex           String?
-  birthdate     String
-  maritalStatus String?
-  occupation    String?
-  contactNumber String
-  isActive      Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                    String   @id @default(cuid())
+  firstName             String
+  middleName            String?
+  lastName              String
+  suffix                String?
+  facebookName          String?
+  email                 String
+  address               String?
+  sex                   String?
+  birthdate             String
+  age                   String
+  birthPlace            String
+  maritalStatus         String?
+  occupation            String?
+  contactNumber         String
+  weight                String
+  height                String
+  fatherName            String
+  fatherOccupation      String
+  fatherContactNumber   String
+  motherName            String
+  motherOccupation      String
+  motherContactNumber   String
+  guardianName          String
+  guardianRelation      String
+  guardianContactNumber String
+  doctorName            String
+  doctorSpecialization  String
+  doctorContactNumber   String
+  referredBy            String
+  consultationReason    String
+  isActive              Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  branchId      String
-  branch        Branch          @relation(fields: [branchId], references: [id])
-  treatmentPlan TreatmentPlan[]
+  branchId       String
+  branch         Branch           @relation(fields: [branchId], references: [id])
+  treatmentPlan  TreatmentPlan[]
+  medicalHistory MedicalHistory[]
+}
+
+model MedicalHistory {
+  id                         String   @id @default(cuid())
+  currentMedication          String
+  previousHospitalization    String
+  allergies                  String
+  developmentalAbnormalities String
+  histories                  String[]
+  medicalCareReaction        String
+  yesSpecify                 String?
+  socialFamilyHistory        String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id])
 }
 
 model Service {

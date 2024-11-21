@@ -71,9 +71,27 @@ const PatientForm = ({
           barangay: "",
           sex: "",
           birthdate: "",
+          age: "",
+          birthPlace: "",
+          weight: "",
+          height: "",
           maritalStatus: "",
           occupation: "",
           contactNumber: "",
+          fatherName: "",
+          fatherOccupation: "",
+          fatherContactNumber: "",
+          motherName: "",
+          motherOccupation: "",
+          motherContactNumber: "",
+          guardianName: "",
+          guardianRelation: "",
+          guardianContactNumber: "",
+          doctorName: "",
+          doctorSpecialization: "",
+          doctorContactNumber: "",
+          referredBy: "",
+          consultationReason: "",
           branchId: Array.isArray(params.branchId)
             ? params.branchId[0]
             : params.branchId ?? "",
@@ -85,7 +103,12 @@ const PatientForm = ({
 
   async function onSubmit(values: z.infer<typeof PatientSchema>) {
     savePatient(values, {
-      onSuccess: () => router.push(`${params.branchId ? `/${params.branchId}/patients` : "/admin/patients"}`),
+      onSuccess: () =>
+        router.push(
+          `${
+            params.branchId ? `/${params.branchId}/patients` : "/admin/patients"
+          }`
+        ),
     });
   }
 
@@ -151,35 +174,7 @@ const PatientForm = ({
               disabled={isLoading}
             />
           </div>
-          <CustomFormField
-            label="Email Address"
-            name="email"
-            placeholder="someone@example.com"
-            isRequired
-            type="email"
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            disabled={isLoading}
-          />
-          <CustomFormField
-            label="Facebook Name"
-            name="facebookName"
-            placeholder="Juan Dela Cruz"
-            isRequired={false}
-            fieldType={FormFieldType.INPUT}
-            control={form.control}
-            disabled={isLoading}
-          />
-          <CustomFormField
-            label="Phone Number"
-            name="contactNumber"
-            type="phone"
-            fieldType={FormFieldType.PHONE_INPUT}
-            control={form.control}
-            disabled={isLoading}
-            isRequired
-          />
-          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+          <div className="grid md:grid-cols-4 grid-cols-1 gap-3">
             <CustomFormField
               label="Date of Birth"
               name="birthdate"
@@ -188,6 +183,30 @@ const PatientForm = ({
               type="date"
               fieldType={FormFieldType.DATE_PICKER}
               calendarMode="birthdate"
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Marital Status"
+              name="maritalStatus"
+              placeholder="Select your marital status"
+              isRequired
+              fieldType={FormFieldType.SELECT}
+              control={form.control}
+              selectOptions={[
+                { label: "Single", value: "Single" },
+                { label: "Married", value: "Married" },
+                { label: "Separated", value: "Separated" },
+                { label: "Widowed", value: "Widowed" },
+              ]}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Age"
+              name="age"
+              placeholder="18"
+              isRequired
+              fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
             />
@@ -207,24 +226,68 @@ const PatientForm = ({
           </div>
           <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
             <CustomFormField
-              label="Marital Status"
-              name="maritalStatus"
-              placeholder="Select your marital status"
-              isRequired
-              fieldType={FormFieldType.SELECT}
+              label="Contact Number"
+              name="contactNumber"
+              type="phone"
+              fieldType={FormFieldType.PHONE_INPUT}
               control={form.control}
-              selectOptions={[
-                { label: "Single", value: "Single" },
-                { label: "Married", value: "Married" },
-                { label: "Separated", value: "Separated" },
-                { label: "Widowed", value: "Widowed" },
-              ]}
+              disabled={isLoading}
+              isRequired
+            />
+            <CustomFormField
+              label="Birth Place (Hospital)"
+              name="birthPlace"
+              placeholder="UMC"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
               disabled={isLoading}
             />
+          </div>
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Facebook Name"
+              name="facebookName"
+              placeholder="Juan Dela Cruz"
+              isRequired={false}
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Email Address"
+              name="email"
+              placeholder="someone@example.com"
+              isRequired
+              type="email"
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
             <CustomFormField
               label="Occupation"
               name="occupation"
               placeholder="Web Developer"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Weight (kg)"
+              name="weight"
+              placeholder="60"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Height (cm)"
+              name="height"
+              placeholder="170"
               isRequired
               fieldType={FormFieldType.INPUT}
               control={form.control}
@@ -295,6 +358,140 @@ const PatientForm = ({
               disabled={isLoading || !selectedMunicipalityName}
             />
           </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Father's Name"
+              name="fatherName"
+              placeholder="Juan Dela Cruz"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Father's Occupation"
+              name="fatherOccupation"
+              placeholder="Painter"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Father's Contact Number"
+              name="fatherContactNumber"
+              isRequired
+              fieldType={FormFieldType.PHONE_INPUT}
+              type="phone"
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Mother's Name"
+              name="motherName"
+              placeholder="Teresa Dela Cruz"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Mother's Occupation"
+              name="motherOccupation"
+              placeholder="Cook"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Mother's Contact Number"
+              name="motherContactNumber"
+              isRequired
+              fieldType={FormFieldType.PHONE_INPUT}
+              type="phone"
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Guardian's Name"
+              name="guardianName"
+              placeholder="Rosa Dela Cruz"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Guardian's Relation (the patient is my?)"
+              name="guardianRelation"
+              placeholder="Aunt"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Guardian's Contact Number"
+              name="guardianContactNumber"
+              isRequired
+              fieldType={FormFieldType.PHONE_INPUT}
+              type="phone"
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="grid md:grid-cols-3 grid-cols-1 gap-3">
+            <CustomFormField
+              label="Doctor's Name"
+              name="doctorName"
+              placeholder="Dr. Arnold Tolentino"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Doctor's Specialization"
+              name="doctorSpecialization"
+              placeholder="Dentist"
+              isRequired
+              fieldType={FormFieldType.INPUT}
+              control={form.control}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              label="Doctor's Contact Number"
+              name="doctorContactNumber"
+              isRequired
+              fieldType={FormFieldType.PHONE_INPUT}
+              type="phone"
+              control={form.control}
+              disabled={isLoading}
+            />
+          </div>
+          <CustomFormField
+            label="Referred by"
+            name="referredBy"
+            placeholder="Friend"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            disabled={isLoading}
+          />
+          <CustomFormField
+            label="Reason for Consultation"
+            name="consultationReason"
+            placeholder="Toothache"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            control={form.control}
+            disabled={isLoading}
+          />
           {!params.branchId && (
             <CustomFormField
               label="Branch"

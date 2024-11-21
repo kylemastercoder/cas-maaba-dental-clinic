@@ -51,6 +51,10 @@ body {
   content: "IMP"; /* Escape each backslash */
 }
 
+.others::after {
+  content: "*"; /* Escape each backslash */
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

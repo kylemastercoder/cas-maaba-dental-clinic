@@ -12,13 +12,19 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
       treatmentPlan: true
     },
   });
+
+  const medicalHistory = await db.medicalHistory.findFirst({
+    where: {
+      patientId: params.patientId,
+    },
+  });
   return (
     <div className="md:grid items-start gap-4 md:gap-8">
       <Heading
-        title={`Treatment Plan`}
+        title={`Patient Dental Record`}
         description="A detailed overview of the patient's treatment, including personal information, medical history, dental chart, and ongoing care for improved dental health."
       />
-      <TreatmentClient patient={patient} />
+      <TreatmentClient medicalHistory={medicalHistory} patient={patient} />
     </div>
   );
 };

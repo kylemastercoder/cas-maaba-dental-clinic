@@ -16,7 +16,7 @@ export const getAllSupplies = async () => {
       include: {
         unit: true,
         branch: true,
-      }
+      },
     });
 
     if (!data) {
@@ -39,7 +39,8 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit, branchId, sku } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId, sku } =
+    validatedField.data;
 
   try {
     const supply = await db.supplies.create({
@@ -87,7 +88,8 @@ export const updateSupply = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, category, used, stocks, unit, branchId, sku } = validatedField.data;
+  const { name, category, used, stocks, unit, branchId, sku } =
+    validatedField.data;
 
   try {
     const supply = await db.supplies.update({
@@ -156,6 +158,51 @@ export const deleteSupply = async (supplyId: string) => {
       error: `Failed to delete supply. Please try again. ${
         error.message || ""
       }`,
+    };
+  }
+};
+
+export const updateStock = async (supplyId: string, stockChange: number) => {
+  const { user } = await getUserFromCookies();
+  if (!supplyId) {
+    return { error: "Supply ID is required." };
+  }
+
+  try {
+    // Fetch the current supply data to get the current stock
+    const supply = await db.supplies.findUnique({
+      where: { id: supplyId },
+    });
+
+    if (!supply) {
+      return { error: "Supply not found." };
+    }
+
+    // Calculate the new quantity (current stock + stock change)
+    const newQuantity = Math.max(0, supply.quantity + stockChange); // Prevent going below 0
+
+    // Update the stock in the database
+    const updatedSupply = await db.supplies.update({
+      where: { id: supplyId },
+      data: { quantity: newQuantity },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    // Log the stock update action
+    if (updatedSupply) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} updated ${updatedSupply.name} stock on ${loginTime}`,
+          branchId: user?.branchId || "",
+        },
+      });
+    }
+
+    return { success: "Stock updated successfully", supply: updatedSupply };
+  } catch (error: any) {
+    return {
+      error: `Failed to update stock. Please try again. ${error.message || ""}`,
     };
   }
 };

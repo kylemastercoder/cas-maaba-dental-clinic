@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-object-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
@@ -303,18 +304,27 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
 
     case FormFieldType.CHECKBOX:
       return (
-        <div className="items-top flex space-x-2">
-          <FormControl>
-            <Checkbox
-              checked={field.value}
-              onCheckedChange={field.onChange}
-              disabled={disabled}
-            />
-          </FormControl>
-          <div className="grid gap-1.5 leading-none">
-            <FormLabel>{label}</FormLabel>
-            <FormDescription>{description}</FormDescription>
-          </div>
+        <div className="grid grid-cols-4 gap-2">
+          {" "}
+          {options?.map((option, index) => (
+            <div key={index} className="flex items-start space-x-2">
+              <FormControl>
+                <Checkbox
+                  checked={field.value?.includes(option)}
+                  onCheckedChange={(isChecked) => {
+                    const newValue = isChecked
+                      ? [...(field.value || []), option]
+                      : field.value.filter((item: string) => item !== option);
+                    field.onChange(newValue);
+                  }}
+                  disabled={disabled}
+                />
+              </FormControl>
+              <div className="leading-none">
+                <FormLabel>{option}</FormLabel>
+              </div>
+            </div>
+          ))}
         </div>
       );
 

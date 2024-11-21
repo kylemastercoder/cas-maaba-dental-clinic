@@ -7,6 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
 export type PatientColumn = {
   id: string;
@@ -32,6 +33,16 @@ export const columns: ColumnDef<PatientColumn>[] = [
           Name
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </span>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Link
+          href={`/admin/patients/${row.original.id}/treatment-plan`}
+          className="text-blue-500 hover:underline"
+        >
+          {row.original.name}
+        </Link>
       );
     },
   },
