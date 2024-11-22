@@ -9,7 +9,13 @@ import {
   UPPER_MIDDLE_TEETH,
   UPPER_TEETH,
 } from "@/constants";
-import { MedicalHistory, Patient, Service, TreatmentPlan } from "@prisma/client";
+import {
+  MedicalHistory,
+  Patient,
+  Service,
+  TreatmentPlan,
+  User,
+} from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
@@ -24,10 +30,12 @@ export interface PatientWithTreatment extends Patient {
 
 const TreatmentClient = ({
   patient,
-  medicalHistory
+  medicalHistory,
+  dentists,
 }: {
   patient: PatientWithTreatment | null;
   medicalHistory: MedicalHistory | null;
+  dentists: User[];
 }) => {
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
@@ -102,6 +110,8 @@ const TreatmentClient = ({
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
         paymentMethod: item.paymentMethod,
+        amount: "₱100",
+        dentist: "N/A",
         status: item.status,
         createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
@@ -113,6 +123,7 @@ const TreatmentClient = ({
         isOpen={modalData.isOpen}
         onClose={() => setModalData({ ...modalData, isOpen: false })}
         toothNumber={modalData.toothNumber}
+        dentists={dentists}
       />
       <Card>
         <CardContent className="p-5">
@@ -250,16 +261,9 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg mb-2">Medical History</h1>
-          <MedicalHistoryForm initialData={medicalHistory} patientId={patient?.id as string} />
-        </CardContent>
-      </Card>
-      <Card className="mt-5">
-        <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Dental History</h1>
-          <DataTable
-            data={formattedData}
-            searchKey="service"
-            columns={columns}
+          <MedicalHistoryForm
+            initialData={medicalHistory}
+            patientId={patient?.id as string}
           />
         </CardContent>
       </Card>
@@ -519,6 +523,16 @@ const TreatmentClient = ({
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <h1 className="font-semibold text-lg">Dental History</h1>
+          <DataTable
+            data={formattedData}
+            searchKey="service"
+            columns={columns}
+          />
         </CardContent>
       </Card>
     </>

@@ -12,7 +12,7 @@ import { TreatmentPlanSchema } from "@/lib/validators";
 import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
-import { Service } from "@prisma/client";
+import { Service, User } from "@prisma/client";
 import { getAllServices } from "@/actions/service";
 import { useParams } from "next/navigation";
 import { useSaveTreatmentPlan } from "@/data/treatment-plan";
@@ -22,11 +22,13 @@ const TreatmentModal = ({
   toothNumber,
   onClose,
   isOpen,
+  dentists,
 }: {
   initialData?: any;
   onClose: () => void;
   isOpen: boolean;
   toothNumber: number | null;
+  dentists: User[];
 }) => {
   const params = useParams();
   const [services, setServices] = useState<Service[]>([]);
@@ -51,6 +53,8 @@ const TreatmentModal = ({
           isPaid: true,
           paymentMethod: "",
           status: "",
+          amount: "",
+          dentist: "",
         },
   });
 
@@ -104,6 +108,19 @@ const TreatmentModal = ({
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.SELECT}
+                  label="Dentist"
+                  placeholder="Select dentist name"
+                  dynamicOptions={dentists.map((dentist) => ({
+                    label: dentist.name,
+                    value: dentist.id,
+                  }))}
+                  isRequired={true}
+                  name="dentist"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.SELECT}
                   label="Service"
                   placeholder="Select a service"
                   isRequired={true}
@@ -140,6 +157,7 @@ const TreatmentModal = ({
                     { label: "Erupting", value: "Erupting" },
                     { label: "Extracted", value: "Extracted" },
                     { label: "Sealant", value: "Sealant" },
+                    { label: "Others", value: "Others" },
                   ]}
                   placeholder="Select diagnosis"
                   isRequired={true}
@@ -153,6 +171,15 @@ const TreatmentModal = ({
                   placeholder="Enter dental remarks"
                   isRequired={false}
                   name="remarks"
+                  disabled={isSaving}
+                />
+                <CustomFormField
+                  control={form.control}
+                  fieldType={FormFieldType.INPUT}
+                  label="Amount"
+                  placeholder="Enter amount"
+                  isRequired={false}
+                  name="amount"
                   disabled={isSaving}
                 />
                 <CustomFormField

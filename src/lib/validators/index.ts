@@ -127,5 +127,7 @@ export const TreatmentPlanSchema = z.object({
   paymentMethod: z.string().min(1, { message: "Payment method is required" }),
   isPaid: z.boolean().optional(),
   status: z.string().min(1, { message: "Status is required" }),
+  amount: z.string().min(1, { message: "Amount is required" }),
+  dentist: z.string().min(1, { message: "Dentist is required" }),
   remarks: z.string().optional(),
 });

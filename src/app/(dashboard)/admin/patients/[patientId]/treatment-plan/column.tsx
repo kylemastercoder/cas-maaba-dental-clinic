@@ -14,6 +14,8 @@ export type TreatmentColumn = {
   serviceId: string;
   paymentMethod: string;
   status: string;
+  amount: string;
+  dentist: string;
   remarks: string;
   toothNumber: number;
   createdAt: string;
@@ -30,23 +32,29 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
   },
   {
     accessorKey: "service",
-    header: "Service",
+    header: "Treatment Rendered",
   },
   {
     accessorKey: "diagnosis",
-    header: "Diagnosis",
+    header: "Notes/Remarks",
+  },
+  {
+    accessorKey: "dentist",
+    header: "Dentist",
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
   },
   {
     accessorKey: "paymentMethod",
-    header: "Payment Method",
+    header: "MOP",
   },
   {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <Badge
-        variant={row.original.status === "Paid" ? "default" : "secondary"}
-      >
+      <Badge variant={row.original.status === "Paid" ? "default" : "secondary"}>
         {row.original.status}
       </Badge>
     ),
@@ -58,8 +66,6 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
   {
     accessorKey: "action",
     header: "Action",
-    cell: ({ row }) => (
-      <CellAction data={row.original} />
-    )
+    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

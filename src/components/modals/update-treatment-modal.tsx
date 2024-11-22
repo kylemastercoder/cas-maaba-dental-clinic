@@ -125,6 +125,7 @@ const UpdateTreatmentModal = ({
                     { label: "Erupting", value: "Erupting" },
                     { label: "Extracted", value: "Extracted" },
                     { label: "Sealant", value: "Sealant" },
+                    { label: "Others", value: "Others" },
                   ]}
                   placeholder="Select diagnosis"
                   isRequired={true}
