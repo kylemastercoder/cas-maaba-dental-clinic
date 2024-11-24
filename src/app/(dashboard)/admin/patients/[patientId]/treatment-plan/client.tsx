@@ -14,7 +14,6 @@ import {
   Patient,
   Service,
   TreatmentPlan,
-  User,
 } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
