@@ -64,9 +64,13 @@ const UserForm = ({
 
   async function onSubmit(values: z.infer<typeof UserRegistrationSchema>) {
     saveUser(values, {
-      onSuccess: () => {
-        onClose();
-        window.location.reload();
+      onSuccess: (data) => {
+        if (data.success) {
+          onClose();
+          window.location.reload();
+        } else {
+          toast.error("Username already exists");
+        }
       },
     });
   }

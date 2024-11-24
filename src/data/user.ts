@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createUser, getAllUsers, setActiveUser, setInactiveUser, updateUser } from "@/actions/user";
+import {
+  createUser,
+  getAllUsers,
+  setActiveUser,
+  setInactiveUser,
+  updateUser,
+} from "@/actions/user";
 import { UserRegistrationSchema } from "@/lib/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -27,6 +33,8 @@ export function useSaveUser(initialData?: any) {
       if (data.success) {
         toast.success(data.success);
         queryClient.invalidateQueries({ queryKey: ["users"] });
+      } else {
+        toast.error("Username already exists");
       }
     },
     onError: (error: any) => {

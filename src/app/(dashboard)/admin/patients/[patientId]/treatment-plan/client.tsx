@@ -31,11 +31,9 @@ export interface PatientWithTreatment extends Patient {
 const TreatmentClient = ({
   patient,
   medicalHistory,
-  dentists,
 }: {
   patient: PatientWithTreatment | null;
   medicalHistory: MedicalHistory | null;
-  dentists: User[];
 }) => {
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
@@ -123,7 +121,6 @@ const TreatmentClient = ({
         isOpen={modalData.isOpen}
         onClose={() => setModalData({ ...modalData, isOpen: false })}
         toothNumber={modalData.toothNumber}
-        dentists={dentists}
       />
       <Card>
         <CardContent className="p-5">
@@ -195,63 +192,64 @@ const TreatmentClient = ({
           <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Father&apos;s Name: </p>
-              <p>{patient?.fatherName}</p>
+              <p>{patient?.fatherName || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Father&apos;s Occupation: </p>
-              <p>{patient?.fatherOccupation}</p>
+              <p>{patient?.fatherOccupation || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Father&apos;s Contact Number: </p>
-              <p>{patient?.fatherContactNumber}</p>
+              <p>{patient?.fatherContactNumber || "N/A"}</p>
             </div>
           </div>
           <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Mother&apos;s Name: </p>
-              <p>{patient?.motherName}</p>
+              <p>{patient?.motherName || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Mother&apos;s Occupation: </p>
-              <p>{patient?.motherOccupation}</p>
+              <p>{patient?.motherOccupation || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Mother&apos;s Contact Number: </p>
-              <p>{patient?.motherContactNumber}</p>
+              <p>{patient?.motherContactNumber || "N/A"}</p>
             </div>
           </div>
           <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Guardian&apos;s Name: </p>
-              <p>{patient?.guardianName}</p>
+              <p>{patient?.guardianName || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Guardian&apos;s Relation: </p>
-              <p>{patient?.guardianRelation}</p>
+              <p>{patient?.guardianRelation || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Guardian&apos;s Contact Number: </p>
-              <p>{patient?.guardianContactNumber}</p>
+              <p>{patient?.guardianContactNumber || "N/A"}</p>
             </div>
           </div>
           <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Doctor&apos;s Name: </p>
-              <p>{patient?.doctorName}</p>
+              <p>{patient?.doctorName || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Doctor&apos;s Specialization: </p>
-              <p>{patient?.doctorSpecialization}</p>
+              <p>{patient?.doctorSpecialization || "N/A"}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Doctor&apos;s Contact Number: </p>
-              <p>{patient?.doctorContactNumber}</p>
+              <p>{patient?.doctorContactNumber || "N/A"}</p>
             </div>
           </div>
           <div className="flex items-center gap-1 border-b w-full mt-2">
             <p className="font-semibold">Referred by: </p>
-            <p>{patient?.referredBy}</p>
+            <p>{patient?.referredBy || "N/A"}</p>
           </div>
+
           <div className="flex items-center gap-1 w-full mt-2">
             <p className="font-semibold">Reason for Consultation: </p>
             <p>{patient?.consultationReason}</p>

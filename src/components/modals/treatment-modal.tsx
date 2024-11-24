@@ -16,22 +16,26 @@ import { Service, User } from "@prisma/client";
 import { getAllServices } from "@/actions/service";
 import { useParams } from "next/navigation";
 import { useSaveTreatmentPlan } from "@/data/treatment-plan";
+import { getAllDentists } from "@/actions/user";
+import { toast } from "sonner";
 
 const TreatmentModal = ({
   initialData,
   toothNumber,
   onClose,
   isOpen,
-  dentists,
 }: {
   initialData?: any;
   onClose: () => void;
   isOpen: boolean;
   toothNumber: number | null;
-  dentists: User[];
 }) => {
   const params = useParams();
   const [services, setServices] = useState<Service[]>([]);
+  const [dentists, setDentists] = useState<User[]>([]);
+  const [selectedDiagnosis, setSelectedDiagnosis] = useState<string | null>(
+    null
+  );
   const title = initialData ? "Edit Treatment Plan" : "Add Treatment Plan";
   const description = initialData
     ? "Make sure to click save changes after you update the treatment plan."
@@ -52,6 +56,7 @@ const TreatmentModal = ({
           remarks: "",
           isPaid: true,
           paymentMethod: "",
+          otherDiagnosis: "",
           status: "",
           amount: "",
           dentist: "",
@@ -67,20 +72,43 @@ const TreatmentModal = ({
   }, []);
 
   useEffect(() => {
+    const fetchDoctors = async () => {
+      const response = await getAllDentists();
+      setDentists(response.data ?? []);
+    };
+    fetchDoctors();
+  }, []);
+
+  useEffect(() => {
     form.reset({
       ...form.getValues(),
       toothNumber: toothNumber ?? 0,
     });
   }, [form, toothNumber]);
 
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      setSelectedDiagnosis(values.diagnosis ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const { mutate: saveTreatmentPlan, isPending: isSaving } =
     useSaveTreatmentPlan(params?.patientId as string);
 
   async function onSubmit(values: z.infer<typeof TreatmentPlanSchema>) {
+    if (values.diagnosis === "Others") {
+      values.diagnosis = values.otherDiagnosis ?? "";
+    }
+    delete values.otherDiagnosis;
     saveTreatmentPlan(values, {
-      onSuccess: () => {
-        onClose();
-        window.location.reload();
+      onSuccess: (data) => {
+        if (data.success) {
+          onClose();
+          window.location.reload();
+        } else {
+          toast.error(data.error);
+        }
       },
     });
   }
@@ -110,7 +138,7 @@ const TreatmentModal = ({
                   fieldType={FormFieldType.SELECT}
                   label="Dentist"
                   placeholder="Select dentist name"
-                  dynamicOptions={dentists.map((dentist) => ({
+                  selectOptions={dentists.map((dentist) => ({
                     label: dentist.name,
                     value: dentist.id,
                   }))}
@@ -164,6 +192,17 @@ const TreatmentModal = ({
                   name="diagnosis"
                   disabled={isSaving}
                 />
+                {selectedDiagnosis === "Others" && (
+                  <CustomFormField
+                    control={form.control}
+                    fieldType={FormFieldType.INPUT}
+                    label="Other Diagnosis"
+                    placeholder="Enter specific diagnosis"
+                    isRequired={false}
+                    name="otherDiagnosis"
+                    disabled={isSaving}
+                  />
+                )}
                 <CustomFormField
                   control={form.control}
                   fieldType={FormFieldType.TEXTAREA}
@@ -178,7 +217,7 @@ const TreatmentModal = ({
                   fieldType={FormFieldType.INPUT}
                   label="Amount"
                   placeholder="Enter amount"
-                  isRequired={false}
+                  isRequired={true}
                   name="amount"
                   disabled={isSaving}
                 />

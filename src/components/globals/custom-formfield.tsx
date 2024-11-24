@@ -248,7 +248,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
               </Button>
             </FormControl>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-auto p-0">
+          <PopoverContent align="start" className="w-auto p-0 z-50">
             <Calendar
               mode="single"
               captionLayout="dropdown-buttons"

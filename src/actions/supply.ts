@@ -3,7 +3,11 @@
 
 import db from "@/lib/db";
 import { formatTimeStamp } from "@/lib/utils";
-import { SupplySchema } from "@/lib/validators";
+import {
+  AddStockSchema,
+  DeductStockSchema,
+  SupplySchema,
+} from "@/lib/validators";
 import { z } from "zod";
 import { getUserFromCookies } from "@/hooks/use-user";
 
@@ -203,6 +207,112 @@ export const updateStock = async (supplyId: string, stockChange: number) => {
   } catch (error: any) {
     return {
       error: `Failed to update stock. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
+export const addStock = async (
+  supplyId: string,
+  values: z.infer<typeof AddStockSchema>
+) => {
+  const { user } = await getUserFromCookies();
+  const validatedField = AddStockSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { quantity, receivedBy, remarks } = validatedField.data;
+
+  try {
+    // Fetch the current supply data to get the current stock
+    const supply = await db.supplies.findFirst({
+      where: { id: supplyId },
+    });
+
+    if (!supply) {
+      return { error: "Supply not found." };
+    }
+
+    // Calculate the new quantity (current stock + stock change)
+    const newQuantity = Math.max(0, supply.quantity + quantity);
+
+    // Update the stock in the database
+    const updatedSupply = await db.supplies.update({
+      where: { id: supplyId },
+      data: { quantity: newQuantity },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    // Log the stock update action
+    if (updatedSupply) {
+      await db.logs.create({
+        data: {
+          action: `${receivedBy} received ${quantity} stock to ${updatedSupply.name} on ${loginTime} with a remarks of ${remarks}`,
+          branchId: user?.branchId || "",
+        },
+      });
+    }
+
+    return { success: "Stock added successfully", supply: updatedSupply };
+  } catch (error: any) {
+    return {
+      error: `Failed to add stock. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
+export const deductStock = async (
+  supplyId: string,
+  values: z.infer<typeof DeductStockSchema>
+) => {
+  const { user } = await getUserFromCookies();
+  const validatedField = DeductStockSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { quantity, dispatchedBy, remarks } = validatedField.data;
+
+  try {
+    // Fetch the current supply data to get the current stock
+    const supply = await db.supplies.findFirst({
+      where: { id: supplyId },
+    });
+
+    if (!supply) {
+      return { error: "Supply not found." };
+    }
+
+    // Calculate the new quantity (current stock - stock change)
+    const newQuantity = Math.max(0, supply.quantity - quantity);
+
+    // Update the stock in the database
+    const updatedSupply = await db.supplies.update({
+      where: { id: supplyId },
+      data: { quantity: newQuantity },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    // Log the stock update action
+    if (updatedSupply) {
+      await db.logs.create({
+        data: {
+          action: `${dispatchedBy} deducted ${quantity} stock to ${updatedSupply.name} on ${loginTime} with a remarks of ${remarks}`,
+          branchId: user?.branchId || "",
+        },
+      });
+    }
+
+    return { success: "Stock deducted successfully", supply: updatedSupply };
+  } catch (error: any) {
+    return {
+      error: `Failed to deduct stock. Please try again. ${error.message || ""}`,
     };
   }
 };

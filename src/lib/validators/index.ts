@@ -13,7 +13,9 @@ export const BranchSchema = z.object({
 export const ResetPasswordSchema = z.object({
   userId: z.string().min(1, { message: "User ID is required" }),
   password: z.string().min(1, { message: "New password is required" }),
-  confirmPassword: z.string().min(1, { message: "Confirm password is required" }),
+  confirmPassword: z
+    .string()
+    .min(1, { message: "Confirm password is required" }),
 });
 
 export const UserRegistrationSchema = z
@@ -64,20 +66,22 @@ export const PatientSchema = z.object({
   birthPlace: z.string().min(1, { message: "Birth place is required" }),
   weight: z.string().min(1, { message: "Weight is required" }),
   height: z.string().min(1, { message: "Height is required" }),
-  fatherName: z.string().min(1, { message: "Father's name is required" }),
-  fatherOccupation: z.string().min(1, { message: "Father's occupation is required" }),
-  fatherContactNumber: z.string().min(1, { message: "Father's contact number is required" }),
-  motherName: z.string().min(1, { message: "Mother's name is required" }),
-  motherOccupation: z.string().min(1, { message: "Mother's occupation is required" }),
-  motherContactNumber: z.string().min(1, { message: "Mother's contact number is required" }),
-  guardianName: z.string().min(1, { message: "Guardian's name is required" }),
-  guardianRelation: z.string().min(1, { message: "Guardian's relation is required" }),
-  guardianContactNumber: z.string().min(1, { message: "Guardian's contact number is required" }),
-  doctorName: z.string().min(1, { message: "Doctor's name is required" }),
-  doctorSpecialization: z.string().min(1, { message: "Doctor's specialization is required" }),
-  doctorContactNumber: z.string().min(1, { message: "Doctor's contact number is required" }),
-  referredBy: z.string().min(1, { message: "Referred by is required" }),
-  consultationReason: z.string().min(1, { message: "Reason for consultation is required" }),
+  fatherName: z.string().optional(),
+  fatherOccupation: z.string().optional(),
+  fatherContactNumber: z.string().optional(),
+  motherName: z.string().optional(),
+  motherOccupation: z.string().optional(),
+  motherContactNumber: z.string().optional(),
+  guardianName: z.string().optional(),
+  guardianRelation: z.string().optional(),
+  guardianContactNumber: z.string().optional(),
+  doctorName: z.string().optional(),
+  doctorSpecialization: z.string().optional(),
+  doctorContactNumber: z.string().optional(),
+  referredBy: z.string().optional(),
+  consultationReason: z
+    .string()
+    .min(1, { message: "Reason for consultation is required" }),
   maritalStatus: z.string().min(1, { message: "Marital status is required" }),
   occupation: z.string().min(1, { message: "Occupation is required" }),
   contactNumber: z.string().min(1, { message: "Contact number is required" }),
@@ -85,14 +89,24 @@ export const PatientSchema = z.object({
 });
 
 export const MedicalHistorySchema = z.object({
-  currentMedication: z.string().min(1, { message: "Current medication is required" }),
-  previousHospitalization: z.string().min(1, { message: "Previous hospitalization is required" }),
+  currentMedication: z
+    .string()
+    .min(1, { message: "Current medication is required" }),
+  previousHospitalization: z
+    .string()
+    .min(1, { message: "Previous hospitalization is required" }),
   allergies: z.string().min(1, { message: "Allergies is required" }),
-  developmentalAbnormalities: z.string().min(1, { message: "Developmental abnormalities is required" }),
+  developmentalAbnormalities: z
+    .string()
+    .min(1, { message: "Developmental abnormalities is required" }),
   histories: z.string().array().min(1, { message: "Histories is required" }),
-  medicalCareReaction: z.string().min(1, { message: "Medical care reaction is required" }),
+  medicalCareReaction: z
+    .string()
+    .min(1, { message: "Medical care reaction is required" }),
   yesSpecify: z.string().optional(),
-  socialFamilyHistory: z.string().min(1, { message: "Social and family history is required" }),
+  socialFamilyHistory: z
+    .string()
+    .min(1, { message: "Social and family history is required" }),
 });
 
 export const ServiceSchema = z.object({
@@ -124,10 +138,25 @@ export const TreatmentPlanSchema = z.object({
     .min(1, { message: "Tooth number is required" }),
   service: z.string().min(1, { message: "Service is required" }),
   diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
+  otherDiagnosis: z.string().optional(),
   paymentMethod: z.string().min(1, { message: "Payment method is required" }),
   isPaid: z.boolean().optional(),
   status: z.string().min(1, { message: "Status is required" }),
   amount: z.string().min(1, { message: "Amount is required" }),
   dentist: z.string().min(1, { message: "Dentist is required" }),
+  remarks: z.string().optional(),
+});
+
+export const AddStockSchema = z.object({
+  supplyName: z.string().min(1, { message: "Supply name is required" }),
+  quantity: z.coerce.number().min(1, { message: "Quantity is required" }),
+  receivedBy: z.string().min(1, { message: "Received by is required" }),
+  remarks: z.string().optional(),
+});
+
+export const DeductStockSchema = z.object({
+  supplyName: z.string().min(1, { message: "Supply name is required" }),
+  quantity: z.coerce.number().min(1, { message: "Quantity is required" }),
+  dispatchedBy: z.string().min(1, { message: "Dispatched by is required" }),
   remarks: z.string().optional(),
 });

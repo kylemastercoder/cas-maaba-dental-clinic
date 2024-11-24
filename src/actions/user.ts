@@ -32,6 +32,50 @@ export const getAllUsers = async () => {
   }
 };
 
+export const getAllDentists = async () => {
+  try {
+    const data = await db.user.findMany({
+      where: {
+        role: {
+          name: "Dentist",
+        },
+      },
+    });
+
+    if (!data) {
+      return { error: "No dentists found." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error(error);
+    return { error: "Something went wrong." };
+  }
+};
+
+export const getAllUsersExceptDentist = async () => {
+  try {
+    const data = await db.user.findMany({
+      where: {
+        NOT: {
+          role: {
+            name: "Dentist",
+          },
+        },
+      },
+    });
+
+    if (!data) {
+      return { error: "No user found." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error(error);
+    return { error: "Something went wrong." };
+  }
+};
+
 export const getAllBranchHead = async () => {
   try {
     const data = await db.user.findMany({
@@ -87,7 +131,7 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
       return { error: "Invalid Password" };
     }
 
-    if(user.isActive === false) {
+    if (user.isActive === false) {
       return { error: "User is inactive. Can't access the system." };
     }
 

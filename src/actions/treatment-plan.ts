@@ -49,6 +49,8 @@ export const createTreatmentPlan = async (
     status,
     isPaid,
     paymentMethod,
+    amount,
+    dentist,
   } = validatedField.data;
 
   try {
@@ -62,6 +64,8 @@ export const createTreatmentPlan = async (
         paymentMethod,
         status,
         isPaid,
+        dentistId: dentist,
+        amount,
       },
       include: {
         patient: true,
@@ -110,6 +114,8 @@ export const updateTreatmentPlan = async (
     status,
     isPaid,
     paymentMethod,
+    dentist,
+    amount,
   } = validatedField.data;
 
   try {
@@ -125,6 +131,8 @@ export const updateTreatmentPlan = async (
         paymentMethod,
         status,
         isPaid,
+        dentistId: dentist,
+        amount,
       },
       include: {
         patient: true,

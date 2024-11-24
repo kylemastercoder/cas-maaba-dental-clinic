@@ -1,10 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-action";
-import { ArrowUpDown, Minus, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import React, { useState } from "react";
+import { ArrowUpDown } from "lucide-react";
+import React from "react";
+import AddStockModal from "./add-stock-modal";
+import DeductStockModal from "./deduct-stock-modal";
 
 export type SupplyColumn = {
   id: string;
@@ -21,9 +20,7 @@ export type SupplyColumn = {
   branchId: string;
 };
 
-export const columns = (
-  handleStockChange: (id: string, change: number) => void
-): ColumnDef<SupplyColumn>[] => [
+export const columns: ColumnDef<SupplyColumn>[] = [
   {
     accessorKey: "sku",
     header: ({ column }) => (
@@ -43,19 +40,7 @@ export const columns = (
         className="flex items-center cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Name
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </span>
-    ),
-  },
-  {
-    accessorKey: "unit",
-    header: ({ column }) => (
-      <span
-        className="flex items-center cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Unit
+        Supply Name
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </span>
     ),
@@ -73,16 +58,26 @@ export const columns = (
     ),
   },
   {
-    accessorKey: "used",
+    accessorKey: "unit",
     header: ({ column }) => (
       <span
         className="flex items-center cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Used
+        Unit
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </span>
     ),
+  },
+  {
+    accessorKey: "actions",
+    header: "Add Stock",
+    cell: ({ row }) => <AddStockModal data={row.original} />,
+  },
+  {
+    accessorKey: "action",
+    header: "Deduct Stock",
+    cell: ({ row }) => <DeductStockModal data={row.original} />,
   },
   {
     accessorKey: "stocks",
@@ -91,69 +86,7 @@ export const columns = (
         className="flex items-center cursor-pointer"
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Stocks
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </span>
-    ),
-    cell: ({ row }) => {
-      const [inputValue, setInputValue] = useState(
-        row.original.stocks.toString()
-      );
-
-      const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Update local input value on change
-        setInputValue(e.target.value);
-      };
-
-      const handleBlur = () => {
-        const newStockValue = parseInt(inputValue, 10);
-        if (!isNaN(newStockValue)) {
-          // Update stock in the parent state and backend
-          handleStockChange(
-            row.original.id,
-            newStockValue - row.original.stocks
-          );
-        } else {
-          setInputValue(row.original.stocks.toString()); // Revert to original if invalid input
-        }
-      };
-
-      return (
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleStockChange(row.original.id, -1)}
-          >
-            <Minus className="w-4 h-4" />
-          </Button>
-          <Input
-            className="w-16"
-            type="number"
-            min={1}
-            value={inputValue}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-          />
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => handleStockChange(row.original.id, 1)}
-          >
-            <Plus className="w-4 h-4" />
-          </Button>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "remaining",
-    header: ({ column }) => (
-      <span
-        className="flex items-center cursor-pointer"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Remaining
+        Quantity
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </span>
     ),
@@ -181,10 +114,5 @@ export const columns = (
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </span>
     ),
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

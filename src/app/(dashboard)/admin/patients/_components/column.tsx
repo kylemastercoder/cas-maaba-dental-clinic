@@ -39,7 +39,7 @@ export const columns: ColumnDef<PatientColumn>[] = [
       return (
         <Link
           href={`/admin/patients/${row.original.id}/treatment-plan`}
-          className="text-blue-500 hover:underline"
+          className="text-black hover:underline"
         >
           {row.original.name}
         </Link>

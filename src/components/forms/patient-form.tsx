@@ -56,6 +56,19 @@ const PatientForm = ({
           maritalStatus: initialData.maritalStatus ?? "",
           occupation: initialData.occupation ?? "",
           contactNumber: initialData.contactNumber ?? "",
+          fatherName: initialData.fatherName ?? "",
+          fatherOccupation: initialData.fatherOccupation ?? "",
+          fatherContactNumber: initialData.fatherContactNumber ?? "",
+          motherName: initialData.motherName ?? "",
+          motherOccupation: initialData.motherOccupation ?? "",
+          motherContactNumber: initialData.motherContactNumber ?? "",
+          guardianName: initialData.guardianName ?? "",
+          guardianRelation: initialData.guardianRelation ?? "",
+          guardianContactNumber: initialData.guardianContactNumber ?? "",
+          doctorName: initialData.doctorName ?? "",
+          doctorSpecialization: initialData.doctorSpecialization ?? "",
+          doctorContactNumber: initialData.doctorContactNumber ?? "",
+          referredBy: initialData.referredBy ?? "",
         }
       : {
           firstName: "",
@@ -363,7 +376,7 @@ const PatientForm = ({
               label="Father's Name"
               name="fatherName"
               placeholder="Juan Dela Cruz"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -372,7 +385,7 @@ const PatientForm = ({
               label="Father's Occupation"
               name="fatherOccupation"
               placeholder="Painter"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -380,7 +393,7 @@ const PatientForm = ({
             <CustomFormField
               label="Father's Contact Number"
               name="fatherContactNumber"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.PHONE_INPUT}
               type="phone"
               control={form.control}
@@ -392,7 +405,7 @@ const PatientForm = ({
               label="Mother's Name"
               name="motherName"
               placeholder="Teresa Dela Cruz"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -401,7 +414,7 @@ const PatientForm = ({
               label="Mother's Occupation"
               name="motherOccupation"
               placeholder="Cook"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -409,7 +422,7 @@ const PatientForm = ({
             <CustomFormField
               label="Mother's Contact Number"
               name="motherContactNumber"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.PHONE_INPUT}
               type="phone"
               control={form.control}
@@ -421,7 +434,7 @@ const PatientForm = ({
               label="Guardian's Name"
               name="guardianName"
               placeholder="Rosa Dela Cruz"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -430,7 +443,7 @@ const PatientForm = ({
               label="Guardian's Relation (the patient is my?)"
               name="guardianRelation"
               placeholder="Aunt"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -438,7 +451,7 @@ const PatientForm = ({
             <CustomFormField
               label="Guardian's Contact Number"
               name="guardianContactNumber"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.PHONE_INPUT}
               type="phone"
               control={form.control}
@@ -450,7 +463,7 @@ const PatientForm = ({
               label="Doctor's Name"
               name="doctorName"
               placeholder="Dr. Arnold Tolentino"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -459,7 +472,7 @@ const PatientForm = ({
               label="Doctor's Specialization"
               name="doctorSpecialization"
               placeholder="Dentist"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.INPUT}
               control={form.control}
               disabled={isLoading}
@@ -467,7 +480,7 @@ const PatientForm = ({
             <CustomFormField
               label="Doctor's Contact Number"
               name="doctorContactNumber"
-              isRequired
+              isRequired={false}
               fieldType={FormFieldType.PHONE_INPUT}
               type="phone"
               control={form.control}
@@ -478,11 +491,12 @@ const PatientForm = ({
             label="Referred by"
             name="referredBy"
             placeholder="Friend"
-            isRequired
+            isRequired={false}
             fieldType={FormFieldType.INPUT}
             control={form.control}
             disabled={isLoading}
           />
+
           <CustomFormField
             label="Reason for Consultation"
             name="consultationReason"

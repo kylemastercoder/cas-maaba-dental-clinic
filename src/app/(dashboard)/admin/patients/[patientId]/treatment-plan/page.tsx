@@ -20,14 +20,6 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
       patientId: params.patientId,
     },
   });
-
-  const dentists = await db.user.findMany({
-    where: {
-      role: {
-        name: "Dentist",
-      },
-    },
-  });
   return (
     <div className="md:grid items-start gap-4 md:gap-8">
       <div className="flex justify-between items-center">
@@ -40,7 +32,7 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
           Download PDF File
         </Button>
       </div>
-      <TreatmentClient dentists={dentists} medicalHistory={medicalHistory} patient={patient} />
+      <TreatmentClient medicalHistory={medicalHistory} patient={patient} />
     </div>
   );
 };

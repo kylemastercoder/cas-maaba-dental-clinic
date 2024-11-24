@@ -41,19 +41,19 @@ model Patient {
   contactNumber         String
   weight                String
   height                String
-  fatherName            String
-  fatherOccupation      String
-  fatherContactNumber   String
-  motherName            String
-  motherOccupation      String
-  motherContactNumber   String
-  guardianName          String
-  guardianRelation      String
-  guardianContactNumber String
-  doctorName            String
-  doctorSpecialization  String
-  doctorContactNumber   String
-  referredBy            String
+  fatherName            String?
+  fatherOccupation      String?
+  fatherContactNumber   String?
+  motherName            String?
+  motherOccupation      String?
+  motherContactNumber   String?
+  guardianName          String?
+  guardianRelation      String?
+  guardianContactNumber String?
+  doctorName            String?
+  doctorSpecialization  String?
+  doctorContactNumber   String?
+  referredBy            String?
   consultationReason    String
   isActive              Boolean  @default(true)
   createdAt             DateTime @default(now())
