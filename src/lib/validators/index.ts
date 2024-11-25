@@ -151,6 +151,21 @@ export const TreatmentPlanSchema = z.object({
   remarks: z.string().optional(),
 });
 
+export const DentalHistorySchema = z.object({
+  toothNumber: z.coerce
+    .number()
+    .min(1, { message: "Tooth number is required" }),
+  service: z.string().min(1, { message: "Service is required" }),
+  diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
+  otherDiagnosis: z.string().optional(),
+  paymentMethod: z.string().min(1, { message: "Payment method is required" }),
+  isPaid: z.boolean().optional(),
+  status: z.string().min(1, { message: "Status is required" }),
+  amount: z.string().min(1, { message: "Amount is required" }),
+  dentist: z.string().min(1, { message: "Dentist is required" }),
+  remarks: z.string().optional(),
+});
+
 export const AddStockSchema = z.object({
   supplyName: z.string().min(1, { message: "Supply name is required" }),
   quantity: z.coerce.number().min(1, { message: "Quantity is required" }),

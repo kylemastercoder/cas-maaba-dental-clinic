@@ -26,6 +26,9 @@ import { useTheme } from "next-themes";
 import MedicalHistoryForm from "@/components/forms/medical-history-form";
 import { getAllDentists } from "@/actions/user";
 import PresentHistoryIllnessForm from "@/components/forms/present-history-illness-form";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import DentalHistoryModal from "@/components/modals/dental-history-modal";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
@@ -34,7 +37,7 @@ export interface PatientWithTreatment extends Patient {
 const TreatmentClient = ({
   patient,
   medicalHistory,
-  presentHistoryIllness
+  presentHistoryIllness,
 }: {
   patient: PatientWithTreatment | null;
   medicalHistory: MedicalHistory | null;
@@ -43,6 +46,7 @@ const TreatmentClient = ({
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
   const [dentists, setDentists] = useState<User[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
   const fullName = `${patient?.firstName} ${patient?.middleName} ${patient?.lastName}`;
   const [modalData, setModalData] = useState<{
     isOpen: boolean;
@@ -138,6 +142,7 @@ const TreatmentClient = ({
         onClose={() => setModalData({ ...modalData, isOpen: false })}
         toothNumber={modalData.toothNumber}
       />
+      <DentalHistoryModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <Card>
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg">Patient Information</h1>
@@ -274,7 +279,9 @@ const TreatmentClient = ({
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg mb-2">History of Present Illness</h1>
+          <h1 className="font-semibold text-lg mb-2">
+            History of Present Illness
+          </h1>
           <PresentHistoryIllnessForm
             initialData={presentHistoryIllness}
             patientId={patient?.id as string}
@@ -292,7 +299,9 @@ const TreatmentClient = ({
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Dental Chart</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Dental Chart</h1>
+          </div>
           <div className="grid md:grid-cols-10 grid-cols-1 mt-2 gap-5">
             <div className="col-span-6 flex flex-col">
               <div className="flex justify-center items-center gap-1">
@@ -550,7 +559,12 @@ const TreatmentClient = ({
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Dental History</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Dental History</h1>
+            <Button size="sm" onClick={() => setIsOpen(true)}>
+              <PlusCircle className="mr-2 w-4 h-4" /> Add
+            </Button>
+          </div>
           <DataTable
             data={formattedData}
             searchKey="service"

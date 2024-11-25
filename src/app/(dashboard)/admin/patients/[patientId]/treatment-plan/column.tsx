@@ -60,10 +60,6 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     ),
   },
   {
-    accessorKey: "remarks",
-    header: "Remarks",
-  },
-  {
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => <CellAction data={row.original} />,
