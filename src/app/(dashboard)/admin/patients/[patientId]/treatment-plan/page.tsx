@@ -2,8 +2,8 @@ import { Heading } from "@/components/ui/heading";
 import db from "@/lib/db";
 import React from "react";
 import TreatmentClient from "./client";
-import { Button } from "@/components/ui/button";
-import { Printer } from "lucide-react";
+
+import HandlePrint from "./handle-print";
 
 const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
   const patient = await db.patient.findUnique({
@@ -20,6 +20,12 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
       patientId: params.patientId,
     },
   });
+
+  const presentHistoryIllness = await db.presentHistoryIllness.findFirst({
+    where: {
+      patientId: params.patientId,
+    },
+  });
   return (
     <div className="md:grid items-start gap-4 md:gap-8">
       <div className="flex justify-between items-center">
@@ -27,12 +33,17 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
           title={`Patient Dental Record`}
           description="A detailed overview of the patient's treatment, including personal information, medical history, dental chart, and ongoing care for improved dental health."
         />
-        <Button>
-          <Printer className="mr-2 w-4 h-4" />
-          Download PDF File
-        </Button>
+        <HandlePrint
+          patient={patient}
+          presentHistoryIllness={presentHistoryIllness}
+          medicalHistory={medicalHistory}
+        />
       </div>
-      <TreatmentClient medicalHistory={medicalHistory} patient={patient} />
+      <TreatmentClient
+        presentHistoryIllness={presentHistoryIllness}
+        medicalHistory={medicalHistory}
+        patient={patient}
+      />
     </div>
   );
 };

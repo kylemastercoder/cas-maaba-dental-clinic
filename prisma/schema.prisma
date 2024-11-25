@@ -59,10 +59,21 @@ model Patient {
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt
 
-  branchId       String
-  branch         Branch           @relation(fields: [branchId], references: [id])
-  treatmentPlan  TreatmentPlan[]
-  medicalHistory MedicalHistory[]
+  branchId              String
+  branch                Branch                  @relation(fields: [branchId], references: [id])
+  treatmentPlan         TreatmentPlan[]
+  medicalHistory        MedicalHistory[]
+  presentHistoryIllness PresentHistoryIllness[]
+}
+
+model PresentHistoryIllness {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientId String
+  patient   Patient @relation(fields: [patientId], references: [id])
 }
 
 model MedicalHistory {

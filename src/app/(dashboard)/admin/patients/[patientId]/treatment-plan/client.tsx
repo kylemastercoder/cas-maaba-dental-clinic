@@ -12,8 +12,10 @@ import {
 import {
   MedicalHistory,
   Patient,
+  PresentHistoryIllness,
   Service,
   TreatmentPlan,
+  User,
 } from "@prisma/client";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -22,6 +24,8 @@ import { columns, TreatmentColumn } from "./column";
 import { getAllServices } from "@/actions/service";
 import { useTheme } from "next-themes";
 import MedicalHistoryForm from "@/components/forms/medical-history-form";
+import { getAllDentists } from "@/actions/user";
+import PresentHistoryIllnessForm from "@/components/forms/present-history-illness-form";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
@@ -30,12 +34,15 @@ export interface PatientWithTreatment extends Patient {
 const TreatmentClient = ({
   patient,
   medicalHistory,
+  presentHistoryIllness
 }: {
   patient: PatientWithTreatment | null;
   medicalHistory: MedicalHistory | null;
+  presentHistoryIllness: PresentHistoryIllness | null;
 }) => {
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
+  const [dentists, setDentists] = useState<User[]>([]);
   const fullName = `${patient?.firstName} ${patient?.middleName} ${patient?.lastName}`;
   const [modalData, setModalData] = useState<{
     isOpen: boolean;
@@ -80,7 +87,7 @@ const TreatmentClient = ({
         case "Others":
           return "text-red-500 others font-bold text-lg";
         default:
-          return "";
+          return "text-red-500 others font-bold text-lg";
       }
     }
     return "";
@@ -94,11 +101,21 @@ const TreatmentClient = ({
     fetchServices();
   }, []);
 
+  useEffect(() => {
+    const fetchDentists = async () => {
+      const response = await getAllDentists();
+      setDentists(response.data ?? []);
+    };
+    fetchDentists();
+  }, []);
+
   const formattedData: TreatmentColumn[] =
     patient?.treatmentPlan?.map((item) => {
       const service =
         services.find((s) => s.id === item.serviceId)?.name ??
         "Unknown Service";
+
+      const dentist = dentists.find((d) => d.id === item.dentistId)?.name ?? "";
       return {
         id: item.id,
         service: service,
@@ -107,8 +124,8 @@ const TreatmentClient = ({
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
         paymentMethod: item.paymentMethod,
-        amount: "₱100",
-        dentist: "N/A",
+        amount: item.amount,
+        dentist: dentist,
         status: item.status,
         createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
@@ -253,6 +270,15 @@ const TreatmentClient = ({
             <p className="font-semibold">Reason for Consultation: </p>
             <p>{patient?.consultationReason}</p>
           </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <h1 className="font-semibold text-lg mb-2">History of Present Illness</h1>
+          <PresentHistoryIllnessForm
+            initialData={presentHistoryIllness}
+            patientId={patient?.id as string}
+          />
         </CardContent>
       </Card>
       <Card className="mt-5">

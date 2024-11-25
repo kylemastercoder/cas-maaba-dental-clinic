@@ -146,7 +146,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                 placeholder={placeholder}
                 disabled={disabled}
                 {...field}
-                className="shad-input"
+                className=""
                 autoFocus={autoFocus}
               />
             </div>

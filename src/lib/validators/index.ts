@@ -88,6 +88,10 @@ export const PatientSchema = z.object({
   branchId: z.string().min(1, { message: "Branch is required" }),
 });
 
+export const PresentIllnessSchema = z.object({
+  name: z.string().min(1, { message: "Present illness is required" }),
+});
+
 export const MedicalHistorySchema = z.object({
   currentMedication: z
     .string()

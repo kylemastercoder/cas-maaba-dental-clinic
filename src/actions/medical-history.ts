@@ -4,7 +4,7 @@
 import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
 import { formatTimeStamp } from "@/lib/utils";
-import { MedicalHistorySchema } from "@/lib/validators";
+import { MedicalHistorySchema, PresentIllnessSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export const createMedicalHistory = async (
@@ -63,6 +63,55 @@ export const createMedicalHistory = async (
   } catch (error: any) {
     return {
       error: `Failed to create medical history. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const createPresentIllness = async (
+  values: z.infer<typeof PresentIllnessSchema>,
+  patientId: string
+) => {
+  const { user } = await getUserFromCookies();
+  const validatedField = PresentIllnessSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { name } = validatedField.data;
+
+  try {
+    const presentIllness = await db.presentHistoryIllness.create({
+      data: {
+        name,
+        patientId,
+      },
+      include: {
+        patient: true,
+      },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (presentIllness) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added history of present illness for ${presentIllness.patient.firstName} ${presentIllness.patient.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
+        },
+      });
+    }
+
+    return {
+      success: "History of present illness created successfully",
+      presentIllness,
+    };
+  } catch (error: any) {
+    return {
+      error: `Failed to create history of present illness. Please try again. ${
         error.message || ""
       }`,
     };
