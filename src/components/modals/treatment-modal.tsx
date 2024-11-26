@@ -34,7 +34,7 @@ const TreatmentModal = ({
   onClose: () => void;
   isOpen: boolean;
   toothNumber: number | null;
-  user: UserWithRole;
+  user?: UserWithRole;
 }) => {
   const params = useParams();
   const [services, setServices] = useState<Service[]>([]);
@@ -65,7 +65,7 @@ const TreatmentModal = ({
           otherDiagnosis: "",
           status: "",
           amount: "",
-          dentist: user.role.name === "Dentist" ? user.id : "",
+          dentist: user?.role.name === "Dentist" ? user?.id : "",
         },
   });
 

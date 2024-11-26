@@ -19,7 +19,7 @@ const PresentHistoryIllnessForm = ({
 }: {
   patientId: string;
   initialData: PresentHistoryIllness | null;
-  user: UserWithRoles;
+  user?: UserWithRoles;
 }) => {
   const form = useForm<z.infer<typeof PresentIllnessSchema>>({
     resolver: zodResolver(PresentIllnessSchema),
@@ -49,9 +49,9 @@ const PresentHistoryIllnessForm = ({
           placeholder="Enter N/A if not applicable"
           name="name"
           isRequired
-          disabled={user.role.name === "Front Desk" || isSaving}
+          disabled={user?.role.name === "Front Desk" || isSaving}
         />
-        <Button type="submit" disabled={user.role.name === "Front Desk" || isSaving} className="mt-3">
+        <Button type="submit" disabled={user?.role.name === "Front Desk" || isSaving} className="mt-3">
           {isSaving && <Loader2 className="animate-spin w-4 h-4 mr-2" />}
           Save Changes
         </Button>

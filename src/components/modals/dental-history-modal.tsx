@@ -27,7 +27,7 @@ const DentalHistoryModal = ({
 }: {
   isOpen: boolean;
   onClose: () => void;
-  user: UserWithRole;
+  user?: UserWithRole;
 }) => {
   const params = useParams();
   const [dentists, setDentists] = React.useState<User[]>([]);
@@ -48,7 +48,7 @@ const DentalHistoryModal = ({
       otherDiagnosis: "",
       status: "",
       amount: "",
-      dentist: user.role.name === "Dentist" ? user.id : "",
+      dentist: user?.role.name === "Dentist" ? user?.id : "",
     },
   });
 
