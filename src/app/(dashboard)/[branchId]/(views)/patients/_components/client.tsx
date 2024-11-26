@@ -3,13 +3,14 @@
 import { DataTable } from "@/components/ui/data-table";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { columns, PatientColumn } from "./column";
+import { getColumns, PatientColumn } from "./column";
 import { differenceInYears, format } from "date-fns";
 import { useGetPatients } from "@/data/patient";
 import { useParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserWithRoles } from "./cell-action";
 
-const PatientClient = () => {
+const PatientClient = ({ user }: { user: UserWithRoles }) => {
   const { data: patientData, error, isLoading } = useGetPatients();
   const [isMounted, setIsMounted] = useState(false);
   const params = useParams();
@@ -56,7 +57,7 @@ const PatientClient = () => {
         <DataTable
           loading={isLoading}
           searchKey="name"
-          columns={columns}
+          columns={getColumns(user)}
           data={activePatients}
         />
       </TabsContent>
@@ -64,7 +65,7 @@ const PatientClient = () => {
         <DataTable
           loading={isLoading}
           searchKey="name"
-          columns={columns}
+          columns={getColumns(user)}
           data={inactivePatients}
         />
       </TabsContent>

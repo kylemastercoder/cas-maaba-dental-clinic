@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createMedicalHistory, createPresentIllness } from "@/actions/medical-history";
+import {
+  createMedicalHistory,
+  createPresentIllness,
+  updateMedicalHistory,
+  updatePresentIllness,
+} from "@/actions/medical-history";
 import { MedicalHistorySchema, PresentIllnessSchema } from "@/lib/validators";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
 
-export function useSaveMedicalHistory(patientId: string) {
+export function useSaveMedicalHistory(patientId: string, initialData?: any) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (values: z.infer<typeof MedicalHistorySchema>) => {
-      return createMedicalHistory(values, patientId);
+      if (initialData) {
+        return updateMedicalHistory(values, initialData.id);
+      } else {
+        return createMedicalHistory(values, patientId);
+      }
     },
     onSuccess: (data) => {
       if (data.success) {
@@ -24,12 +33,16 @@ export function useSaveMedicalHistory(patientId: string) {
   });
 }
 
-export function useSavePresentIllness(patientId: string) {
+export function useSavePresentIllness(patientId: string, initialData?: any) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (values: z.infer<typeof PresentIllnessSchema>) => {
-      return createPresentIllness(values, patientId);
+      if (initialData) {
+        return updatePresentIllness(values, initialData.id);
+      } else {
+        return createPresentIllness(values, patientId);
+      }
     },
     onSuccess: (data) => {
       if (data.success) {

@@ -4,8 +4,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { CellAction } from "./cell-action";
+import { CellAction, UserWithRoles } from "./cell-action";
 import { ArrowUpDown } from "lucide-react";
+import { User } from "@prisma/client";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
 export type PatientColumn = {
   id: string;
@@ -19,84 +22,105 @@ export type PatientColumn = {
   createdAt: string;
 };
 
-export const columns: ColumnDef<PatientColumn>[] = [
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <span
-          className="flex items-center cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Name
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </span>
-      );
+export const getColumns = (user: UserWithRoles): ColumnDef<PatientColumn>[] => {
+  const columns: ColumnDef<PatientColumn>[] = [
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Name
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
+        );
+      },
+      cell: ({ row }) => {
+        const params = useParams();
+        return (
+          <Link
+            href={`/${params.branchId}/patients/${row.original.id}/treatment-plan`}
+            className="text-black hover:underline"
+          >
+            {row.original.name}
+          </Link>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "address",
-    header: ({ column }) => {
-      return (
-        <span
-          className="flex items-center cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Address
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </span>
-      );
+    {
+      accessorKey: "address",
+      header: ({ column }) => {
+        return (
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Address
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "sex",
-    header: ({ column }) => {
-      return (
-        <span
-          className="flex items-center cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Sex
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </span>
-      );
+    {
+      accessorKey: "sex",
+      header: ({ column }) => {
+        return (
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Sex
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "age",
-    header: ({ column }) => {
-      return (
-        <span
-          className="flex items-center cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Age
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </span>
-      );
+    {
+      accessorKey: "age",
+      header: ({ column }) => {
+        return (
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Age
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
+        );
+      },
     },
-  },
-  {
-    accessorKey: "contactNumber",
-    header: "Contact Number",
-  },
-  {
-    accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <span
-          className="flex items-center cursor-pointer"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date Created
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </span>
-      );
+    {
+      accessorKey: "contactNumber",
+      header: "Contact Number",
     },
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
-];
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => {
+        return (
+          <span
+            className="flex items-center cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            Date Created
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </span>
+        );
+      },
+    },
+  ];
+
+  // Add 'Actions' column based on the user role
+  if (user?.role.name !== "Dentist") {
+    columns.push({
+      accessorKey: "actions",
+      header: "Actions",
+      cell: ({ row }) => {
+        return <CellAction data={row.original} />;
+      },
+    });
+  }
+
+  return columns;
+};

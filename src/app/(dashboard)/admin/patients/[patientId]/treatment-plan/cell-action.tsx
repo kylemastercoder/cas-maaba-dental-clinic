@@ -50,8 +50,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setOpenEdit(false)}
       />
       <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
+        <DropdownMenuTrigger data-html2canvas-ignore asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0 no-print">
             <span className="sr-only">Open menu</span>
             <MoreHorizontal className="w-4 h-4" />
           </Button>

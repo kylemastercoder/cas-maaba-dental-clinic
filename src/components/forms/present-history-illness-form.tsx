@@ -10,13 +10,16 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { useSavePresentIllness } from "@/data/medical-history";
 import { PresentHistoryIllness } from "@prisma/client";
+import { UserWithRoles } from "@/app/(dashboard)/[branchId]/(views)/patients/_components/cell-action";
 
 const PresentHistoryIllnessForm = ({
   patientId,
   initialData,
+  user,
 }: {
   patientId: string;
   initialData: PresentHistoryIllness | null;
+  user: UserWithRoles;
 }) => {
   const form = useForm<z.infer<typeof PresentIllnessSchema>>({
     resolver: zodResolver(PresentIllnessSchema),
@@ -27,7 +30,7 @@ const PresentHistoryIllnessForm = ({
   });
 
   const { mutate: savePresentIllness, isPending: isSaving } =
-    useSavePresentIllness(patientId as string);
+    useSavePresentIllness(patientId as string, initialData);
 
   async function onSubmit(values: z.infer<typeof PresentIllnessSchema>) {
     savePresentIllness(values, {
@@ -46,13 +49,9 @@ const PresentHistoryIllnessForm = ({
           placeholder="Enter N/A if not applicable"
           name="name"
           isRequired
-          disabled={!!initialData?.name || isSaving}
+          disabled={user.role.name === "Front Desk" || isSaving}
         />
-        <Button
-          type="submit"
-          disabled={!!initialData || isSaving}
-          className="mt-3"
-        >
+        <Button type="submit" disabled={user.role.name === "Front Desk" || isSaving} className="mt-3">
           {isSaving && <Loader2 className="animate-spin w-4 h-4 mr-2" />}
           Save Changes
         </Button>

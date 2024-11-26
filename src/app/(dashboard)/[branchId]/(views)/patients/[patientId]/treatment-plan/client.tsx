@@ -9,31 +9,51 @@ import {
   UPPER_MIDDLE_TEETH,
   UPPER_TEETH,
 } from "@/constants";
-import { Patient, Role, Service, TreatmentPlan, User } from "@prisma/client";
-import { differenceInYears, format } from "date-fns";
+import {
+  MedicalHistory,
+  Patient,
+  PresentHistoryIllness,
+  Role,
+  Service,
+  TreatmentPlan,
+  User,
+} from "@prisma/client";
+import { format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { columns, TreatmentColumn } from "./column";
 import { getAllServices } from "@/actions/service";
 import { useTheme } from "next-themes";
+import MedicalHistoryForm from "@/components/forms/medical-history-form";
+import { getAllDentists } from "@/actions/user";
+import PresentHistoryIllnessForm from "@/components/forms/present-history-illness-form";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import DentalHistoryModal from "@/components/modals/dental-history-modal";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
 }
 
-interface UserRole extends User {
-  role: Role | null;
+interface UserWithRole extends User {
+  role: Role;
 }
 
 const TreatmentClient = ({
   patient,
+  medicalHistory,
+  presentHistoryIllness,
   user,
 }: {
   patient: PatientWithTreatment | null;
-  user: UserRole | null;
+  medicalHistory: MedicalHistory | null;
+  presentHistoryIllness: PresentHistoryIllness | null;
+  user: UserWithRole;
 }) => {
   const { theme } = useTheme();
   const [services, setServices] = useState<Service[]>([]);
+  const [dentists, setDentists] = useState<User[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
   const fullName = `${patient?.firstName} ${patient?.middleName} ${patient?.lastName}`;
   const [modalData, setModalData] = useState<{
     isOpen: boolean;
@@ -59,12 +79,12 @@ const TreatmentClient = ({
           return "size-3 rounded-full border-2 border-black"; // Recurrent status
         case "For EXO":
           return "bg-red-600 w-[2px] h-6 rotate-45"; // For EXO status
-        case "Abraided/Attrition abraided":
-          return "text-red-600"; // Abraided/Attrition status
+        case "Abraided/Attrition":
+          return "text-red-600 abraided"; // Abraided/Attrition status
         case "Severe":
           return "w-3 h-2 bg-red-500 rotate-12"; // Severe status
         case "Impacted":
-          return "text-red-600"; // Impacted status
+          return "text-red-600 impacted"; // Impacted status
         case "Incipient":
           return "bg-red-600 w-4 h-[2px]"; // Incipient status
         case "CO or AM":
@@ -75,8 +95,10 @@ const TreatmentClient = ({
           return "bg-black w-[2px] h-6 rotate-45";
         case "Sealant":
           return "text-black sealant font-bold text-lg";
+        case "Others":
+          return "text-red-500 others font-bold text-lg";
         default:
-          return "";
+          return "text-red-500 others font-bold text-lg";
       }
     }
     return "";
@@ -90,55 +112,61 @@ const TreatmentClient = ({
     fetchServices();
   }, []);
 
+  useEffect(() => {
+    const fetchDentists = async () => {
+      const response = await getAllDentists();
+      setDentists(response.data ?? []);
+    };
+    fetchDentists();
+  }, []);
+
   const formattedData: TreatmentColumn[] =
     patient?.treatmentPlan?.map((item) => {
       const service =
         services.find((s) => s.id === item.serviceId)?.name ??
         "Unknown Service";
+
+      const dentist = dentists.find((d) => d.id === item.dentistId)?.name ?? "";
       return {
         id: item.id,
         service: service,
-        serviceId: item.serviceId ?? "Unknown Service ID",
+        serviceId: item.serviceId ?? "",
         toothNumber: item.toothNumber,
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
         paymentMethod: item.paymentMethod,
+        amount: item.amount,
+        dentist: dentist,
         status: item.status,
-        createdAt: format(item.createdAt, "MMMM do, yyyy"),
+        createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
     }) || [];
 
   return (
     <>
       <TreatmentModal
+        user={user}
         isOpen={modalData.isOpen}
         onClose={() => setModalData({ ...modalData, isOpen: false })}
         toothNumber={modalData.toothNumber}
       />
+      <DentalHistoryModal
+        user={user}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+      />
       <Card>
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg">Patient Information</h1>
-          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
-            <div className="flex items-center gap-1 border-b w-full">
-              <p className="font-semibold">Name: </p>
-              <p>{fullName}</p>
-            </div>
-            <div className="flex items-center gap-1 border-b w-full">
-              <p className="font-semibold">Sex: </p>
-              <p>{patient?.sex}</p>
-            </div>
+          <div className="flex flex-print items-center gap-1 border-b w-full mt-2">
+            <p className="font-semibold">Name: </p>
+            <p>{fullName}</p>
           </div>
-          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
-            <div className="flex items-center gap-1 border-b w-full">
-              <p className="font-semibold">Email Address: </p>
-              <p>{patient?.email}</p>
-            </div>
-            <div className="flex items-center gap-1 border-b w-full">
-              <p className="font-semibold">Facebook Name: </p>
-              <p>{patient?.facebookName}</p>
-            </div>
+          <div className="flex flex-print items-center gap-1 border-b w-full mt-2">
+            <p className="font-semibold">Residential Address: </p>
+            <p>{patient?.address}</p>
           </div>
-          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
+          <div className="grid w-full md:grid-cols-4 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Birthday: </p>
               <p>
@@ -148,39 +176,146 @@ const TreatmentClient = ({
               </p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Marital Status: </p>
+              <p>{patient?.maritalStatus}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Age: </p>
-              <p>
-                {patient?.birthdate
-                  ? differenceInYears(new Date(), new Date(patient.birthdate))
-                  : "N/A"}
-              </p>
+              <p>{patient?.age} years old</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Sex: </p>
+              <p>{patient?.sex}</p>
             </div>
           </div>
           <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Contact Number: </p>
+              <p>{patient?.contactNumber}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Birthplace (Hospital): </p>
+              <p>{patient?.birthPlace}</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-2 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Facebook Name: </p>
+              <p>{patient?.facebookName}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Email Address: </p>
+              <p>{patient?.email}</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
             <div className="flex items-center gap-1 border-b w-full">
               <p className="font-semibold">Occupation: </p>
               <p>{patient?.occupation}</p>
             </div>
             <div className="flex items-center gap-1 border-b w-full">
-              <p className="font-semibold">Marital Status: </p>
-              <p>{patient?.maritalStatus}</p>
+              <p className="font-semibold">Weight (kg): </p>
+              <p>{patient?.weight} kg</p>
             </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Height (cm): </p>
+              <p>{patient?.height} cm</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Father&apos;s Name: </p>
+              <p>{patient?.fatherName || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Father&apos;s Occupation: </p>
+              <p>{patient?.fatherOccupation || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Father&apos;s Contact Number: </p>
+              <p>{patient?.fatherContactNumber || "N/A"}</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Mother&apos;s Name: </p>
+              <p>{patient?.motherName || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Mother&apos;s Occupation: </p>
+              <p>{patient?.motherOccupation || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Mother&apos;s Contact Number: </p>
+              <p>{patient?.motherContactNumber || "N/A"}</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Guardian&apos;s Name: </p>
+              <p>{patient?.guardianName || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Guardian&apos;s Relation: </p>
+              <p>{patient?.guardianRelation || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Guardian&apos;s Contact Number: </p>
+              <p>{patient?.guardianContactNumber || "N/A"}</p>
+            </div>
+          </div>
+          <div className="grid w-full md:grid-cols-3 grid-cols-1 md:gap-5 gap-2 mt-2">
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Doctor&apos;s Name: </p>
+              <p>{patient?.doctorName || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Doctor&apos;s Specialization: </p>
+              <p>{patient?.doctorSpecialization || "N/A"}</p>
+            </div>
+            <div className="flex items-center gap-1 border-b w-full">
+              <p className="font-semibold">Doctor&apos;s Contact Number: </p>
+              <p>{patient?.doctorContactNumber || "N/A"}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 border-b w-full mt-2">
+            <p className="font-semibold">Referred by: </p>
+            <p>{patient?.referredBy || "N/A"}</p>
+          </div>
+
+          <div className="flex items-center gap-1 w-full mt-2">
+            <p className="font-semibold">Reason for Consultation: </p>
+            <p>{patient?.consultationReason}</p>
           </div>
         </CardContent>
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Treatment Rendered</h1>
-          <DataTable
-            data={formattedData}
-            searchKey="service"
-            columns={columns}
+          <h1 className="font-semibold text-lg mb-2">
+            History of Present Illness
+          </h1>
+          <PresentHistoryIllnessForm
+            initialData={presentHistoryIllness}
+            patientId={patient?.id as string}
+            user={user}
           />
         </CardContent>
       </Card>
       <Card className="mt-5">
         <CardContent className="p-5">
-          <h1 className="font-semibold text-lg">Dental Chart</h1>
+          <h1 className="font-semibold text-lg mb-2">Medical History</h1>
+          <MedicalHistoryForm
+            initialData={medicalHistory}
+            patientId={patient?.id as string}
+            user={user}
+          />
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Dental Chart</h1>
+          </div>
           <div className="grid md:grid-cols-10 grid-cols-1 mt-2 gap-5">
             <div className="col-span-6 flex flex-col">
               <div className="flex justify-center items-center gap-1">
@@ -193,8 +328,6 @@ const TreatmentClient = ({
                           t.toothNumber === tooth && t.patientId === patient.id
                       )
                         ? "cursor-not-allowed"
-                        : user?.role?.name === "Front Desk"
-                        ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
                     onClick={() => {
@@ -202,7 +335,7 @@ const TreatmentClient = ({
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       );
-                      if (!isNotClickable && user?.role?.name !== "Front Desk") {
+                      if (!isNotClickable) {
                         openModal(tooth);
                       }
                     }}
@@ -241,19 +374,19 @@ const TreatmentClient = ({
                         className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                           patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth && t.patientId === patient.id
+                              t.toothNumber === tooth &&
+                              t.patientId === patient.id
                           )
-                            ? "cursor-not-allowed"
-                            : user?.role?.name === "Front Desk"
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
                         }`}
                         onClick={() => {
                           const isNotClickable = patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth && t.patientId === patient.id
+                              t.toothNumber === tooth &&
+                              t.patientId === patient.id
                           );
-                          if (!isNotClickable && user?.role?.name !== "Front Desk") {
+                          if (!isNotClickable) {
                             openModal(tooth);
                           }
                         }}
@@ -266,14 +399,13 @@ const TreatmentClient = ({
                               : "/light-tooth.svg"
                           }`}
                           alt="Tooth"
-                          layout="fill"
-                          objectFit="contain"
+                          fill
                         />
                         <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                           {tooth}
                         </p>
                         <div
-                          className={`absolute top-1 right-2 ${getToothStatus(
+                          className={`absolute text-xl top-1 right-2 ${getToothStatus(
                             tooth
                           )}`}
                         ></div>
@@ -289,19 +421,19 @@ const TreatmentClient = ({
                           className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                             patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth && t.patientId === patient.id
+                                t.toothNumber === tooth &&
+                                t.patientId === patient.id
                             )
-                              ? "cursor-not-allowed"
-                              : user?.role?.name === "Front Desk"
                               ? "cursor-not-allowed"
                               : "cursor-pointer"
                           }`}
                           onClick={() => {
                             const isNotClickable = patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth && t.patientId === patient.id
+                                t.toothNumber === tooth &&
+                                t.patientId === patient.id
                             );
-                            if (!isNotClickable && user?.role?.name !== "Front Desk") {
+                            if (!isNotClickable) {
                               openModal(tooth);
                             }
                           }}
@@ -314,8 +446,7 @@ const TreatmentClient = ({
                                 : "/light-tooth.svg"
                             }`}
                             alt="Tooth"
-                            layout="fill"
-                            objectFit="contain"
+                            fill
                           />
                           <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                             {tooth}
@@ -338,13 +469,11 @@ const TreatmentClient = ({
                 {LOWER_TEETH.map((tooth) => (
                   <div
                     key={tooth}
-                    className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
+                    className={`relative w-[50px] h-[50px] ${
                       patient?.treatmentPlan.find(
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       )
-                        ? "cursor-not-allowed"
-                        : user?.role?.name === "Front Desk"
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
@@ -353,7 +482,7 @@ const TreatmentClient = ({
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
                       );
-                      if (!isNotClickable && user?.role?.name !== "Front Desk") {
+                      if (!isNotClickable) {
                         openModal(tooth);
                       }
                     }}
@@ -366,8 +495,7 @@ const TreatmentClient = ({
                           : "/light-tooth.svg"
                       }`}
                       alt="Tooth"
-                      layout="fill"
-                      objectFit="contain"
+                      fill
                     />
                     <p className="md:text-xs text-[10px] absolute inset-0 flex items-center mb-2 font-semibold justify-center">
                       {tooth}
@@ -381,7 +509,7 @@ const TreatmentClient = ({
                 ))}
               </div>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-4" data-html2canvas-ignore>
               <p className="font-semibold mb-2">Legend:</p>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2">
@@ -434,9 +562,32 @@ const TreatmentClient = ({
                   <div className="text-black">S</div>
                   <p> - Sealant</p>
                 </div>
+                <div className="flex items-center gap-2">
+                  <div className="text-red-500">*</div>
+                  <p> - Others</p>
+                </div>
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Dental History</h1>
+            <Button
+              data-html2canvas-ignore
+              size="sm"
+              onClick={() => setIsOpen(true)}
+            >
+              <PlusCircle className="mr-2 w-4 h-4" /> Add
+            </Button>
+          </div>
+          <DataTable
+            data={formattedData}
+            searchKey="service"
+            columns={columns}
+          />
         </CardContent>
       </Card>
     </>

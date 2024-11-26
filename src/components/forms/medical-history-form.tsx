@@ -10,13 +10,16 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { useSaveMedicalHistory } from "@/data/medical-history";
 import { MedicalHistory } from "@prisma/client";
+import { UserWithRoles } from "@/app/(dashboard)/[branchId]/(views)/patients/_components/cell-action";
 
 const MedicalHistoryForm = ({
   patientId,
   initialData,
+  user,
 }: {
   patientId: string;
   initialData: MedicalHistory | null;
+  user: UserWithRoles;
 }) => {
   const form = useForm<z.infer<typeof MedicalHistorySchema>>({
     resolver: zodResolver(MedicalHistorySchema),
@@ -34,7 +37,7 @@ const MedicalHistoryForm = ({
   });
 
   const { mutate: saveMedicalHistory, isPending: isSaving } =
-    useSaveMedicalHistory(patientId as string);
+    useSaveMedicalHistory(patientId as string, initialData);
 
   async function onSubmit(values: z.infer<typeof MedicalHistorySchema>) {
     saveMedicalHistory(values, {
@@ -54,7 +57,7 @@ const MedicalHistoryForm = ({
             placeholder="Enter N/A if not applicable"
             name="currentMedication"
             isRequired
-            disabled={!!initialData?.currentMedication || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
           />
           <CustomFormField
             control={form.control}
@@ -63,7 +66,7 @@ const MedicalHistoryForm = ({
             placeholder="Enter N/A if not applicable"
             name="previousHospitalization"
             isRequired
-            disabled={!!initialData?.previousHospitalization || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
           />
         </div>
         <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-3">
@@ -74,7 +77,7 @@ const MedicalHistoryForm = ({
             placeholder="Enter N/A if not applicable"
             name="allergies"
             isRequired
-            disabled={!!initialData?.allergies || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
           />
           <CustomFormField
             control={form.control}
@@ -83,7 +86,7 @@ const MedicalHistoryForm = ({
             placeholder="Enter N/A if not applicable"
             name="developmentalAbnormalities"
             isRequired
-            disabled={!!initialData?.developmentalAbnormalities || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
           />
         </div>
         <div className="flex flex-col gap-2 mt-3">
@@ -92,7 +95,7 @@ const MedicalHistoryForm = ({
             control={form.control}
             fieldType={FormFieldType.CHECKBOX}
             label="Any history of the following:"
-            disabled={!!initialData?.histories || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
             name="histories"
             options={[
               "Circulatory Problem",
@@ -120,7 +123,7 @@ const MedicalHistoryForm = ({
             placeholder="Yes or No"
             name="medicalCareReaction"
             isRequired
-            disabled={!!initialData?.medicalCareReaction || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
           />
           <CustomFormField
             control={form.control}
@@ -128,7 +131,7 @@ const MedicalHistoryForm = ({
             label="If yes, please specify"
             placeholder=""
             name="yesSpecify"
-            disabled={!!initialData?.yesSpecify || isSaving}
+            disabled={user.role.name === "Front Desk" || isSaving}
             isRequired={false}
           />
         </div>
@@ -139,11 +142,11 @@ const MedicalHistoryForm = ({
           placeholder="Enter N/A if not applicable"
           name="socialFamilyHistory"
           isRequired
-          disabled={!!initialData?.socialFamilyHistory || isSaving}
+          disabled={user.role.name === "Front Desk" || isSaving}
         />
         <Button
           type="submit"
-          disabled={!!initialData || isSaving}
+          disabled={user.role.name === "Front Desk" || isSaving}
           className="mt-3"
         >
           {isSaving && <Loader2 className="animate-spin w-4 h-4 mr-2" />}

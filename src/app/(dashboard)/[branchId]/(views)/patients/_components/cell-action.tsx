@@ -24,12 +24,17 @@ import AlertModal from "@/components/ui/alert-modal";
 import { useParams, useRouter } from "next/navigation";
 import NotifyModal from "@/components/modals/notify-modal";
 import { useDeletePatient } from "@/data/patient";
+import { Role, User } from "@prisma/client";
 
+export interface UserWithRoles extends User {
+  role: Role;
+}
 interface CellActionProps {
   data: PatientColumn;
+  user?: UserWithRoles;
 }
 
-export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+export const CellAction: React.FC<CellActionProps> = ({ data, user }) => {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(false);
@@ -56,7 +61,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     sixYearsAgo.setFullYear(sixYearsAgo.getFullYear() - 6);
 
     if (createdAtDate <= sixYearsAgo) {
-      onDelete(); // Trigger delete if more than six years old
+      onDelete();
     }
   }, [data.createdAt]);
 
@@ -75,44 +80,60 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         isOpen={openNotifyModal}
         onClose={() => setOpenNotifyModal(false)}
       />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="w-4 h-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() =>
-              router.push(`${params.branchId ? `/${params.branchId}/patients/${data.id}/treatment-plan` : `/admin/patients/${data.id}/treatment-plan`}`)
-            }
-          >
-            <BriefcaseMedical className="w-4 h-4 mr-2" />
-            Treatment Plan
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
-            <Bell className="w-4 h-4 mr-2" />
-            Notify for Follow-up
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => router.push(`${params.branchId ? `/${params.branchId}/patients/${data.id}` : `/admin/patients/${data.id}`}`)}
-          >
-            <Edit className="w-4 h-4 mr-2" />
-            Update
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onCopy(data.name)}>
-            <Copy className="w-4 h-4 mr-2" />
-            Copy
-          </DropdownMenuItem>
-          {/* <DropdownMenuSeparator />
+      {user?.role.name !== "Dentist" && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="w-4 h-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(
+                  `${
+                    params.branchId
+                      ? `/${params.branchId}/patients/${data.id}/treatment-plan`
+                      : `/admin/patients/${data.id}/treatment-plan`
+                  }`
+                )
+              }
+            >
+              <BriefcaseMedical className="w-4 h-4 mr-2" />
+              Treatment Plan
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
+              <Bell className="w-4 h-4 mr-2" />
+              Notify for Follow-up
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(
+                  `${
+                    params.branchId
+                      ? `/${params.branchId}/patients/${data.id}`
+                      : `/admin/patients/${data.id}`
+                  }`
+                )
+              }
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Update
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onCopy(data.name)}>
+              <Copy className="w-4 h-4 mr-2" />
+              Copy
+            </DropdownMenuItem>
+            {/* <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem> */}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
     </>
   );
 };

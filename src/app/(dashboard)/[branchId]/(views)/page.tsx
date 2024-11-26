@@ -146,6 +146,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
       {user?.role.name === "Dentist" ? null : (
         <div className="grid md:grid-cols-4 grid-cols-1 gap-6 mt-5">
           <StatCard
+            user={user}
             title="Patients"
             href={`${
               user?.role.name === "Administrator"
@@ -156,6 +157,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             icon={Users}
           />
           <StatCard
+            user={user}
             title="Services"
             href={`${
               user?.role.name === "Administrator"
@@ -166,6 +168,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             icon={FileCheck2}
           />
           <StatCard
+            user={user}
             title="Supplies"
             href={`${
               user?.role.name === "Administrator"
@@ -176,6 +179,7 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             icon={Syringe}
           />
           <StatCard
+            user={user}
             title="Staff"
             href={`${
               user?.role.name === "Administrator"
@@ -197,7 +201,10 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <PatientDayTable branch={user?.branch.name} userRole={user?.role.name as string} />
+            <PatientDayTable
+              branch={user?.branch.name}
+              userRole={user?.role.name as string}
+            />
           </CardContent>
         </Card>
       </div>

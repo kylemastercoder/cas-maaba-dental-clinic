@@ -12,23 +12,29 @@ import { TreatmentPlanSchema } from "@/lib/validators";
 import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { Modal } from "../ui/modal";
-import { Service, User } from "@prisma/client";
+import { Role, Service, User } from "@prisma/client";
 import { getAllServices } from "@/actions/service";
 import { useParams } from "next/navigation";
 import { useSaveTreatmentPlan } from "@/data/treatment-plan";
 import { getAllDentists } from "@/actions/user";
 import { toast } from "sonner";
 
+interface UserWithRole extends User {
+  role: Role;
+}
+
 const TreatmentModal = ({
   initialData,
   toothNumber,
   onClose,
   isOpen,
+  user,
 }: {
   initialData?: any;
   onClose: () => void;
   isOpen: boolean;
   toothNumber: number | null;
+  user: UserWithRole;
 }) => {
   const params = useParams();
   const [services, setServices] = useState<Service[]>([]);
@@ -59,7 +65,7 @@ const TreatmentModal = ({
           otherDiagnosis: "",
           status: "",
           amount: "",
-          dentist: "",
+          dentist: user.role.name === "Dentist" ? user.id : "",
         },
   });
 

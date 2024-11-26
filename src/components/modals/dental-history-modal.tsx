@@ -8,7 +8,7 @@ import { DentalHistorySchema } from "@/lib/validators";
 import CustomFormField from "../globals/custom-formfield";
 import { FormFieldType } from "@/constants";
 import { getAllDentists } from "@/actions/user";
-import { Service, User } from "@prisma/client";
+import { Role, Service, User } from "@prisma/client";
 import { getAllServices } from "@/actions/service";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
@@ -16,12 +16,18 @@ import { toast } from "sonner";
 import { useParams } from "next/navigation";
 import { useSaveTreatmentPlan } from "@/data/treatment-plan";
 
+interface UserWithRole extends User {
+  role: Role;
+}
+
 const DentalHistoryModal = ({
   isOpen,
   onClose,
+  user,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  user: UserWithRole;
 }) => {
   const params = useParams();
   const [dentists, setDentists] = React.useState<User[]>([]);
@@ -42,7 +48,7 @@ const DentalHistoryModal = ({
       otherDiagnosis: "",
       status: "",
       amount: "",
-      dentist: "",
+      dentist: user.role.name === "Dentist" ? user.id : "",
     },
   });
 

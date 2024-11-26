@@ -146,11 +146,11 @@ const TreatmentClient = ({
       <Card>
         <CardContent className="p-5">
           <h1 className="font-semibold text-lg">Patient Information</h1>
-          <div className="flex items-center gap-1 border-b w-full mt-2">
+          <div className="flex flex-print items-center gap-1 border-b w-full mt-2">
             <p className="font-semibold">Name: </p>
             <p>{fullName}</p>
           </div>
-          <div className="flex items-center gap-1 border-b w-full mt-2">
+          <div className="flex flex-print items-center gap-1 border-b w-full mt-2">
             <p className="font-semibold">Residential Address: </p>
             <p>{patient?.address}</p>
           </div>
@@ -495,7 +495,7 @@ const TreatmentClient = ({
                 ))}
               </div>
             </div>
-            <div className="col-span-4">
+            <div className="col-span-4" data-html2canvas-ignore>
               <p className="font-semibold mb-2">Legend:</p>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2">
@@ -561,7 +561,7 @@ const TreatmentClient = ({
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
             <h1 className="font-semibold text-lg">Dental History</h1>
-            <Button size="sm" onClick={() => setIsOpen(true)}>
+            <Button data-html2canvas-ignore size="sm" onClick={() => setIsOpen(true)}>
               <PlusCircle className="mr-2 w-4 h-4" /> Add
             </Button>
           </div>

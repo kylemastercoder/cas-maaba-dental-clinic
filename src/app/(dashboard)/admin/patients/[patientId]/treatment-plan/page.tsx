@@ -33,11 +33,7 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
           title={`Patient Dental Record`}
           description="A detailed overview of the patient's treatment, including personal information, medical history, dental chart, and ongoing care for improved dental health."
         />
-        <HandlePrint
-          patient={patient}
-          presentHistoryIllness={presentHistoryIllness}
-          medicalHistory={medicalHistory}
-        />
+        <HandlePrint />
       </div>
       <TreatmentClient
         presentHistoryIllness={presentHistoryIllness}
