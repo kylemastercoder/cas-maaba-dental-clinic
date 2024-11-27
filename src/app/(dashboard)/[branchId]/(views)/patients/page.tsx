@@ -31,7 +31,8 @@ const Patients = async ({ params }: { params: { branchId: string } }) => {
           description="Manage and view all patient information, including personal details, medical history, and appointments."
         />
         {user?.role.name === "Administrator" ||
-          (user?.role.name === "Branch Head" && (
+          user?.role.name === "Branch Head" ||
+          (user?.role.name === "Front Desk" && (
             <Button asChild>
               <Link href={`/${params.branchId}/patients/new`}>Add Patient</Link>
             </Button>

@@ -21,7 +21,7 @@ import {
 import { format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { columns, TreatmentColumn } from "./column";
+import { columns, columns2, TreatmentColumn, TreatmentColumn2 } from "./column";
 import { getAllServices } from "@/actions/service";
 import { useTheme } from "next-themes";
 import MedicalHistoryForm from "@/components/forms/medical-history-form";
@@ -138,6 +138,17 @@ const TreatmentClient = ({
         amount: item.amount,
         dentist: dentist,
         status: item.status,
+        createdAt: format(item.createdAt, "MMMM dd, yyyy"),
+      };
+    }) || [];
+
+    const formattedDataTreatment: TreatmentColumn2[] =
+    patient?.treatmentPlan?.map((item) => {
+      return {
+        id: item.id,
+        toothNumber: item.toothNumber,
+        diagnosis: item.diagnosis,
+        remarks: item.dentalRemarks || "N/A",
         createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
     }) || [];
@@ -569,6 +580,18 @@ const TreatmentClient = ({
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Remarks</h1>
+          </div>
+          <DataTable
+            data={formattedDataTreatment}
+            searchKey="toothNumber"
+            columns={columns2}
+          />
         </CardContent>
       </Card>
       <Card className="mt-5">

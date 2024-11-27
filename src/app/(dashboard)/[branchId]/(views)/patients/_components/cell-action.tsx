@@ -102,7 +102,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data, user }) => {
               }
             >
               <BriefcaseMedical className="w-4 h-4 mr-2" />
-              Treatment Plan
+              Dental Record
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
               <Bell className="w-4 h-4 mr-2" />

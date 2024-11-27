@@ -28,6 +28,7 @@ const SupplyClient = () => {
     supplyData?.data?.filter((item) => (branchId ? item.branchId === branchId : true))
     .map((item) => ({
       id: item.id,
+      sku: item.sku,
       name: item.name,
       category: item.category,
       unit: item.unit.name,
@@ -37,6 +38,7 @@ const SupplyClient = () => {
       remaining: item.quantity - item.used,
       createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       branchId: item.branchId,
+      branch: item.branch.name,
     })) || [];
 
   if (!isMounted) {

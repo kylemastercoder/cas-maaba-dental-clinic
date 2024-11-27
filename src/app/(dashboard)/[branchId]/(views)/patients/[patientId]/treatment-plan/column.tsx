@@ -19,6 +19,14 @@ export type TreatmentColumn = {
   createdAt: string;
 };
 
+export type TreatmentColumn2 = {
+  id: string;
+  diagnosis: string;
+  remarks: string;
+  toothNumber: number;
+  createdAt: string;
+};
+
 export const columns: ColumnDef<TreatmentColumn>[] = [
   {
     accessorKey: "createdAt",
@@ -61,5 +69,24 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     cell: ({ row }) => (
       <CellAction data={row.original} />
     )
+  },
+];
+
+export const columns2: ColumnDef<TreatmentColumn2>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Date Created",
+  },
+  {
+    accessorKey: "toothNumber",
+    header: "Tooth Number",
+  },
+  {
+    accessorKey: "diagnosis",
+    header: "Diagnosis",
+  },
+  {
+    accessorKey: "remarks",
+    header: "Remarks",
   },
 ];
