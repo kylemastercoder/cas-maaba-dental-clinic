@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import db from "@/lib/db";
 import React from "react";
 import {
@@ -6,6 +7,7 @@ import {
   View,
   Document,
   StyleSheet,
+  Image,
   renderToStream,
 } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
@@ -19,10 +21,15 @@ import {
 import { format } from "date-fns";
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 100,  // Set the size of your logo
+    height: 80,
+  },
   page: {
     flexDirection: "row",
     backgroundColor: "#E4E4E4",
     padding: 20,
+    height: "100%",
   },
   flexCol: {
     flexDirection: "column",
@@ -31,6 +38,13 @@ const styles = StyleSheet.create({
   flexRow: {
     flexDirection: "row",
     gap: 2,
+  },
+  flexRowCenter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 2,
+    marginBottom: 20,
   },
   section: {
     margin: 10,
@@ -126,13 +140,12 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
     <Document>
       <Page size="A4" style={styles.page}>
         <View style={styles.flexCol}>
+          <View style={styles.flexRowCenter}>
+            <Image style={styles.logo} src="https://firebasestorage.googleapis.com/v0/b/tander-mobile.appspot.com/o/logo-icon.png?alt=media&token=7d43f8b7-452d-4a30-bc07-2092160647be" />
+            <Text style={styles.header}>Cas-Maaba Dental Clinic</Text>
+          </View>
           <View style={styles.flexCol}>
             <Text style={styles.header}>Patient Dental Record</Text>
-            <Text style={styles.subTitle}>
-              A detailed overview of the patient&apos;s treatment, including
-              personal information, medical history, dental chart, and ongoing
-              care for improved dental health.
-            </Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.subHeader}>Personal Information</Text>
@@ -412,6 +425,7 @@ export async function GET(
     },
     include: {
       treatmentPlan: true,
+      dentalRemarks: true,
     },
   });
 

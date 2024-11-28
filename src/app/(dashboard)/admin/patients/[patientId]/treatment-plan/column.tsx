@@ -10,12 +10,20 @@ import { CellAction } from "./cell-action";
 export type TreatmentColumn = {
   id: string;
   service: string;
-  diagnosis: string;
-  serviceId: string;
   paymentMethod: string;
-  status: string;
   amount: string;
   dentist: string;
+  status: string;
+  serviceId: string;
+  dentistId: string;
+  remarks: string;
+  toothNumber: number;
+  createdAt: string;
+};
+
+export type TreatmentColumn2 = {
+  id: string;
+  diagnosis: string;
   remarks: string;
   toothNumber: number;
   createdAt: string;
@@ -35,7 +43,7 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     header: "Treatment Rendered",
   },
   {
-    accessorKey: "diagnosis",
+    accessorKey: "remarks",
     header: "Notes/Remarks",
   },
   {
@@ -48,7 +56,7 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
   },
   {
     accessorKey: "paymentMethod",
-    header: "MOP",
+    header: "Payment Method",
   },
   {
     accessorKey: "status",
@@ -63,5 +71,24 @@ export const columns: ColumnDef<TreatmentColumn>[] = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => <CellAction data={row.original} />,
+  },
+];
+
+export const columns2: ColumnDef<TreatmentColumn2>[] = [
+  {
+    accessorKey: "createdAt",
+    header: "Date Created",
+  },
+  {
+    accessorKey: "toothNumber",
+    header: "Tooth Number",
+  },
+  {
+    accessorKey: "diagnosis",
+    header: "Diagnosis",
+  },
+  {
+    accessorKey: "remarks",
+    header: "Remarks",
   },
 ];

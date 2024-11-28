@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  createDentalHistory,
   createTreatmentPlan,
   deleteTreatmentPlan,
   getAllTreatmentPlanByPatient,
+  updateDentalHistory,
   updateTreatmentPlan,
 } from "@/actions/treatment-plan";
-import { TreatmentPlanSchema } from "@/lib/validators";
+import { DentalHistorySchema, TreatmentPlanSchema } from "@/lib/validators";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -51,6 +53,29 @@ export function useDeleteTreatmentPlan() {
       if (data?.success) {
         toast.success(data.success);
         queryClient.invalidateQueries({ queryKey: ["treatmentPlan"] });
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "An error occurred");
+    },
+  });
+}
+
+export function useSaveDentalHistory(patientId: string, initialData?: any) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (values: z.infer<typeof DentalHistorySchema>) => {
+      if (initialData) {
+        return updateDentalHistory(values, initialData.id);
+      } else {
+        return createDentalHistory(values, patientId);
+      }
+    },
+    onSuccess: (data) => {
+      if (data.success) {
+        toast.success(data.success);
+        queryClient.invalidateQueries({ queryKey: ["dentalHistory"] });
       }
     },
     onError: (error: any) => {

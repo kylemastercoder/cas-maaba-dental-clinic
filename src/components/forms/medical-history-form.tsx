@@ -1,6 +1,6 @@
 import { MedicalHistorySchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Form } from "../ui/form";
@@ -21,6 +21,7 @@ const MedicalHistoryForm = ({
   initialData: MedicalHistory | null;
   user?: UserWithRoles;
 }) => {
+  const [selectedHistories, setSelectedHistories] = useState<string[]>([]);
   const form = useForm<z.infer<typeof MedicalHistorySchema>>({
     resolver: zodResolver(MedicalHistorySchema),
     mode: "onChange",
@@ -30,16 +31,39 @@ const MedicalHistoryForm = ({
       allergies: initialData?.allergies || "",
       developmentalAbnormalities: initialData?.developmentalAbnormalities || "",
       histories: initialData?.histories || [],
+      otherHistories:
+        initialData?.histories?.find((history) =>
+          history.startsWith("Other")
+        ) || "",
       medicalCareReaction: initialData?.medicalCareReaction || "",
       yesSpecify: initialData?.yesSpecify || "",
       socialFamilyHistory: initialData?.socialFamilyHistory || "",
     },
   });
 
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      setSelectedHistories(
+        values.histories?.includes("Others") ? ["Others"] : []
+      );
+    });
+    return () => subscription.unsubscribe();
+  }, [form]);
+
   const { mutate: saveMedicalHistory, isPending: isSaving } =
     useSaveMedicalHistory(patientId as string, initialData);
 
   async function onSubmit(values: z.infer<typeof MedicalHistorySchema>) {
+    // Add `otherHistories` to `histories` if "Others" is selected
+    if (values.histories.includes("Others") && values.otherHistories) {
+      // Add the value of `otherHistories` to the histories array
+      values.histories = [...values.histories, values.otherHistories].filter(
+        (v) => v !== "Others" // Make sure "Others" is removed
+      );
+    }
+
+    // Remove `otherHistories` from the payload before sending it to the server
+    delete values.otherHistories;
     saveMedicalHistory(values, {
       onSuccess: () => {
         window.location.reload();
@@ -89,7 +113,7 @@ const MedicalHistoryForm = ({
             disabled={user?.role.name === "Front Desk" || isSaving}
           />
         </div>
-        <div className="flex flex-col gap-2 mt-3">
+        <div className="flex flex-col gap-2 mt-3 mb-3">
           <p className="font-semibold text-sm">Any history of the following:</p>
           <CustomFormField
             control={form.control}
@@ -115,6 +139,18 @@ const MedicalHistoryForm = ({
             isRequired
           />
         </div>
+        {/* add a input box here if the selected histories includes others */}
+        {selectedHistories.includes("Others") && (
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.INPUT}
+            label="Other History"
+            placeholder="Enter specific history"
+            isRequired={false}
+            name="otherHistories"
+            disabled={isSaving}
+          />
+        )}
         <div className="grid md:grid-cols-2 grid-cols-1 gap-5 mt-3 mb-3">
           <CustomFormField
             control={form.control}

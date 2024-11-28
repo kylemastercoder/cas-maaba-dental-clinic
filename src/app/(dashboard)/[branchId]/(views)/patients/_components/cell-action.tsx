@@ -80,34 +80,36 @@ export const CellAction: React.FC<CellActionProps> = ({ data, user }) => {
         isOpen={openNotifyModal}
         onClose={() => setOpenNotifyModal(false)}
       />
-      {user?.role.name !== "Dentist" && (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() =>
-                router.push(
-                  `${
-                    params.branchId
-                      ? `/${params.branchId}/patients/${data.id}/treatment-plan`
-                      : `/admin/patients/${data.id}/treatment-plan`
-                  }`
-                )
-              }
-            >
-              <BriefcaseMedical className="w-4 h-4 mr-2" />
-              Dental Record
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
-              <Bell className="w-4 h-4 mr-2" />
-              Notify for Follow-up
-            </DropdownMenuItem>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(
+                `${
+                  params.branchId
+                    ? `/${params.branchId}/patients/${data.id}/treatment-plan`
+                    : `/admin/patients/${data.id}/treatment-plan`
+                }`
+              )
+            }
+          >
+            <BriefcaseMedical className="w-4 h-4 mr-2" />
+            Dental Record
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpenNotifyModal(true)}>
+            <Bell className="w-4 h-4 mr-2" />
+            Notify for Follow-up
+          </DropdownMenuItem>
+          {(user?.role.name === "Branch Head" ||
+            user?.role.name === "Front Desk" ||
+            user?.role.name === "Administrator") && (
             <DropdownMenuItem
               onClick={() =>
                 router.push(
@@ -122,18 +124,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data, user }) => {
               <Edit className="w-4 h-4 mr-2" />
               Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onCopy(data.name)}>
-              <Copy className="w-4 h-4 mr-2" />
-              Copy
-            </DropdownMenuItem>
-            {/* <DropdownMenuSeparator />
+          )}
+          <DropdownMenuItem onClick={() => onCopy(data.name)}>
+            <Copy className="w-4 h-4 mr-2" />
+            Copy
+          </DropdownMenuItem>
+          {/* <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem> */}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </>
   );
 };

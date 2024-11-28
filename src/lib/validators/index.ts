@@ -104,6 +104,7 @@ export const MedicalHistorySchema = z.object({
     .string()
     .min(1, { message: "Developmental abnormalities is required" }),
   histories: z.string().array().min(1, { message: "Histories is required" }),
+  otherHistories: z.string().optional(),
   medicalCareReaction: z
     .string()
     .min(1, { message: "Medical care reaction is required" }),
@@ -140,14 +141,8 @@ export const TreatmentPlanSchema = z.object({
   toothNumber: z.coerce
     .number()
     .min(1, { message: "Tooth number is required" }),
-  service: z.string().min(1, { message: "Service is required" }),
   diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
   otherDiagnosis: z.string().optional(),
-  paymentMethod: z.string().min(1, { message: "Payment method is required" }),
-  isPaid: z.boolean().optional(),
-  status: z.string().min(1, { message: "Status is required" }),
-  amount: z.string().min(1, { message: "Amount is required" }),
-  dentist: z.string().min(1, { message: "Dentist is required" }),
   remarks: z.string().optional(),
 });
 
@@ -156,14 +151,11 @@ export const DentalHistorySchema = z.object({
     .number()
     .min(1, { message: "Tooth number is required" }),
   service: z.string().min(1, { message: "Service is required" }),
-  diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
-  otherDiagnosis: z.string().optional(),
-  paymentMethod: z.string().min(1, { message: "Payment method is required" }),
-  isPaid: z.boolean().optional(),
-  status: z.string().min(1, { message: "Status is required" }),
-  amount: z.string().min(1, { message: "Amount is required" }),
-  dentist: z.string().min(1, { message: "Dentist is required" }),
   remarks: z.string().optional(),
+  dentist: z.string().min(1, { message: "Dentist is required" }),
+  paymentMethod: z.string().optional(),
+  status: z.string().optional(),
+  amount: z.string().optional(),
 });
 
 export const AddStockSchema = z.object({

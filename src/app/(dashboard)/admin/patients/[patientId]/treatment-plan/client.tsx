@@ -10,6 +10,7 @@ import {
   UPPER_TEETH,
 } from "@/constants";
 import {
+  DentalRemarks,
   MedicalHistory,
   Patient,
   PresentHistoryIllness,
@@ -20,7 +21,7 @@ import {
 import { format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { columns, TreatmentColumn } from "./column";
+import { columns, columns2, TreatmentColumn, TreatmentColumn2 } from "./column";
 import { getAllServices } from "@/actions/service";
 import { useTheme } from "next-themes";
 import MedicalHistoryForm from "@/components/forms/medical-history-form";
@@ -32,6 +33,7 @@ import DentalHistoryModal from "@/components/modals/dental-history-modal";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
+  dentalRemarks: DentalRemarks[];
 }
 
 const TreatmentClient = ({
@@ -58,12 +60,12 @@ const TreatmentClient = ({
   };
 
   const getToothStatus = (toothNumber: number) => {
-    const treatment = patient?.treatmentPlan.find(
+    const dentalRemarks = patient?.dentalRemarks.find(
       (t) => t.toothNumber === toothNumber && t.patientId === patient.id
     );
 
-    if (treatment) {
-      switch (treatment.diagnosis) {
+    if (dentalRemarks) {
+      switch (dentalRemarks.diagnosis) {
         case "Decal":
           return "size-3 border-2 border-red-600"; // Decal status
         case "Caries":
@@ -115,22 +117,31 @@ const TreatmentClient = ({
 
   const formattedData: TreatmentColumn[] =
     patient?.treatmentPlan?.map((item) => {
-      const service =
-        services.find((s) => s.id === item.serviceId)?.name ??
-        "Unknown Service";
+      const service = services.find((s) => s.id === item.serviceId)?.name ?? "";
 
       const dentist = dentists.find((d) => d.id === item.dentistId)?.name ?? "";
       return {
         id: item.id,
         service: service,
         serviceId: item.serviceId ?? "",
+        dentistId: item.dentistId,
+        toothNumber: item.toothNumber,
+        remarks: item.dentalRemarks || "N/A",
+        paymentMethod: item.paymentMethod || "N/A",
+        amount: item.amount || "0",
+        dentist: dentist,
+        status: item.status,
+        createdAt: format(item.createdAt, "MMMM dd, yyyy"),
+      };
+    }) || [];
+
+  const formattedDataTreatment: TreatmentColumn2[] =
+    patient?.dentalRemarks?.map((item) => {
+      return {
+        id: item.id,
         toothNumber: item.toothNumber,
         diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
-        paymentMethod: item.paymentMethod,
-        amount: item.amount,
-        dentist: dentist,
-        status: item.status,
         createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
     }) || [];
@@ -560,8 +571,24 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
+            <h1 className="font-semibold text-lg">Dental Remarks</h1>
+          </div>
+          <DataTable
+            data={formattedDataTreatment}
+            searchKey="toothNumber"
+            columns={columns2}
+          />
+        </CardContent>
+      </Card>
+      <Card className="mt-5">
+        <CardContent className="p-5">
+          <div className="flex items-center justify-between">
             <h1 className="font-semibold text-lg">Dental History</h1>
-            <Button data-html2canvas-ignore size="sm" onClick={() => setIsOpen(true)}>
+            <Button
+              data-html2canvas-ignore
+              size="sm"
+              onClick={() => setIsOpen(true)}
+            >
               <PlusCircle className="mr-2 w-4 h-4" /> Add
             </Button>
           </div>

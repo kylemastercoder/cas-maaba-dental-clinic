@@ -64,6 +64,7 @@ model Patient {
   treatmentPlan         TreatmentPlan[]
   medicalHistory        MedicalHistory[]
   presentHistoryIllness PresentHistoryIllness[]
+  dentalRemarks         DentalRemarks[]
 }
 
 model PresentHistoryIllness {
@@ -155,12 +156,11 @@ model Role {
 model TreatmentPlan {
   id            String   @id @default(cuid())
   toothNumber   Int
-  diagnosis     String
   dentalRemarks String?
-  paymentMethod String
+  paymentMethod String?
   isPaid        Boolean  @default(false)
   status        String   @default("Pending")
-  amount        String
+  amount        String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -172,6 +172,19 @@ model TreatmentPlan {
 
   serviceId String?
   service   Service? @relation(fields: [serviceId], references: [id])
+}
+
+model DentalRemarks {
+  id            String @id @default(cuid())
+  toothNumber   Int
+  diagnosis     String
+  dentalRemarks String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patientId String?
+  patient   Patient? @relation(fields: [patientId], references: [id])
 }
 
 model Logs {

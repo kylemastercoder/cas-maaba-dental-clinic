@@ -10,6 +10,7 @@ import {
   UPPER_TEETH,
 } from "@/constants";
 import {
+  DentalRemarks,
   MedicalHistory,
   Patient,
   PresentHistoryIllness,
@@ -21,7 +22,7 @@ import {
 import { format } from "date-fns";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { columns, columns2, TreatmentColumn, TreatmentColumn2 } from "./column";
+import { columns2, getColumns, TreatmentColumn, TreatmentColumn2 } from "./column";
 import { getAllServices } from "@/actions/service";
 import { useTheme } from "next-themes";
 import MedicalHistoryForm from "@/components/forms/medical-history-form";
@@ -33,6 +34,7 @@ import DentalHistoryModal from "@/components/modals/dental-history-modal";
 
 export interface PatientWithTreatment extends Patient {
   treatmentPlan: TreatmentPlan[];
+  dentalRemarks: DentalRemarks[];
 }
 
 interface UserWithRole extends User {
@@ -65,12 +67,12 @@ const TreatmentClient = ({
   };
 
   const getToothStatus = (toothNumber: number) => {
-    const treatment = patient?.treatmentPlan.find(
+    const dentalRemarks = patient?.dentalRemarks.find(
       (t) => t.toothNumber === toothNumber && t.patientId === patient.id
     );
 
-    if (treatment) {
-      switch (treatment.diagnosis) {
+    if (dentalRemarks) {
+      switch (dentalRemarks.diagnosis) {
         case "Decal":
           return "size-3 border-2 border-red-600"; // Decal status
         case "Caries":
@@ -124,26 +126,26 @@ const TreatmentClient = ({
     patient?.treatmentPlan?.map((item) => {
       const service =
         services.find((s) => s.id === item.serviceId)?.name ??
-        "Unknown Service";
+        "";
 
       const dentist = dentists.find((d) => d.id === item.dentistId)?.name ?? "";
       return {
         id: item.id,
         service: service,
         serviceId: item.serviceId ?? "",
+        dentistId: item.dentistId,
         toothNumber: item.toothNumber,
-        diagnosis: item.diagnosis,
         remarks: item.dentalRemarks || "N/A",
-        paymentMethod: item.paymentMethod,
-        amount: item.amount,
+        paymentMethod: item.paymentMethod || "N/A",
+        amount: item.amount || "0",
         dentist: dentist,
         status: item.status,
         createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       };
     }) || [];
 
-    const formattedDataTreatment: TreatmentColumn2[] =
-    patient?.treatmentPlan?.map((item) => {
+  const formattedDataTreatment: TreatmentColumn2[] =
+    patient?.dentalRemarks?.map((item) => {
       return {
         id: item.id,
         toothNumber: item.toothNumber,
@@ -334,18 +336,20 @@ const TreatmentClient = ({
                   <div
                     key={tooth}
                     className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
-                      patient?.treatmentPlan.find(
+                      patient?.dentalRemarks.find(
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
-                      )
+                      ) || user.role.name === "Front Desk"
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
                     onClick={() => {
-                      const isNotClickable = patient?.treatmentPlan.find(
-                        (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
-                      );
+                      const isNotClickable =
+                        patient?.dentalRemarks.find(
+                          (t) =>
+                            t.toothNumber === tooth &&
+                            t.patientId === patient.id
+                        ) || user.role.name === "Front Desk";
                       if (!isNotClickable) {
                         openModal(tooth);
                       }
@@ -373,6 +377,7 @@ const TreatmentClient = ({
                   </div>
                 ))}
               </div>
+
               <div className="flex justify-center items-center gap-1 mt-2">
                 <p className="md:mx-10 mx-2 md:text-md text-sm font-semibold">
                   RIGHT
@@ -383,20 +388,21 @@ const TreatmentClient = ({
                       <div
                         key={tooth}
                         className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
-                          patient?.treatmentPlan.find(
+                          patient?.dentalRemarks.find(
                             (t) =>
                               t.toothNumber === tooth &&
                               t.patientId === patient.id
-                          )
+                          ) || user.role.name === "Front Desk"
                             ? "cursor-not-allowed"
                             : "cursor-pointer"
                         }`}
                         onClick={() => {
-                          const isNotClickable = patient?.treatmentPlan.find(
-                            (t) =>
-                              t.toothNumber === tooth &&
-                              t.patientId === patient.id
-                          );
+                          const isNotClickable =
+                            patient?.dentalRemarks.find(
+                              (t) =>
+                                t.toothNumber === tooth &&
+                                t.patientId === patient.id
+                            ) || user.role.name === "Front Desk";
                           if (!isNotClickable) {
                             openModal(tooth);
                           }
@@ -430,20 +436,21 @@ const TreatmentClient = ({
                         <div
                           key={tooth}
                           className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
-                            patient?.treatmentPlan.find(
+                            patient?.dentalRemarks.find(
                               (t) =>
                                 t.toothNumber === tooth &&
                                 t.patientId === patient.id
-                            )
+                            ) || user.role.name === "Front Desk"
                               ? "cursor-not-allowed"
                               : "cursor-pointer"
                           }`}
                           onClick={() => {
-                            const isNotClickable = patient?.treatmentPlan.find(
-                              (t) =>
-                                t.toothNumber === tooth &&
-                                t.patientId === patient.id
-                            );
+                            const isNotClickable =
+                              patient?.dentalRemarks.find(
+                                (t) =>
+                                  t.toothNumber === tooth &&
+                                  t.patientId === patient.id
+                              ) || user.role.name === "Front Desk";
                             if (!isNotClickable) {
                               openModal(tooth);
                             }
@@ -481,18 +488,20 @@ const TreatmentClient = ({
                   <div
                     key={tooth}
                     className={`relative w-[50px] h-[50px] ${
-                      patient?.treatmentPlan.find(
+                      patient?.dentalRemarks.find(
                         (t) =>
                           t.toothNumber === tooth && t.patientId === patient.id
-                      )
+                      ) || user.role.name === "Front Desk"
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
                     }`}
                     onClick={() => {
-                      const isNotClickable = patient?.treatmentPlan.find(
-                        (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
-                      );
+                      const isNotClickable =
+                        patient?.dentalRemarks.find(
+                          (t) =>
+                            t.toothNumber === tooth &&
+                            t.patientId === patient.id
+                        ) || user.role.name === "Front Desk";
                       if (!isNotClickable) {
                         openModal(tooth);
                       }
@@ -585,7 +594,7 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-lg">Remarks</h1>
+            <h1 className="font-semibold text-lg">Dental Remarks</h1>
           </div>
           <DataTable
             data={formattedDataTreatment}
@@ -609,7 +618,7 @@ const TreatmentClient = ({
           <DataTable
             data={formattedData}
             searchKey="service"
-            columns={columns}
+            columns={getColumns(user)}
           />
         </CardContent>
       </Card>

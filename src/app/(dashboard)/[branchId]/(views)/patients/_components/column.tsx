@@ -42,7 +42,7 @@ export const getColumns = (user: UserWithRoles): ColumnDef<PatientColumn>[] => {
         return (
           <Link
             href={`/${params.branchId}/patients/${row.original.id}/treatment-plan`}
-            className="text-black hover:underline"
+            className="text-black dark:text-white hover:underline"
           >
             {row.original.name}
           </Link>
@@ -112,12 +112,12 @@ export const getColumns = (user: UserWithRoles): ColumnDef<PatientColumn>[] => {
   ];
 
   // Add 'Actions' column based on the user role
-  if (user?.role.name !== "Dentist") {
+  if (user?.role.name === "Dentist" || user?.role.name === "Branch Head" || user?.role.name === "Front Desk") {
     columns.push({
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }) => {
-        return <CellAction data={row.original} />;
+        return <CellAction user={user} data={row.original} />;
       },
     });
   }

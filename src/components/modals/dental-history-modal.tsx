@@ -14,7 +14,9 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
-import { useSaveTreatmentPlan } from "@/data/treatment-plan";
+import {
+  useSaveDentalHistory,
+} from "@/data/treatment-plan";
 
 interface UserWithRole extends User {
   role: Role;
@@ -32,20 +34,14 @@ const DentalHistoryModal = ({
   const params = useParams();
   const [dentists, setDentists] = React.useState<User[]>([]);
   const [services, setServices] = React.useState<Service[]>([]);
-  const [selectedDiagnosis, setSelectedDiagnosis] = React.useState<
-    string | null
-  >(null);
   const form = useForm<z.infer<typeof DentalHistorySchema>>({
     resolver: zodResolver(DentalHistorySchema),
     mode: "onChange",
     defaultValues: {
       toothNumber: 1,
       service: "",
-      diagnosis: "",
       remarks: "",
-      isPaid: true,
       paymentMethod: "",
-      otherDiagnosis: "",
       status: "",
       amount: "",
       dentist: user?.role.name === "Dentist" ? user?.id : "",
@@ -68,22 +64,11 @@ const DentalHistoryModal = ({
     fetchServices();
   }, []);
 
-  React.useEffect(() => {
-    const subscription = form.watch((values) => {
-      setSelectedDiagnosis(values.diagnosis ?? null);
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
-  const { mutate: saveTreatmentPlan, isPending: isSaving } =
-    useSaveTreatmentPlan(params?.patientId as string);
+  const { mutate: saveDentalHistory, isPending: isSaving } =
+    useSaveDentalHistory(params?.patientId as string);
 
   async function onSubmit(values: z.infer<typeof DentalHistorySchema>) {
-    if (values.diagnosis === "Others") {
-      values.diagnosis = values.otherDiagnosis ?? "";
-    }
-    delete values.otherDiagnosis;
-    saveTreatmentPlan(values, {
+    saveDentalHistory(values, {
       onSuccess: (data) => {
         if (data.success) {
           onClose();
@@ -144,97 +129,11 @@ const DentalHistoryModal = ({
           />
           <CustomFormField
             control={form.control}
-            fieldType={FormFieldType.SELECT}
-            label="Diagnosis"
-            disabled={isSaving}
-            selectOptions={[
-              { label: "Decal", value: "Decal" },
-              { label: "Caries", value: "Caries" },
-              { label: "Recurrent", value: "Recurrent" },
-              { label: "For EXO", value: "For EXO" },
-              {
-                label: "Abraided/Attrition",
-                value: "Abraided/Attrition",
-              },
-              {
-                label: "Incipient",
-                value: "Incipient",
-              },
-              {
-                label: "Impacted",
-                value: "Impacted",
-              },
-              { label: "Severe", value: "Severe" },
-              { label: "CO or AM", value: "CO or AM" },
-              { label: "Erupting", value: "Erupting" },
-              { label: "Extracted", value: "Extracted" },
-              { label: "Sealant", value: "Sealant" },
-              { label: "Others", value: "Others" },
-            ]}
-            placeholder="Select diagnosis"
-            isRequired={true}
-            name="diagnosis"
-          />
-          {selectedDiagnosis === "Others" && (
-            <CustomFormField
-              control={form.control}
-              fieldType={FormFieldType.INPUT}
-              label="Other Diagnosis"
-              placeholder="Enter specific diagnosis"
-              isRequired={false}
-              disabled={isSaving}
-              name="otherDiagnosis"
-            />
-          )}
-          <CustomFormField
-            control={form.control}
             fieldType={FormFieldType.TEXTAREA}
             label="Dental Remarks"
             placeholder="Enter dental remarks"
             isRequired={false}
             name="remarks"
-            disabled={isSaving}
-          />
-          <CustomFormField
-            control={form.control}
-            fieldType={FormFieldType.INPUT}
-            label="Amount"
-            placeholder="Enter amount"
-            isRequired={true}
-            name="amount"
-            disabled={isSaving}
-          />
-          <CustomFormField
-            control={form.control}
-            fieldType={FormFieldType.SELECT}
-            label="Payment Method"
-            selectOptions={[
-              { label: "E-Wallet", value: "E-Wallet" },
-              { label: "Bank Transfer", value: "Bank Transfer" },
-              { label: "Credit Card", value: "Credit Card" },
-              { label: "Cash", value: "Cash" },
-              {
-                label: "HMO",
-                value: "HMO",
-              },
-            ]}
-            placeholder="Select payment method"
-            isRequired={true}
-            name="paymentMethod"
-            disabled={isSaving}
-          />
-          <CustomFormField
-            control={form.control}
-            fieldType={FormFieldType.SELECT}
-            label="Status"
-            selectOptions={[
-              { label: "Pending", value: "Pending" },
-              { label: "Not Yet Paid", value: "Not Yet Paid" },
-              { label: "Paid", value: "Paid" },
-            ]}
-            placeholder="Select status"
-            isRequired={true}
-            name="status"
             disabled={isSaving}
           />
           <Button type="submit" size="sm">

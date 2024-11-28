@@ -4,7 +4,7 @@
 import { getUserFromCookies } from "@/hooks/use-user";
 import db from "@/lib/db";
 import { formatTimeStamp } from "@/lib/utils";
-import { TreatmentPlanSchema } from "@/lib/validators";
+import { DentalHistorySchema, TreatmentPlanSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export const getAllTreatmentPlanByPatient = async (patientId: string) => {
@@ -43,13 +43,114 @@ export const createTreatmentPlan = async (
 
   const {
     toothNumber,
-    service,
     diagnosis,
     remarks,
-    status,
-    isPaid,
-    paymentMethod,
-    amount,
+  } = validatedField.data;
+
+  try {
+    const dentalRemarks = await db.dentalRemarks.create({
+      data: {
+        toothNumber,
+        diagnosis,
+        dentalRemarks: remarks ?? "",
+        patientId,
+      },
+      include: {
+        patient: true,
+      },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (dentalRemarks) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} added ${diagnosis} for ${toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
+        },
+      });
+    }
+
+    return { success: "Dental remarks created successfully", dentalRemarks };
+  } catch (error: any) {
+    return {
+      error: `Failed to create dental remarks. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const updateTreatmentPlan = async (
+  values: z.infer<typeof TreatmentPlanSchema>,
+  treatmentId: string
+) => {
+  const { user } = await getUserFromCookies();
+  const validatedField = TreatmentPlanSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const {
+    toothNumber,
+    diagnosis,
+    remarks,
+  } = validatedField.data;
+
+  try {
+    const dentalRemarks = await db.dentalRemarks.update({
+      where: {
+        id: treatmentId,
+      },
+      data: {
+        toothNumber,
+        diagnosis,
+        dentalRemarks: remarks ?? "",
+      },
+      include: {
+        patient: true,
+      },
+    });
+
+    const loginTime = formatTimeStamp(new Date());
+
+    if (dentalRemarks) {
+      await db.logs.create({
+        data: {
+          action: `${user?.name} updated ${diagnosis} for ${toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
+          branchId: user?.branchId ?? "",
+        },
+      });
+    }
+
+    return { success: "Dental remarks updated successfully", dentalRemarks };
+  } catch (error: any) {
+    return {
+      error: `Failed to updated dental remarks. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const createDentalHistory = async (
+  values: z.infer<typeof DentalHistorySchema>,
+  patientId: string
+) => {
+  const { user } = await getUserFromCookies();
+  const validatedField = DentalHistorySchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const {
+    toothNumber,
+    remarks,
+    service,
     dentist,
   } = validatedField.data;
 
@@ -57,15 +158,10 @@ export const createTreatmentPlan = async (
     const treatmentPlan = await db.treatmentPlan.create({
       data: {
         toothNumber,
-        serviceId: service,
-        diagnosis,
         dentalRemarks: remarks ?? "",
         patientId,
-        paymentMethod,
-        status,
-        isPaid,
+        serviceId: service,
         dentistId: dentist,
-        amount,
       },
       include: {
         patient: true,
@@ -94,12 +190,12 @@ export const createTreatmentPlan = async (
   }
 };
 
-export const updateTreatmentPlan = async (
-  values: z.infer<typeof TreatmentPlanSchema>,
+export const updateDentalHistory = async (
+  values: z.infer<typeof DentalHistorySchema>,
   treatmentId: string
 ) => {
   const { user } = await getUserFromCookies();
-  const validatedField = TreatmentPlanSchema.safeParse(values);
+  const validatedField = DentalHistorySchema.safeParse(values);
 
   if (!validatedField.success) {
     const errors = validatedField.error.errors.map((err) => err.message);
@@ -108,14 +204,12 @@ export const updateTreatmentPlan = async (
 
   const {
     toothNumber,
-    service,
-    diagnosis,
     remarks,
-    status,
-    isPaid,
-    paymentMethod,
+    service,
     dentist,
     amount,
+    paymentMethod,
+    status
   } = validatedField.data;
 
   try {
@@ -125,14 +219,12 @@ export const updateTreatmentPlan = async (
       },
       data: {
         toothNumber,
-        serviceId: service,
-        diagnosis,
         dentalRemarks: remarks ?? "",
-        paymentMethod,
-        status,
-        isPaid,
+        serviceId: service,
         dentistId: dentist,
         amount,
+        paymentMethod,
+        status,
       },
       include: {
         patient: true,
@@ -145,7 +237,7 @@ export const updateTreatmentPlan = async (
     if (treatmentPlan) {
       await db.logs.create({
         data: {
-          action: `${user?.name} updated ${treatmentPlan.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+          action: `${user?.name} updated ${treatmentPlan?.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
         },
       });
@@ -154,7 +246,7 @@ export const updateTreatmentPlan = async (
     return { success: "Treatment plan updated successfully", treatmentPlan };
   } catch (error: any) {
     return {
-      error: `Failed to updated treatment plan. Please try again. ${
+      error: `Failed to update treatment plan. Please try again. ${
         error.message || ""
       }`,
     };
@@ -165,31 +257,30 @@ export const deleteTreatmentPlan = async (treatmentId: string) => {
   const { user } = await getUserFromCookies();
 
   try {
-    const treatmentPlan = await db.treatmentPlan.delete({
+    const dentalRemarks = await db.dentalRemarks.delete({
       where: {
         id: treatmentId,
       },
       include: {
         patient: true,
-        service: true,
       },
     });
 
     const loginTime = formatTimeStamp(new Date());
 
-    if (treatmentPlan) {
+    if (dentalRemarks) {
       await db.logs.create({
         data: {
-          action: `${user?.name} deleted ${treatmentPlan.toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
+          action: `${user?.name} deleted ${dentalRemarks.toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
         },
       });
     }
 
-    return { success: "Treatment plan deleted successfully", treatmentPlan };
+    return { success: "Dental remarks deleted successfully", dentalRemarks };
   } catch (error: any) {
     return {
-      error: `Failed to deleted treatment plan. Please try again. ${
+      error: `Failed to delete dental remarks. Please try again. ${
         error.message || ""
       }`,
     };

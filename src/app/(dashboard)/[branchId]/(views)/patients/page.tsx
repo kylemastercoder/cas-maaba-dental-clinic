@@ -30,13 +30,13 @@ const Patients = async ({ params }: { params: { branchId: string } }) => {
           title="Patient Records"
           description="Manage and view all patient information, including personal details, medical history, and appointments."
         />
-        {user?.role.name === "Administrator" ||
-          user?.role.name === "Branch Head" ||
-          (user?.role.name === "Front Desk" && (
-            <Button asChild>
-              <Link href={`/${params.branchId}/patients/new`}>Add Patient</Link>
-            </Button>
-          ))}
+        {(user?.role.name === "Branch Head" ||
+          user?.role.name === "Front Desk" ||
+          user?.role.name === "Administrator") && (
+          <Button asChild>
+            <Link href={`/${params.branchId}/patients/new`}>Add Patient</Link>
+          </Button>
+        )}
       </div>
       <HydrationBoundary state={dehydratedState}>
         {user && <PatientClient user={user} />}

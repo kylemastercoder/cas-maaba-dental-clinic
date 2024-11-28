@@ -13,6 +13,7 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
     },
     include: {
       treatmentPlan: true,
+      dentalRemarks: true,
     },
   });
 
