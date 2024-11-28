@@ -162,6 +162,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         url: `/${params.branchId}/supplies`,
         icon: IconMedicineSyrup,
       },
+      {
+        title: "Logs",
+        url: `/${params.branchId}/logs`,
+        icon: IconLogs,
+      },
     ],
   };
 
@@ -181,6 +186,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Appointments",
         url: `/${params.branchId}/appointments`,
         icon: IconCalendarMonth,
+      },
+      {
+        title: "Logs",
+        url: `/${params.branchId}/logs`,
+        icon: IconLogs,
       },
     ],
   };

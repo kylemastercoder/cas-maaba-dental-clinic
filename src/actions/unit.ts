@@ -40,6 +40,7 @@ export const createUnit = async (name: string) => {
         data: {
           action: `${user?.name} added ${unit.name} on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }

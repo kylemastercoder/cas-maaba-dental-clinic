@@ -119,6 +119,7 @@ export const createPatient = async (values: z.infer<typeof PatientSchema>) => {
         data: {
           action: `${user?.name} added ${patient.firstName} ${patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -232,6 +233,7 @@ export const updatePatient = async (
         data: {
           action: `${user?.name} updated ${patient.firstName} ${patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -269,6 +271,7 @@ export const deletePatient = async (patientId: string) => {
         data: {
           action: `${user?.name} became inactive ${patient.firstName} ${patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }

@@ -46,6 +46,7 @@ export const createRole = async (name: string) => {
         data: {
           action: `${user?.name} added ${role.name} on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }

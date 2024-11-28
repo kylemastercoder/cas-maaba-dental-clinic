@@ -52,6 +52,7 @@ export const createService = async (values: z.infer<typeof ServiceSchema>) => {
         data: {
           action: `${user?.name} added ${service.name} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -98,6 +99,7 @@ export const updateService = async (
         data: {
           action: `${user?.name} updated ${service.name} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -132,6 +134,7 @@ export const deleteService = async (serviceId: string) => {
         data: {
           action: `${user?.name} deleted ${service.name} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }

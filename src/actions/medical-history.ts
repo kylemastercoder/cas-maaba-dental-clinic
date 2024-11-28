@@ -55,6 +55,7 @@ export const createMedicalHistory = async (
         data: {
           action: `${user?.name} added medical history for ${medicalHistory.patient.firstName} ${medicalHistory.patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -119,6 +120,7 @@ export const updateMedicalHistory = async (
         data: {
           action: `${user?.name} updated medical history for ${medicalHistory.patient.firstName} ${medicalHistory.patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -165,6 +167,7 @@ export const createPresentIllness = async (
         data: {
           action: `${user?.name} added history of present illness for ${presentIllness.patient.firstName} ${presentIllness.patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -216,6 +219,7 @@ export const updatePresentIllness = async (
         data: {
           action: `${user?.name} updated history of present illness for ${presentIllness.patient.firstName} ${presentIllness.patient.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }

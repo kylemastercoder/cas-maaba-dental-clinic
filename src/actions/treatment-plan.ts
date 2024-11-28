@@ -41,11 +41,7 @@ export const createTreatmentPlan = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {
-    toothNumber,
-    diagnosis,
-    remarks,
-  } = validatedField.data;
+  const { toothNumber, diagnosis, remarks } = validatedField.data;
 
   try {
     const dentalRemarks = await db.dentalRemarks.create({
@@ -67,6 +63,7 @@ export const createTreatmentPlan = async (
         data: {
           action: `${user?.name} added ${diagnosis} for ${toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -93,11 +90,7 @@ export const updateTreatmentPlan = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {
-    toothNumber,
-    diagnosis,
-    remarks,
-  } = validatedField.data;
+  const { toothNumber, diagnosis, remarks } = validatedField.data;
 
   try {
     const dentalRemarks = await db.dentalRemarks.update({
@@ -121,6 +114,7 @@ export const updateTreatmentPlan = async (
         data: {
           action: `${user?.name} updated ${diagnosis} for ${toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -147,12 +141,7 @@ export const createDentalHistory = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {
-    toothNumber,
-    remarks,
-    service,
-    dentist,
-  } = validatedField.data;
+  const { toothNumber, remarks, service, dentist } = validatedField.data;
 
   try {
     const treatmentPlan = await db.treatmentPlan.create({
@@ -176,6 +165,7 @@ export const createDentalHistory = async (
         data: {
           action: `${user?.name} added ${treatmentPlan.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -209,7 +199,7 @@ export const updateDentalHistory = async (
     dentist,
     amount,
     paymentMethod,
-    status
+    status,
   } = validatedField.data;
 
   try {
@@ -239,6 +229,7 @@ export const updateDentalHistory = async (
         data: {
           action: `${user?.name} updated ${treatmentPlan?.service?.name} for ${toothNumber} to ${treatmentPlan.patient?.firstName} ${treatmentPlan.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }
@@ -273,6 +264,7 @@ export const deleteTreatmentPlan = async (treatmentId: string) => {
         data: {
           action: `${user?.name} deleted ${dentalRemarks.toothNumber} to ${dentalRemarks.patient?.firstName} ${dentalRemarks.patient?.lastName} on ${loginTime}`,
           branchId: user?.branchId ?? "",
+          userId: user?.id || "",
         },
       });
     }

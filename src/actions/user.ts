@@ -8,6 +8,7 @@ import { UserLoginSchema, UserRegistrationSchema } from "@/lib/validators";
 import * as jose from "jose";
 import { cookies } from "next/headers";
 import { formatTimeStamp } from "@/lib/utils";
+import { getUserFromCookies } from "@/hooks/use-user";
 
 export const getAllUsers = async () => {
   try {
@@ -54,9 +55,11 @@ export const getAllDentists = async () => {
 };
 
 export const getAllUsersExceptDentist = async () => {
+  const {user} = await getUserFromCookies();
   try {
     const data = await db.user.findMany({
       where: {
+        id: user?.id,
         NOT: {
           role: {
             name: "Dentist",
@@ -142,6 +145,7 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
         data: {
           action: `${user.name} logged in on ${loginTime}`,
           branchId: user.branchId,
+          userId: user?.id || "",
         },
       });
     }
@@ -205,6 +209,7 @@ export const createUser = async (
         data: {
           action: `${user.name} created on ${loginTime}`,
           branchId: user.branchId,
+          userId: user?.id || "",
         },
       });
     }
@@ -257,6 +262,7 @@ export const updateUser = async (
         data: {
           action: `${user.name} updated on ${loginTime}`,
           branchId: user.branchId,
+          userId: user?.id || "",
         },
       });
     }
@@ -291,6 +297,7 @@ export const setInactiveUser = async (userId: string) => {
         data: {
           action: `${user.name} set inactive on ${loginTime}`,
           branchId: user.branchId,
+          userId: user?.id || "",
         },
       });
     }
@@ -327,6 +334,7 @@ export const setActiveUser = async (userId: string) => {
         data: {
           action: `${user.name} set active on ${loginTime}`,
           branchId: user.branchId,
+          userId: user?.id || "",
         },
       });
     }

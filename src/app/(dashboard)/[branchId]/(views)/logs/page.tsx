@@ -6,7 +6,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import React from "react";
-import { getAllLogs } from "@/actions/logs";
+import { getAllLogsByUser } from "@/actions/logs";
 import LogsClient from "./_components/client";
 
 const Logs = async () => {
@@ -15,7 +15,7 @@ const Logs = async () => {
   // Prefetch the data from the server
   await queryClient.prefetchQuery({
     queryKey: ["logs"],
-    queryFn: getAllLogs,
+    queryFn: getAllLogsByUser,
   });
 
   // Hydrate the query data for the client

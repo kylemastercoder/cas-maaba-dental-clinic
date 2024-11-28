@@ -66,6 +66,7 @@ export const createSupply = async (values: z.infer<typeof SupplySchema>) => {
         data: {
           action: `${user?.name} added ${supply.name} on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
@@ -118,6 +119,7 @@ export const updateSupply = async (
         data: {
           action: `${user?.name} updated ${supply.name} on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
@@ -152,6 +154,7 @@ export const deleteSupply = async (supplyId: string) => {
         data: {
           action: `${user?.name} deleted ${supply.name} on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
@@ -199,6 +202,7 @@ export const updateStock = async (supplyId: string, stockChange: number) => {
         data: {
           action: `${user?.name} updated ${updatedSupply.name} stock on ${loginTime}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
@@ -252,6 +256,7 @@ export const addStock = async (
         data: {
           action: `${receivedBy} received ${quantity} stock to ${updatedSupply.name} on ${loginTime} with a remarks of ${remarks}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
@@ -305,6 +310,7 @@ export const deductStock = async (
         data: {
           action: `${dispatchedBy} deducted ${quantity} stock to ${updatedSupply.name} on ${loginTime} with a remarks of ${remarks}`,
           branchId: user?.branchId || "",
+          userId: user?.id || "",
         },
       });
     }
