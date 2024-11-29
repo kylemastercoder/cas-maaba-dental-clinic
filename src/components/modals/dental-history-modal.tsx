@@ -38,7 +38,7 @@ const DentalHistoryModal = ({
     resolver: zodResolver(DentalHistorySchema),
     mode: "onChange",
     defaultValues: {
-      toothNumber: 1,
+      toothNumber: "",
       service: "",
       remarks: "",
       paymentMethod: "",
@@ -94,7 +94,6 @@ const DentalHistoryModal = ({
         >
           <CustomFormField
             label="Tooth Number"
-            type="number"
             fieldType={FormFieldType.INPUT}
             name="toothNumber"
             control={form.control}

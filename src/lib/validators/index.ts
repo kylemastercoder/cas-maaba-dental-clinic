@@ -138,18 +138,14 @@ export const SupplySchema = z.object({
 });
 
 export const TreatmentPlanSchema = z.object({
-  toothNumber: z.coerce
-    .number()
-    .min(1, { message: "Tooth number is required" }),
+  toothNumber: z.string().min(1, { message: "Tooth number is required" }),
   diagnosis: z.string().min(1, { message: "Diagnosis is required" }),
   otherDiagnosis: z.string().optional(),
   remarks: z.string().optional(),
 });
 
 export const DentalHistorySchema = z.object({
-  toothNumber: z.coerce
-    .number()
-    .min(1, { message: "Tooth number is required" }),
+  toothNumber: z.string().min(1, { message: "Tooth number is required" }),
   service: z.string().min(1, { message: "Service is required" }),
   remarks: z.string().optional(),
   dentist: z.string().min(1, { message: "Dentist is required" }),

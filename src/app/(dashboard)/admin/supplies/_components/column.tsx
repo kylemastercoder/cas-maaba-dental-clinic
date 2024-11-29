@@ -4,6 +4,7 @@ import { ArrowUpDown } from "lucide-react";
 import React from "react";
 import AddStockModal from "./add-stock-modal";
 import DeductStockModal from "./deduct-stock-modal";
+import { CellAction } from "./cell-action";
 
 export type SupplyColumn = {
   id: string;
@@ -114,5 +115,10 @@ export const columns: ColumnDef<SupplyColumn>[] = [
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </span>
     ),
+  },
+  {
+    accessorKey: "action",
+    header: "Actions",
+    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

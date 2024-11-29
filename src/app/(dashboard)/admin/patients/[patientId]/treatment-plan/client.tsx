@@ -52,14 +52,14 @@ const TreatmentClient = ({
   const fullName = `${patient?.firstName} ${patient?.middleName} ${patient?.lastName}`;
   const [modalData, setModalData] = useState<{
     isOpen: boolean;
-    toothNumber: number | null;
+    toothNumber: string | null;
   }>({ isOpen: false, toothNumber: null });
 
-  const openModal = (toothNumber: number) => {
+  const openModal = (toothNumber: string) => {
     setModalData({ isOpen: true, toothNumber });
   };
 
-  const getToothStatus = (toothNumber: number) => {
+  const getToothStatus = (toothNumber: string) => {
     const dentalRemarks = patient?.dentalRemarks.find(
       (t) => t.toothNumber === toothNumber && t.patientId === patient.id
     );
@@ -118,7 +118,6 @@ const TreatmentClient = ({
   const formattedData: TreatmentColumn[] =
     patient?.treatmentPlan?.map((item) => {
       const service = services.find((s) => s.id === item.serviceId)?.name ?? "";
-
       const dentist = dentists.find((d) => d.id === item.dentistId)?.name ?? "";
       return {
         id: item.id,
@@ -322,7 +321,8 @@ const TreatmentClient = ({
                     className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                       patient?.treatmentPlan.find(
                         (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
+                          t.toothNumber === tooth.toString() &&
+                          t.patientId === patient.id
                       )
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
@@ -330,10 +330,11 @@ const TreatmentClient = ({
                     onClick={() => {
                       const isNotClickable = patient?.treatmentPlan.find(
                         (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
+                          t.toothNumber === tooth.toString() &&
+                          t.patientId === patient.id
                       );
                       if (!isNotClickable) {
-                        openModal(tooth);
+                        openModal(tooth.toString());
                       }
                     }}
                   >
@@ -353,7 +354,7 @@ const TreatmentClient = ({
                     </p>
                     <div
                       className={`absolute top-1 right-2 ${getToothStatus(
-                        tooth
+                        tooth.toString()
                       )}`}
                     ></div>
                   </div>
@@ -371,7 +372,7 @@ const TreatmentClient = ({
                         className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                           patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth &&
+                              t.toothNumber === tooth.toString() &&
                               t.patientId === patient.id
                           )
                             ? "cursor-not-allowed"
@@ -380,11 +381,11 @@ const TreatmentClient = ({
                         onClick={() => {
                           const isNotClickable = patient?.treatmentPlan.find(
                             (t) =>
-                              t.toothNumber === tooth &&
+                              t.toothNumber === tooth.toString() &&
                               t.patientId === patient.id
                           );
                           if (!isNotClickable) {
-                            openModal(tooth);
+                            openModal(tooth.toString());
                           }
                         }}
                       >
@@ -403,7 +404,7 @@ const TreatmentClient = ({
                         </p>
                         <div
                           className={`absolute text-xl top-1 right-2 ${getToothStatus(
-                            tooth
+                            tooth.toString()
                           )}`}
                         ></div>
                       </div>
@@ -418,7 +419,7 @@ const TreatmentClient = ({
                           className={`relative md:w-[50px] md:h-[50px] w-7 h-7 ${
                             patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth &&
+                                t.toothNumber === tooth.toString() &&
                                 t.patientId === patient.id
                             )
                               ? "cursor-not-allowed"
@@ -427,11 +428,11 @@ const TreatmentClient = ({
                           onClick={() => {
                             const isNotClickable = patient?.treatmentPlan.find(
                               (t) =>
-                                t.toothNumber === tooth &&
+                                t.toothNumber === tooth.toString() &&
                                 t.patientId === patient.id
                             );
                             if (!isNotClickable) {
-                              openModal(tooth);
+                              openModal(tooth.toString());
                             }
                           }}
                         >
@@ -450,7 +451,7 @@ const TreatmentClient = ({
                           </p>
                           <div
                             className={`absolute top-1 right-2 ${getToothStatus(
-                              tooth
+                              tooth.toString()
                             )}`}
                           ></div>
                         </div>
@@ -469,7 +470,8 @@ const TreatmentClient = ({
                     className={`relative w-[50px] h-[50px] ${
                       patient?.treatmentPlan.find(
                         (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
+                          t.toothNumber === tooth.toString() &&
+                          t.patientId === patient.id
                       )
                         ? "cursor-not-allowed"
                         : "cursor-pointer"
@@ -477,10 +479,11 @@ const TreatmentClient = ({
                     onClick={() => {
                       const isNotClickable = patient?.treatmentPlan.find(
                         (t) =>
-                          t.toothNumber === tooth && t.patientId === patient.id
+                          t.toothNumber === tooth.toString() &&
+                          t.patientId === patient.id
                       );
                       if (!isNotClickable) {
-                        openModal(tooth);
+                        openModal(tooth.toString());
                       }
                     }}
                   >
@@ -499,7 +502,7 @@ const TreatmentClient = ({
                     </p>
                     <div
                       className={`absolute top-1 right-2 ${getToothStatus(
-                        tooth
+                        tooth.toString()
                       )}`}
                     ></div>
                   </div>

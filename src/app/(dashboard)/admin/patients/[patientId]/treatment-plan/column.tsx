@@ -17,7 +17,7 @@ export type TreatmentColumn = {
   serviceId: string;
   dentistId: string;
   remarks: string;
-  toothNumber: number;
+  toothNumber: string;
   createdAt: string;
 };
 
@@ -25,7 +25,7 @@ export type TreatmentColumn2 = {
   id: string;
   diagnosis: string;
   remarks: string;
-  toothNumber: number;
+  toothNumber: string;
   createdAt: string;
 };
 

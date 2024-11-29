@@ -156,7 +156,7 @@ model Role {
 
 model TreatmentPlan {
   id            String   @id @default(cuid())
-  toothNumber   Int
+  toothNumber   String
   dentalRemarks String?
   paymentMethod String?
   isPaid        Boolean  @default(false)
@@ -177,7 +177,7 @@ model TreatmentPlan {
 
 model DentalRemarks {
   id            String @id @default(cuid())
-  toothNumber   Int
+  toothNumber   String
   diagnosis     String
   dentalRemarks String
 

@@ -32,7 +32,7 @@ const TreatmentModal = ({
   initialData?: any;
   onClose: () => void;
   isOpen: boolean;
-  toothNumber: number | null;
+  toothNumber: string | null;
   user?: UserWithRole;
 }) => {
   const params = useParams();
@@ -63,7 +63,7 @@ const TreatmentModal = ({
   useEffect(() => {
     form.reset({
       ...form.getValues(),
-      toothNumber: toothNumber ?? 0,
+      toothNumber: toothNumber ?? "",
     });
   }, [form, toothNumber]);
 
