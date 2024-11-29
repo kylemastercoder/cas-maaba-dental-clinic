@@ -39,6 +39,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 2,
   },
+  gridRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   flexRowCenter: {
     flexDirection: "row",
     alignItems: "center",
@@ -115,6 +120,10 @@ const styles = StyleSheet.create({
     fontSize: 10,
     textAlign: "center",
   },
+  tooth: {
+    width: 50,
+    height: 50,
+  },
 });
 
 interface PatientDocumentProps {
@@ -163,123 +172,157 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                 <Text style={styles.props}>Residential Address: </Text>
                 <Text style={styles.value}>{patient.address}</Text>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Birthday: </Text>
-                <Text style={styles.value}>
-                  {patient?.birthdate
-                    ? format(new Date(patient.birthdate), "MMMM dd, yyyy")
-                    : "N/A"}
-                </Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Birthday: </Text>
+                  <Text style={styles.value}>
+                    {patient?.birthdate
+                      ? format(new Date(patient.birthdate), "MMMM dd, yyyy")
+                      : "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Marital Status: </Text>
+                  <Text style={styles.value}>{patient.maritalStatus}</Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Marital Status: </Text>
-                <Text style={styles.value}>{patient.maritalStatus}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Age: </Text>
+                  <Text style={styles.value}>{patient.age}</Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Sex: </Text>
+                  <Text style={styles.value}>{patient.sex}</Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Age: </Text>
-                <Text style={styles.value}>{patient.age}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Contact Number: </Text>
+                  <Text style={styles.value}>{patient.contactNumber}</Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Birthplace (Hospital): </Text>
+                  <Text style={styles.value}>{patient.birthPlace}</Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Sex: </Text>
-                <Text style={styles.value}>{patient.sex}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Facebook Name: </Text>
+                  <Text style={styles.value}>
+                    {patient.facebookName || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Occupation: </Text>
+                  <Text style={styles.value}>
+                    {patient.occupation || "N/A"}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Contact Number: </Text>
-                <Text style={styles.value}>{patient.contactNumber}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Weight (kg): </Text>
+                  <Text style={styles.value}>
+                    {patient.weight + " kg" || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Height (cm): </Text>
+                  <Text style={styles.value}>
+                    {patient.height + " cm" || "N/A"}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Birthplace (Hospital): </Text>
-                <Text style={styles.value}>{patient.birthPlace}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Father&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient.fatherName || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Father&apos;s Occupation: </Text>
+                  <Text style={styles.value}>
+                    {patient.fatherOccupation || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>
+                    Father&apos;s Contact Number:{" "}
+                  </Text>
+                  <Text style={styles.value}>
+                    {patient.fatherContactNumber || "N/A"}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Facebook Name: </Text>
-                <Text style={styles.value}>
-                  {patient.facebookName || "N/A"}
-                </Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Mother&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient.motherName || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Mother&apos;s Occupation: </Text>
+                  <Text style={styles.value}>
+                    {patient.motherOccupation || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>
+                    Mother&apos;s Contact Number:{" "}
+                  </Text>
+                  <Text style={styles.value}>
+                    {patient.motherContactNumber || "N/A"}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Occupation: </Text>
-                <Text style={styles.value}>{patient.occupation || "N/A"}</Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Guardian&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient.guardianName || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Guardian&apos;s Relation: </Text>
+                  <Text style={styles.value}>
+                    {patient.guardianRelation || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>
+                    Guardian&apos;s Contact Number:{" "}
+                  </Text>
+                  <Text style={styles.value}>
+                    {patient.guardianContactNumber || "N/A"}
+                  </Text>
+                </View>
               </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Weight (kg): </Text>
-                <Text style={styles.value}>
-                  {patient.weight + " kg" || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Height (cm): </Text>
-                <Text style={styles.value}>
-                  {patient.height + " cm" || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Father&apos;s Name: </Text>
-                <Text style={styles.value}>{patient.fatherName || "N/A"}</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Father&apos;s Occupation: </Text>
-                <Text style={styles.value}>
-                  {patient.fatherOccupation || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Father&apos;s Contact Number: </Text>
-                <Text style={styles.value}>
-                  {patient.fatherContactNumber || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Mother&apos;s Name: </Text>
-                <Text style={styles.value}>{patient.motherName || "N/A"}</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Mother&apos;s Occupation: </Text>
-                <Text style={styles.value}>
-                  {patient.motherOccupation || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Mother&apos;s Contact Number: </Text>
-                <Text style={styles.value}>
-                  {patient.motherContactNumber || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Guardian&apos;s Name: </Text>
-                <Text style={styles.value}>
-                  {patient.guardianName || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Guardian&apos;s Relation: </Text>
-                <Text style={styles.value}>
-                  {patient.guardianRelation || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>
-                  Guardian&apos;s Contact Number:{" "}
-                </Text>
-                <Text style={styles.value}>
-                  {patient.guardianContactNumber || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Doctor&apos;s Name: </Text>
-                <Text style={styles.value}>{patient.doctorName || "N/A"}</Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Doctor&apos;s Specialization: </Text>
-                <Text style={styles.value}>
-                  {patient.doctorSpecialization || "N/A"}
-                </Text>
-              </View>
-              <View style={styles.flexRow}>
-                <Text style={styles.props}>Doctor&apos;s Contact Number: </Text>
-                <Text style={styles.value}>
-                  {patient.doctorContactNumber || "N/A"}
-                </Text>
+              <View style={styles.gridRow}>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Doctor&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient.doctorName || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>
+                    Doctor&apos;s Specialization:{" "}
+                  </Text>
+                  <Text style={styles.value}>
+                    {patient.doctorSpecialization || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>
+                    Doctor&apos;s Contact Number:{" "}
+                  </Text>
+                  <Text style={styles.value}>
+                    {patient.doctorContactNumber || "N/A"}
+                  </Text>
+                </View>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Referred by: </Text>
@@ -355,6 +398,43 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                   {medicalHistory.socialFamilyHistory || "N/A"}
                 </Text>
               </View>
+            </View>
+          </View>
+          <View style={styles.card}>
+            <Text style={styles.subHeader}>Dental Remarks</Text>
+            <View style={styles.table}>
+              {/* Table Header */}
+              <View style={[styles.tableRow, styles.tableHeader]}>
+                <Text style={[styles.tableCell, styles.headerCell]}>Date</Text>
+                <Text style={[styles.tableCell, styles.headerCell]}>
+                  Tooth Number
+                </Text>
+                <Text style={[styles.tableCell, styles.headerCell]}>
+                  Diagnosis
+                </Text>
+                <Text style={[styles.tableCell, styles.headerCell]}>
+                  Notes/Remarks
+                </Text>
+              </View>
+              {/* Table Body */}
+              {patient.dentalRemarks.map((treatment, index) => (
+                <View key={index} style={styles.tableRow}>
+                  <Text style={styles.tableCell}>
+                    {treatment.createdAt
+                      ? format(new Date(treatment.createdAt), "MMMM dd, yyyy")
+                      : "N/A"}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {treatment.toothNumber || "N/A"}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {treatment.diagnosis || "N/A"}
+                  </Text>
+                  <Text style={styles.tableCell}>
+                    {treatment.dentalRemarks || "N/A"}
+                  </Text>
+                </View>
+              ))}
             </View>
           </View>
         </View>
