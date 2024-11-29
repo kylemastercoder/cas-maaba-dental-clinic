@@ -49,7 +49,7 @@ const UpdateDentalHistoryModal = ({
           paymentMethod: initialData.paymentMethod || "",
         }
       : {
-          toothNumber: 1,
+          toothNumber: "",
           service: "",
           remarks: "",
           dentist: "",
