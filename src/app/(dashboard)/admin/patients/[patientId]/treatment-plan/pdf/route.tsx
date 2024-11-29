@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
 });
 
 interface PatientDocumentProps {
-  patient: PatientWithTreatment;
-  medicalHistory: MedicalHistory;
-  presentHistoryIllness: PresentHistoryIllness;
+  patient: PatientWithTreatment | null;
+  medicalHistory: MedicalHistory | null;
+  presentHistoryIllness: PresentHistoryIllness | null;
   dentists: User[];
   services: Service[];
 }
@@ -141,10 +141,10 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
   presentHistoryIllness,
   services,
 }) => {
-  const dentistIds = patient.treatmentPlan.map((item) => item.dentistId); // Extract all dentist IDs from the treatment plan
-  const dentist = dentists.find((d) => dentistIds.includes(d.id))?.name ?? "";
-  const serviceIds = patient.treatmentPlan.map((item) => item.serviceId); // Extract all service IDs from the treatment plan
-  const service = services.find((s) => serviceIds.includes(s.id))?.name ?? "";
+  const dentistIds = patient?.treatmentPlan.map((item) => item.dentistId); // Extract all dentist IDs from the treatment plan
+  const dentist = dentists.find((d) => dentistIds?.includes(d.id))?.name ?? "";
+  const serviceIds = patient?.treatmentPlan.map((item) => item.serviceId); // Extract all service IDs from the treatment plan
+  const service = services.find((s) => serviceIds?.includes(s.id))?.name ?? "";
   return (
     <Document>
       <Page size="A4" style={styles.page}>
@@ -165,12 +165,12 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Name: </Text>
                 <Text style={styles.value}>
-                  {patient.firstName} {patient.lastName}
+                  {patient?.firstName} {patient?.lastName}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Residential Address: </Text>
-                <Text style={styles.value}>{patient.address}</Text>
+                <Text style={styles.value}>{patient?.address}</Text>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
@@ -183,40 +183,40 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Marital Status: </Text>
-                  <Text style={styles.value}>{patient.maritalStatus}</Text>
+                  <Text style={styles.value}>{patient?.maritalStatus}</Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Age: </Text>
-                  <Text style={styles.value}>{patient.age}</Text>
+                  <Text style={styles.value}>{patient?.age}</Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Sex: </Text>
-                  <Text style={styles.value}>{patient.sex}</Text>
+                  <Text style={styles.value}>{patient?.sex}</Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Contact Number: </Text>
-                  <Text style={styles.value}>{patient.contactNumber}</Text>
+                  <Text style={styles.value}>{patient?.contactNumber}</Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Birthplace (Hospital): </Text>
-                  <Text style={styles.value}>{patient.birthPlace}</Text>
+                  <Text style={styles.value}>{patient?.birthPlace}</Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Facebook Name: </Text>
                   <Text style={styles.value}>
-                    {patient.facebookName || "N/A"}
+                    {patient?.facebookName || "N/A"}
                   </Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Occupation: </Text>
                   <Text style={styles.value}>
-                    {patient.occupation || "N/A"}
+                    {patient?.occupation || "N/A"}
                   </Text>
                 </View>
               </View>
@@ -224,13 +224,13 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Weight (kg): </Text>
                   <Text style={styles.value}>
-                    {patient.weight + " kg" || "N/A"}
+                    {patient?.weight + " kg" || "N/A"}
                   </Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Height (cm): </Text>
                   <Text style={styles.value}>
-                    {patient.height + " cm" || "N/A"}
+                    {patient?.height + " cm" || "N/A"}
                   </Text>
                 </View>
               </View>
@@ -238,81 +238,85 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Father&apos;s Name: </Text>
                   <Text style={styles.value}>
-                    {patient.fatherName || "N/A"}
+                    {patient?.fatherName || "N/A"}
                   </Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Father&apos;s Occupation: </Text>
                   <Text style={styles.value}>
-                    {patient.fatherOccupation || "N/A"}
+                    {patient?.fatherOccupation || "N/A"}
                   </Text>
                 </View>
+              </View>
+              <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>
                     Father&apos;s Contact Number:{" "}
                   </Text>
                   <Text style={styles.value}>
-                    {patient.fatherContactNumber || "N/A"}
+                    {patient?.fatherContactNumber || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Mother&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient?.motherName || "N/A"}
                   </Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
-                <View style={styles.flexRow}>
-                  <Text style={styles.props}>Mother&apos;s Name: </Text>
-                  <Text style={styles.value}>
-                    {patient.motherName || "N/A"}
-                  </Text>
-                </View>
-                <View style={styles.flexRow}>
-                  <Text style={styles.props}>Mother&apos;s Occupation: </Text>
-                  <Text style={styles.value}>
-                    {patient.motherOccupation || "N/A"}
-                  </Text>
-                </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>
                     Mother&apos;s Contact Number:{" "}
                   </Text>
                   <Text style={styles.value}>
-                    {patient.motherContactNumber || "N/A"}
+                    {patient?.motherContactNumber || "N/A"}
+                  </Text>
+                </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Guardian&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient?.guardianName || "N/A"}
                   </Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
-                  <Text style={styles.props}>Guardian&apos;s Name: </Text>
+                  <Text style={styles.props}>Mother&apos;s Occupation: </Text>
                   <Text style={styles.value}>
-                    {patient.guardianName || "N/A"}
+                    {patient?.motherOccupation || "N/A"}
                   </Text>
                 </View>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>Guardian&apos;s Relation: </Text>
                   <Text style={styles.value}>
-                    {patient.guardianRelation || "N/A"}
-                  </Text>
-                </View>
-                <View style={styles.flexRow}>
-                  <Text style={styles.props}>
-                    Guardian&apos;s Contact Number:{" "}
-                  </Text>
-                  <Text style={styles.value}>
-                    {patient.guardianContactNumber || "N/A"}
+                    {patient?.guardianRelation || "N/A"}
                   </Text>
                 </View>
               </View>
               <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
-                  <Text style={styles.props}>Doctor&apos;s Name: </Text>
+                  <Text style={styles.props}>
+                    Guardian&apos;s Contact Number:{" "}
+                  </Text>
                   <Text style={styles.value}>
-                    {patient.doctorName || "N/A"}
+                    {patient?.guardianContactNumber || "N/A"}
                   </Text>
                 </View>
+                <View style={styles.flexRow}>
+                  <Text style={styles.props}>Doctor&apos;s Name: </Text>
+                  <Text style={styles.value}>
+                    {patient?.doctorName || "N/A"}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.gridRow}>
                 <View style={styles.flexRow}>
                   <Text style={styles.props}>
                     Doctor&apos;s Specialization:{" "}
                   </Text>
                   <Text style={styles.value}>
-                    {patient.doctorSpecialization || "N/A"}
+                    {patient?.doctorSpecialization || "N/A"}
                   </Text>
                 </View>
                 <View style={styles.flexRow}>
@@ -320,25 +324,27 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                     Doctor&apos;s Contact Number:{" "}
                   </Text>
                   <Text style={styles.value}>
-                    {patient.doctorContactNumber || "N/A"}
+                    {patient?.doctorContactNumber || "N/A"}
                   </Text>
                 </View>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Referred by: </Text>
-                <Text style={styles.value}>{patient.referredBy || "N/A"}</Text>
+                <Text style={styles.value}>{patient?.referredBy || "N/A"}</Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Reason for Consultation: </Text>
                 <Text style={styles.value}>
-                  {patient.consultationReason || "N/A"}
+                  {patient?.consultationReason || "N/A"}
                 </Text>
               </View>
             </View>
           </View>
           <View style={styles.card}>
             <Text style={styles.subHeader}>History of Present Illness</Text>
-            <Text style={styles.value}>{presentHistoryIllness.name}</Text>
+            <Text style={styles.value}>
+              {presentHistoryIllness?.name || "N/A"}
+            </Text>
           </View>
           <View style={styles.card}>
             <Text style={styles.subHeader}>Medical History</Text>
@@ -346,32 +352,32 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Current Medication/Vitamins: </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.currentMedication || "N/A"}
+                  {medicalHistory?.currentMedication || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Previous Hospitalization: </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.previousHospitalization || "N/A"}
+                  {medicalHistory?.previousHospitalization || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Allergies (Medicine/Food): </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.allergies || "N/A"}
+                  {medicalHistory?.allergies || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Developmental Abnormalities: </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.developmentalAbnormalities || "N/A"}
+                  {medicalHistory?.developmentalAbnormalities || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>Any history of the following: </Text>
                 <Text style={styles.value}>
-                  {medicalHistory?.histories?.length > 0
-                    ? medicalHistory.histories.join(", ")
+                  {medicalHistory?.histories?.length ?? 0 > 0
+                    ? medicalHistory?.histories.join(", ")
                     : "N/A"}
                 </Text>
               </View>
@@ -381,13 +387,13 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                   previous dental care or medical care?:{" "}
                 </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.medicalCareReaction || "N/A"}
+                  {medicalHistory?.medicalCareReaction || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
                 <Text style={styles.props}>If yes, please specify: </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.yesSpecify || "N/A"}
+                  {medicalHistory?.yesSpecify || "N/A"}
                 </Text>
               </View>
               <View style={styles.flexRow}>
@@ -395,7 +401,7 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                   Social and Family Medical History:{" "}
                 </Text>
                 <Text style={styles.value}>
-                  {medicalHistory.socialFamilyHistory || "N/A"}
+                  {medicalHistory?.socialFamilyHistory || "N/A"}
                 </Text>
               </View>
             </View>
@@ -417,7 +423,7 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
                 </Text>
               </View>
               {/* Table Body */}
-              {patient.dentalRemarks.map((treatment, index) => (
+              {patient?.dentalRemarks.map((treatment, index) => (
                 <View key={index} style={styles.tableRow}>
                   <Text style={styles.tableCell}>
                     {treatment.createdAt
@@ -465,7 +471,7 @@ const PatientDocument: React.FC<PatientDocumentProps> = ({
               </Text>
             </View>
             {/* Table Body */}
-            {patient.treatmentPlan.map((treatment, index) => (
+            {patient?.treatmentPlan.map((treatment, index) => (
               <View key={index} style={styles.tableRow}>
                 <Text style={styles.tableCell}>
                   {treatment.createdAt
@@ -502,6 +508,9 @@ export async function GET(
   request: Request,
   { params }: { params: { patientId: string } }
 ) {
+  if (!params.patientId) {
+    return new NextResponse("Patient ID is required", { status: 400 });
+  }
   const patient = await db.patient.findUnique({
     where: {
       id: params.patientId,
@@ -534,13 +543,9 @@ export async function GET(
 
   const services = await db.service.findMany();
 
-  if (!patient || !medicalHistory || !presentHistoryIllness) {
-    return new NextResponse("Data not found", { status: 404 });
-  }
-
   const stream = await renderToStream(
     <PatientDocument
-      patient={patient}
+      patient={patient!}
       medicalHistory={medicalHistory}
       presentHistoryIllness={presentHistoryIllness}
       dentists={users}
