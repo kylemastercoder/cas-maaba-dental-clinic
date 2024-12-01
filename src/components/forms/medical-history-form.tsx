@@ -183,7 +183,7 @@ const MedicalHistoryForm = ({
         <Button
           type="submit"
           disabled={user?.role.name === "Front Desk" || isSaving}
-          className="mt-3"
+          className="mt-3 no-print"
         >
           {isSaving && <Loader2 className="animate-spin w-4 h-4 mr-2" />}
           Save Changes

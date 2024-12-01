@@ -597,7 +597,7 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-lg">Dental Remarks</h1>
+            <h1 className="font-semibold text-lg">Treatment Plan</h1>
           </div>
           <DataTable
             data={formattedDataTreatment}
@@ -609,7 +609,7 @@ const TreatmentClient = ({
       <Card className="mt-5">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <h1 className="font-semibold text-lg">Dental History</h1>
+            <h1 className="font-semibold text-lg">Treatment Rendered</h1>
             {(
               user?.role.name === "Branch Head" ||
               user?.role.name === "Dentist" ||
@@ -619,6 +619,7 @@ const TreatmentClient = ({
                 data-html2canvas-ignore
                 size="sm"
                 onClick={() => setIsOpen(true)}
+                className="no-print"
               >
                 <PlusCircle className="mr-2 w-4 h-4" /> Add
               </Button>

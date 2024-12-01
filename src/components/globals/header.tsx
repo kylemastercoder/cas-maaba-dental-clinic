@@ -192,7 +192,7 @@ const Header = ({ user }: { user: HeaderProps | null }) => {
   };
 
   return (
-    <div className="flex items-center justify-between py-5 border-b px-5">
+    <div className="flex no-print items-center justify-between py-5 border-b px-5">
       <div className="md:block hidden">
         {user?.role?.name === "Administrator"
           ? getHeaderText()

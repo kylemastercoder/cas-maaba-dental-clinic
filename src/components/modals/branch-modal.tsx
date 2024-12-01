@@ -25,6 +25,7 @@ const BranchModal = () => {
     defaultValues: {
       name: "",
       address: "",
+      gmail: "",
     },
   });
 
@@ -70,6 +71,15 @@ const BranchModal = () => {
                 label="Branch Address"
                 disabled={isLoading}
                 placeholder="Enter branch address"
+                isRequired
+                fieldType={FormFieldType.INPUT}
+              />
+              <CustomFormField
+                control={form.control}
+                name="gmail"
+                label="Gmail Calendar"
+                disabled={isLoading}
+                placeholder="Enter gmail calendar"
                 isRequired
                 fieldType={FormFieldType.INPUT}
               />

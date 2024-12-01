@@ -8,6 +8,7 @@ export const UserLoginSchema = z.object({
 export const BranchSchema = z.object({
   name: z.string().min(1, { message: "Branch name is required" }),
   address: z.string().min(1, { message: "Branch address is required" }),
+  gmail: z.string().min(1, { message: "Gmail is required" }),
 });
 
 export const ResetPasswordSchema = z.object({

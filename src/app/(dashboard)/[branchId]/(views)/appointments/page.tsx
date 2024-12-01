@@ -17,7 +17,7 @@ const Appointments = async ({ params }: { params: { branchId: string } }) => {
           description="Easily schedule and manage your dental appointments online. Our system allows you to book consultations, check-ups, and treatments at your convenience."
         />
       </div>
-      <AppointmentClient branch={branch?.name as string} />
+      {branch ? <AppointmentClient branch={branch} /> : <p>Branch not found</p>}
     </div>
   );
 };

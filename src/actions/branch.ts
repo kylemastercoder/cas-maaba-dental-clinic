@@ -16,13 +16,14 @@ export const createBranch = async (values: z.infer<typeof BranchSchema>) => {
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, address } = validatedField.data;
+  const { name, address, gmail } = validatedField.data;
 
   try {
     const branch = await db.branch.create({
       data: {
         name,
         address,
+        gmail,
       },
     });
 
@@ -52,7 +53,7 @@ export const getAllBranches = async () => {
   try {
     const data = await db.branch.findMany({
       orderBy: {
-        createdAt: "asc",
+        name: "asc",
       },
     });
 
