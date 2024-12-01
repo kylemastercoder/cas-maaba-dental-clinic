@@ -32,7 +32,7 @@ const TreatmentPlan = async ({ params }: { params: { patientId: string } }) => {
     <div className="md:grid items-start gap-4 md:gap-8">
       <div className="flex justify-between items-center">
         <Heading
-          title={`Treatment Plan`}
+          title={`Patient Dental Record`}
           description="A detailed overview of the patient's treatment, including personal information, medical history, dental chart, and ongoing care for improved dental health."
         />
         <HandlePrint />
