@@ -82,7 +82,7 @@ const DentalHistoryModal = ({
 
   return (
     <Modal
-      title="Add Dental History"
+      title="Add Treatment Rendered"
       description="Provide detailed dental history for the patient, including past treatments, conditions, and any relevant notes."
       isOpen={isOpen}
       onClose={onClose}
