@@ -18,6 +18,7 @@ import {
   IconFiles,
   IconLogs,
   IconMedicineSyrup,
+  IconReport,
   IconUsers,
   IconUserSquareRounded,
 } from "@tabler/icons-react";
@@ -91,6 +92,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Logs",
         url: "/admin/logs",
         icon: IconLogs,
+      },
+      {
+        title: "Inventory Report",
+        url: "/admin/inventory-report",
+        icon: IconReport,
       },
     ],
   };

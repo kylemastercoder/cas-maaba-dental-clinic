@@ -112,6 +112,7 @@ const UserForm = ({
                   label="Password"
                   type="password"
                   isRequired={true}
+                  description="Password must be at least 8 characters long. It should contain at least one uppercase letter, one lowercase letter, one number, and one special character."
                   name="password"
                   disabled={isSaving}
                 />

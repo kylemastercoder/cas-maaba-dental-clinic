@@ -22,6 +22,25 @@ export const getAllLogs = async () => {
   }
 };
 
+export const getAllInventoryReport = async () => {
+  try {
+    const data = await db.inventoryReport.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    if (!data) {
+      return { error: "No logs found." };
+    }
+
+    return { data };
+  } catch (error) {
+    console.error(error);
+    return { error: "Something went wrong." };
+  }
+};
+
 export const getAllLogsByUser = async () => {
   const { user } = await getUserFromCookies();
   try {

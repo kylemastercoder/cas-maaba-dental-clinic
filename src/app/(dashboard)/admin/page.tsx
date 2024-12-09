@@ -13,9 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import db from "@/lib/db";
+import { sendEmailStock } from "@/lib/send-email";
 import { differenceInYears, formatDate } from "date-fns";
 import { FileCheck2, Stethoscope, Syringe, Users } from "lucide-react";
 import React from "react";
+import cron from "node-cron";
 
 const calculateAge = (birthdate: string): number => {
   return differenceInYears(new Date(), new Date(birthdate));
@@ -149,6 +151,10 @@ const AdminPage = async () => {
       remaining: supply.quantity - supply.used,
     }))
     .filter((supply) => supply.remaining <= 10);
+
+  cron.schedule("0 0 * * *", async () => {
+    await sendEmailStock(runningSupplies);
+  });
 
   const ageSexDistribution = getAgeSexDistribution(patient);
   const barangays = patient.map((p) => {

@@ -17,6 +17,8 @@ import React from "react";
 import { differenceInYears, formatDate } from "date-fns";
 import PatientDayTable from "@/components/globals/patient-day-table";
 import { TreatmentRenderedPie } from "@/components/globals/treatment-rendered-pie";
+import cron from "node-cron";
+import { sendEmailStock } from "@/lib/send-email";
 
 const calculateAge = (birthdate: string): number => {
   return differenceInYears(new Date(), new Date(birthdate));
@@ -128,6 +130,10 @@ const DashboardPage = async ({ params }: { params: { branchId: string } }) => {
       remaining: supply.quantity - supply.used,
     }))
     .filter((supply) => supply.remaining <= 10);
+
+    cron.schedule("0 0 * * *", async () => {
+      await sendEmailStock(runningSupplies);
+    });
 
   const ageSexDistribution = getAgeSexDistribution(patient);
   const barangays = patient.map((p) => {

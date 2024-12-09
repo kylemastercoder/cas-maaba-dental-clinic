@@ -54,7 +54,7 @@ export const columns: ColumnDef<UserColumn>[] = [
           className="flex items-center cursor-pointer"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Role
+          Position
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </span>
       );

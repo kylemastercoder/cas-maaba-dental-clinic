@@ -118,6 +118,7 @@ model Branch {
   supplies Supplies[]
   user     User[]
   logs     Logs[]
+  inventoryReport InventoryReport[]
 }
 
 model Supplies {
@@ -197,6 +198,16 @@ model Logs {
 
   userId String?
   user   User?   @relation(fields: [userId], references: [id])
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
+}
+
+model InventoryReport {
+  id        String   @id @default(cuid())
+  action      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   branchId String
   branch   Branch @relation(fields: [branchId], references: [id])

@@ -259,6 +259,13 @@ export const addStock = async (
           userId: user?.id || "",
         },
       });
+
+      await db.inventoryReport.create({
+        data: {
+          action: `${receivedBy} received ${quantity} stock to ${updatedSupply.name} on ${loginTime}`,
+          branchId: user?.branchId || "",
+        },
+      });
     }
 
     return { success: "Stock added successfully", supply: updatedSupply };
@@ -311,6 +318,13 @@ export const deductStock = async (
           action: `${dispatchedBy} deducted ${quantity} stock to ${updatedSupply.name} on ${loginTime} with a remarks of ${remarks}`,
           branchId: user?.branchId || "",
           userId: user?.id || "",
+        },
+      });
+
+      await db.inventoryReport.create({
+        data: {
+          action: `${dispatchedBy} deducted ${quantity} stock to ${updatedSupply.name} on ${loginTime}`,
+          branchId: user?.branchId || "",
         },
       });
     }
