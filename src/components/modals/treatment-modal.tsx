@@ -39,11 +39,11 @@ const TreatmentModal = ({
   const [selectedDiagnosis, setSelectedDiagnosis] = useState<string | null>(
     null
   );
-  const title = initialData ? "Edit Dental Remarks" : "Add Dental Remarks";
+  const title = initialData ? "Edit Treatment Plan" : "Add Treatment Plan";
   const description = initialData
-    ? "Make sure to click save changes after you update the dental remarks."
-    : "Please fill the required fields to add a new dental remarks.";
-  const action = initialData ? "Save Changes" : "Save Dental Remarks";
+    ? "Make sure to click save changes after you update the treatment plan."
+    : "Please fill the required fields to add a new treatment plan.";
+  const action = initialData ? "Save Changes" : "Save Treatment Plan";
   const form = useForm<z.infer<typeof TreatmentPlanSchema>>({
     resolver: zodResolver(TreatmentPlanSchema),
     mode: "onChange",
